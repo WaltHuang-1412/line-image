@@ -1,0 +1,11 @@
+Pillow>=10.0.0
+requests>=2.31.0
+websocket-client>=1.6.0
+numpy>=1.24.0
+torch>=2.0.0
+torchvision>=0.15.0
+segment_anything
+transformers>=4.30.0
+accelerate>=0.20.0
+rembg>=2.0.50
+onnxruntime>=1.16.0

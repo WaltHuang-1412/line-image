@@ -1,0 +1,126 @@
+{
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "animagine-xl-3.1.safetensors"
+    }
+  },
+  "10": {
+    "class_type": "IPAdapterUnifiedLoader",
+    "inputs": {
+      "model": ["4", 0],
+      "preset": "STANDARD (medium strength)"
+    }
+  },
+  "12": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "v3.png"
+    }
+  },
+  "13": {
+    "class_type": "IPAdapter",
+    "inputs": {
+      "model": ["10", 0],
+      "ipadapter": ["10", 1],
+      "image": ["12", 0],
+      "weight": 0.5,
+      "start_at": 0.0,
+      "end_at": 1.0,
+      "weight_type": "standard"
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "batch_size": 1,
+      "height": 1024,
+      "width": 1024
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["4", 1],
+      "text": "POSITIVE_PROMPT"
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["4", 1],
+      "text": "NEGATIVE_PROMPT"
+    }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["13", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["5", 0],
+      "seed": 0,
+      "steps": 28,
+      "cfg": 7.0,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1.0
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["4", 2]
+    }
+  },
+  "20": {
+    "class_type": "SAMModelLoader (segment anything)",
+    "inputs": {
+      "model_name": "sam_vit_b (375MB)"
+    }
+  },
+  "21": {
+    "class_type": "GroundingDinoModelLoader (segment anything)",
+    "inputs": {
+      "model_name": "GroundingDINO_SwinT_OGC (694MB)"
+    }
+  },
+  "22": {
+    "class_type": "GroundingDinoSAMSegment (segment anything)",
+    "inputs": {
+      "sam_model": ["20", 0],
+      "grounding_dino_model": ["21", 0],
+      "image": ["8", 0],
+      "prompt": "cat",
+      "threshold": 0.3
+    }
+  },
+  "23": {
+    "class_type": "InvertMask (segment anything)",
+    "inputs": {
+      "mask": ["22", 1]
+    }
+  },
+  "24": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": ["8", 0],
+      "alpha": ["23", 0]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "sticker_raw",
+      "images": ["8", 0]
+    }
+  },
+  "25": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "sticker_nobg",
+      "images": ["24", 0]
+    }
+  }
+}
