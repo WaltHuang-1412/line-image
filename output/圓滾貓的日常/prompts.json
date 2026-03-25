@@ -1,0 +1,22 @@
+{
+  "title": "圓滾貓的日常",
+  "description": "圓滾滾灰貓的日常，16種超有態度的表情貼圖",
+  "stickers": [
+    {"id": 1, "text": "呵呵", "text_style": "speech_bubble"},
+    {"id": 2, "text": "嗯哼", "text_style": "explosion"},
+    {"id": 3, "text": "我嗎？", "text_style": "floating"},
+    {"id": 4, "text": "爽啦", "text_style": "explosion"},
+    {"id": 5, "text": "讚喔", "text_style": "deadpan"},
+    {"id": 6, "text": "嫌棄", "text_style": "wavy"},
+    {"id": 7, "text": "關我屁事", "text_style": "scattered"},
+    {"id": 8, "text": "掰", "text_style": "trailing"},
+    {"id": 9, "text": "QQ", "text_style": "floating"},
+    {"id": 10, "text": "嘻嘻", "text_style": "tilted"},
+    {"id": 11, "text": "氣不氣", "text_style": "explosion"},
+    {"id": 12, "text": "隨便你", "text_style": "deadpan"},
+    {"id": 13, "text": "就是我", "text_style": "explosion"},
+    {"id": 14, "text": "...", "text_style": "floating"},
+    {"id": 15, "text": "別吵", "text_style": "speech_bubble"},
+    {"id": 16, "text": "勉強愛你", "text_style": "wavy"}
+  ]
+}

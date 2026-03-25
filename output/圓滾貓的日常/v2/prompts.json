@@ -1,0 +1,24 @@
+{
+  "title": "圓滾貓的日常 2",
+  "description": "圓滾滾灰貓的日常第二彈，16種實用表情貼圖",
+  "style_prefix": "1cat, solo, simple background, white background, full body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, sticker, round chubby body, blush stickers, big head small body, cat face, whiskers, cat paws, grey cat, centered composition, correct anatomy, no text, grey cat",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana",
+  "stickers": [
+    {"id": 1, "emotion": "謝謝", "prompt": "bowing politely, grateful smile"},
+    {"id": 2, "emotion": "OK", "prompt": "winking, thumbs up gesture"},
+    {"id": 3, "emotion": "早安", "prompt": "stretching and yawning, just woke up"},
+    {"id": 4, "emotion": "晚安", "prompt": "sleepy drowsy, moon and stars, waving goodnight"},
+    {"id": 5, "emotion": "辛苦了", "prompt": "tired, wiping sweat, relieved smile"},
+    {"id": 6, "emotion": "加油", "prompt": "fists pumping, determined, energetic"},
+    {"id": 7, "emotion": "吃東西", "prompt": "eating happily, mouth full, fish"},
+    {"id": 8, "emotion": "耍廢", "prompt": "lying flat, melted, lazy"},
+    {"id": 9, "emotion": "等等", "prompt": "stop gesture, stern face, wait"},
+    {"id": 10, "emotion": "在嗎", "prompt": "peeking, curious big eyes, waving hello"},
+    {"id": 11, "emotion": "抱抱", "prompt": "hugging heart, gentle smile, affectionate"},
+    {"id": 12, "emotion": "生氣", "prompt": "puffed up, angry red face, furious"},
+    {"id": 13, "emotion": "嚇到", "prompt": "shocked, eyes wide, startled"},
+    {"id": 14, "emotion": "無聊", "prompt": "lying on side, dead bored eyes, sighing"},
+    {"id": 15, "emotion": "生日快樂", "prompt": "party hat, celebrating, confetti"},
+    {"id": 16, "emotion": "想你", "prompt": "lonely sad eyes, heart floating, missing someone"}
+  ]
+}

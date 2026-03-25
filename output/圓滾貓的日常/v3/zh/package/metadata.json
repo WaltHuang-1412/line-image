@@ -1,0 +1,29 @@
+{
+  "theme": "圓滾貓的日常",
+  "version": "v3",
+  "title": "圓滾貓的日常 3",
+  "description": "圓滾滾灰貓嘴超賤！16種欠揍日常貼圖",
+  "sticker_count": 16,
+  "files": {
+    "main": "main.png",
+    "tab": "tab.png",
+    "stickers": [
+      "01.png",
+      "02.png",
+      "03.png",
+      "04.png",
+      "05.png",
+      "06.png",
+      "07.png",
+      "08.png",
+      "09.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "14.png",
+      "15.png",
+      "16.png"
+    ]
+  }
+}

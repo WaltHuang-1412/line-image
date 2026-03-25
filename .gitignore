@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
 ComfyUI/
-output/
+# raw files are large and regenerable, exclude them
+output/*/v*/raw/
 v3.png

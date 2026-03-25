@@ -1,0 +1,24 @@
+{
+  "title": "圓滾貓的日常 4",
+  "description": "圓滾滾灰貓化身吃貨！16種貪吃日常貼圖",
+  "style_prefix": "1cat, solo, simple background, white background, full body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, sticker, round chubby body, blush stickers, big head small body, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, centered composition, correct anatomy, no text, grey cat",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana",
+  "stickers": [
+    {"id": 1, "emotion": "好餓", "prompt": "lying flat on ground, drooling, empty stomach growling, desperate hungry eyes, paws reaching forward weakly"},
+    {"id": 2, "emotion": "吃什麼", "prompt": "tilting head to one side, question mark above head, paw on chin thinking, curious pondering expression"},
+    {"id": 3, "emotion": "開動", "prompt": "holding chopsticks in both paws, sparkling excited eyes, mouth open wide, eager anticipation, ready to eat"},
+    {"id": 4, "emotion": "太好吃", "prompt": "eyes squeezed shut in bliss, both cheeks stuffed full, happy tears, savoring delicious food, pure ecstasy expression"},
+    {"id": 5, "emotion": "再一口", "prompt": "sitting up, both paws together begging, puppy eyes looking up, drooling, pleading cute expression, mouth slightly open, wanting more food"},
+    {"id": 6, "emotion": "吃飽了", "prompt": "lying on back, round bloated belly, rubbing tummy with one paw, satisfied sleepy smile, food coma"},
+    {"id": 7, "emotion": "不夠吃", "prompt": "looking at empty plate, big teary puppy eyes, trembling lower lip, both paws holding empty bowl, sad hungry"},
+    {"id": 8, "emotion": "是我的", "prompt": "hugging food bowl tightly, fierce protective glare, hissing, arched back, guarding food aggressively"},
+    {"id": 9, "emotion": "宵夜", "prompt": "tiptoeing sneakily in the dark, holding snack in mouth, shifty guilty eyes looking sideways, midnight snack thief"},
+    {"id": 10, "emotion": "減肥", "prompt": "looking down at own round belly, shocked wide eyes, both paws squeezing belly fat, horrified expression, sweat drops, oh no face"},
+    {"id": 11, "emotion": "明天再說", "prompt": "waving one paw dismissively, other paw holding snack, eating carelessly, smug unbothered expression, don't care attitude"},
+    {"id": 12, "emotion": "外送到了", "prompt": "jumping up excitedly, both paws raised in the air, sparkling eyes, huge open mouth smile, overjoyed celebration pose"},
+    {"id": 13, "emotion": "請客", "prompt": "sparkling starry eyes, both paws clasped together begging, drooling slightly, hopeful expectant expression, mooching pose"},
+    {"id": 14, "emotion": "我請你", "prompt": "puffing chest out proudly, one paw slapping chest confidently, generous boss expression, cool sunglasses, treating someone"},
+    {"id": 15, "emotion": "甜點胃", "prompt": "staring at cake with heart-shaped eyes, both paws on cheeks, blushing, lovestruck expression, dreamy face"},
+    {"id": 16, "emotion": "打包", "prompt": "carrying huge pile of food boxes stacked high, peeking from behind the stack, greedy satisfied grin, hoarding food"}
+  ]
+}

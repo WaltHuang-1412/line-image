@@ -23,20 +23,27 @@ import config
 # Text overlay
 # ---------------------------------------------------------------------------
 
-TEXT_FONT_BOLD = "msjhbd.ttc"   # Microsoft JhengHei Bold
+TEXT_FONT_HUNINN = os.path.join(os.path.dirname(__file__), "fonts", "jf-openhuninn-2.1.ttf")
+TEXT_FONT_BOLD = "msjhbd.ttc"   # Microsoft JhengHei Bold (fallback)
 TEXT_FONT_REGULAR = "msjh.ttc"
 
-# Text style
-TEXT_FILL = (60, 60, 60, 255)
+# Text style — warm dark brown + thick white stroke for hand-drawn feel
+TEXT_FILL = (75, 55, 45, 255)
 TEXT_STROKE = (255, 255, 255, 255)
-TEXT_STROKE_WIDTH = 4
+TEXT_STROKE_WIDTH = 6
 
 # Small decorative marks per emotion (CJK-safe characters only)
 EMOTION_DECO = {
+    # v1-v3 emotions
     "嘻嘻": "～",   "才怪": "！",   "干你事": "",     "嘴嘴": "～",
     "你誰": "？",   "回我": "！！", "哼": "！",       "吵屁": "！",
     "略略": "～",   "滾": "！",    "識相": "～",      "欠揍": "！",
     "切": "～",     "煩欸": "…",   "比心": "～",      "愛你屁": "！", "才不要": "！",
+    # v4 food emotions
+    "好餓": "…",    "吃什麼": "？", "開動": "！",      "太好吃": "～",
+    "再一口": "～",  "吃飽了": "～", "不夠吃": "！",    "是我的": "！",
+    "宵夜": "～",   "減肥": "！",   "明天再說": "～",   "外送到了": "！",
+    "請客": "～",   "我請你": "！", "甜點胃": "～",    "打包": "！",
 }
 
 # Slight horizontal offset per sticker for variety (-1=left, 0=center, 1=right)
@@ -47,8 +54,8 @@ TEXT_OFFSET = {
 
 
 def _get_font(size):
-    """Load Chinese bold font at given size."""
-    for name in [TEXT_FONT_BOLD, TEXT_FONT_REGULAR]:
+    """Load Chinese font — prefer huninn (hand-drawn round), fallback to system."""
+    for name in [TEXT_FONT_HUNINN, TEXT_FONT_BOLD, TEXT_FONT_REGULAR]:
         try:
             return ImageFont.truetype(name, size)
         except (OSError, IOError):
@@ -70,13 +77,15 @@ def add_text_overlay(canvas, text, position="bottom", sticker_id=1):
 
     # Font size — bigger for fewer chars (based on original text, not deco)
     if len(text) <= 1:
-        font_size = 54
+        font_size = 64
     elif len(text) <= 2:
-        font_size = 48
+        font_size = 58
     elif len(text) <= 3:
-        font_size = 42
+        font_size = 50
+    elif len(text) <= 5:
+        font_size = 44
     else:
-        font_size = 36
+        font_size = 38
 
     font = _get_font(font_size)
 
@@ -90,11 +99,11 @@ def add_text_overlay(canvas, text, position="bottom", sticker_id=1):
     x = (canvas.width - text_w) // 2 + offset_x
     x = max(4, min(x, canvas.width - text_w - 4))  # clamp
 
-    # Vertical: overlap slightly with cat area for a more integrated feel
+    # Vertical: overlap into cat area for an integrated hand-drawn feel
     if position == "top":
-        y = 6
+        y = 2
     else:
-        y = canvas.height - text_h - 8
+        y = canvas.height - text_h - 4
 
     # Drop shadow
     shadow_offset = 2

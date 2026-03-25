@@ -1,0 +1,24 @@
+{
+  "title": "圓滾貓的日常 3",
+  "description": "圓滾滾灰貓嘴超賤！16種欠揍日常貼圖",
+  "style_prefix": "1cat, solo, simple background, white background, full body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, sticker, round chubby body, blush stickers, big head small body, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, centered composition, correct anatomy, no text, grey cat",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana",
+  "stickers": [
+    {"id": 1, "emotion": "嘻嘻", "prompt": "sly mischievous grin, half-closed eyes, smug smirking, one paw covering mouth, sneaky expression"},
+    {"id": 2, "emotion": "才怪", "prompt": "tongue sticking out, one eye closed winking, playful teasing face, one paw waving dismissively"},
+    {"id": 3, "emotion": "干麻", "prompt": "sitting with legs crossed, leaning back, looking away with bored expression, one paw raised dismissively, attitude pose"},
+    {"id": 4, "emotion": "嘴嘴", "prompt": "leaning forward, exaggerated puckered lips, eyes closed, demanding a kiss, pushy cute expression"},
+    {"id": 5, "emotion": "你誰", "prompt": "squinting eyes suspiciously, looking sideways, one paw pointing forward, judging expression, condescending look"},
+    {"id": 6, "emotion": "回我", "prompt": "both paws slamming on table, angry demanding face, impatient expression, leaning forward aggressively"},
+    {"id": 7, "emotion": "哼", "prompt": "turning head away sharply, nose up in the air, eyes closed, puffed cheeks, arms crossed, offended pose"},
+    {"id": 8, "emotion": "吵屁", "prompt": "both paws pressed over ears, eyes squeezed shut, annoyed grimace, shaking head, irritated expression"},
+    {"id": 9, "emotion": "略略", "prompt": "tongue sticking out far, one eye closed, smug teasing face, one paw on hip, mocking expression, nyah nyah pose"},
+    {"id": 10, "emotion": "滾", "prompt": "one paw kicking forward, angry face, shooing gesture, looking down with contempt, dismissive pose"},
+    {"id": 11, "emotion": "識相", "prompt": "smug satisfied grin, tail raised high, chin up proudly, looking down on someone, superior expression"},
+    {"id": 12, "emotion": "欠揍", "prompt": "one paw raised in fist, other paw on hip, fired up angry face, ready to fight, threatening cute pose"},
+    {"id": 13, "emotion": "切", "prompt": "looking to the side, lips pursed in disapproval, unimpressed flat expression, one paw flicking dismissively"},
+    {"id": 14, "emotion": "煩欸", "prompt": "lying face down flat on ground, exhausted annoyed, one paw draped over head, done with everything"},
+    {"id": 15, "emotion": "比心", "prompt": "both paws forming heart shape above head, but eyes rolling dramatically, reluctant love, tsundere expression"},
+    {"id": 16, "emotion": "才不要", "prompt": "blushing red cheeks, turning face away shyly, but one paw secretly making small heart, embarrassed tsundere, flustered"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "title": "まんまるネコの日常 3",
+  "description": "まんまるグレー猫の毒舌シリーズ！16種の生意気スタンプ",
+  "stickers": [
+    {"id": 1, "emotion": "ニヤリ"},
+    {"id": 2, "emotion": "うそ"},
+    {"id": 3, "emotion": "なに"},
+    {"id": 4, "emotion": "チュー"},
+    {"id": 5, "emotion": "だれ"},
+    {"id": 6, "emotion": "返事！"},
+    {"id": 7, "emotion": "ふん"},
+    {"id": 8, "emotion": "うるさい"},
+    {"id": 9, "emotion": "べー"},
+    {"id": 10, "emotion": "あっち行け"},
+    {"id": 11, "emotion": "わかってる"},
+    {"id": 12, "emotion": "やんのか"},
+    {"id": 13, "emotion": "チッ"},
+    {"id": 14, "emotion": "だるい"},
+    {"id": 15, "emotion": "ハート"},
+    {"id": 16, "emotion": "やだ"}
+  ]
+}
