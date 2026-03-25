@@ -9,13 +9,107 @@ Pipeline per sticker:
   5. For the first sticker, also create main.png (240x240) and tab.png (96x74).
 """
 import glob
+import json
 import os
 from io import BytesIO
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 import config
+
+
+# ---------------------------------------------------------------------------
+# Text overlay
+# ---------------------------------------------------------------------------
+
+TEXT_FONT_BOLD = "msjhbd.ttc"   # Microsoft JhengHei Bold
+TEXT_FONT_REGULAR = "msjh.ttc"
+
+# Text style
+TEXT_FILL = (60, 60, 60, 255)
+TEXT_STROKE = (255, 255, 255, 255)
+TEXT_STROKE_WIDTH = 4
+
+# Small decorative marks per emotion (CJK-safe characters only)
+EMOTION_DECO = {
+    "嘻嘻": "～",   "才怪": "！",   "干你事": "",     "嘴嘴": "～",
+    "你誰": "？",   "回我": "！！", "哼": "！",       "吵屁": "！",
+    "略略": "～",   "滾": "！",    "識相": "～",      "欠揍": "！",
+    "切": "～",     "煩欸": "…",   "比心": "～",      "愛你屁": "！", "才不要": "！",
+}
+
+# Slight horizontal offset per sticker for variety (-1=left, 0=center, 1=right)
+TEXT_OFFSET = {
+    1: -12, 2: 8, 3: -6, 4: 10, 5: -8, 6: 6, 7: -10, 8: 12,
+    9: -6, 10: 8, 11: -12, 12: 10, 13: -8, 14: 6, 15: -10, 16: 12,
+}
+
+
+def _get_font(size):
+    """Load Chinese bold font at given size."""
+    for name in [TEXT_FONT_BOLD, TEXT_FONT_REGULAR]:
+        try:
+            return ImageFont.truetype(name, size)
+        except (OSError, IOError):
+            continue
+    return ImageFont.load_default()
+
+
+def add_text_overlay(canvas, text, position="bottom", sticker_id=1):
+    """Draw text on the sticker canvas with decorative marks and slight offset."""
+    if not text:
+        return canvas
+
+    result = canvas.copy()
+    draw = ImageDraw.Draw(result)
+
+    # Add decorative mark
+    deco = EMOTION_DECO.get(text, "")
+    display_text = text + deco
+
+    # Font size — bigger for fewer chars (based on original text, not deco)
+    if len(text) <= 1:
+        font_size = 54
+    elif len(text) <= 2:
+        font_size = 48
+    elif len(text) <= 3:
+        font_size = 42
+    else:
+        font_size = 36
+
+    font = _get_font(font_size)
+
+    # Measure
+    bbox = draw.textbbox((0, 0), display_text, font=font, stroke_width=TEXT_STROKE_WIDTH)
+    text_w = bbox[2] - bbox[0]
+    text_h = bbox[3] - bbox[1]
+
+    # Horizontal: center + slight offset for variety
+    offset_x = TEXT_OFFSET.get(sticker_id, 0)
+    x = (canvas.width - text_w) // 2 + offset_x
+    x = max(4, min(x, canvas.width - text_w - 4))  # clamp
+
+    # Vertical: overlap slightly with cat area for a more integrated feel
+    if position == "top":
+        y = 6
+    else:
+        y = canvas.height - text_h - 8
+
+    # Drop shadow
+    shadow_offset = 2
+    draw.text((x + shadow_offset, y + shadow_offset), display_text, font=font,
+              fill=(0, 0, 0, 40),
+              stroke_width=TEXT_STROKE_WIDTH,
+              stroke_fill=(0, 0, 0, 0))
+
+    # Main text
+    draw.text((x, y), display_text, font=font,
+              fill=TEXT_FILL,
+              stroke_width=TEXT_STROKE_WIDTH,
+              stroke_fill=TEXT_STROKE)
+
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -131,9 +225,50 @@ def _fit_on_canvas(img_rgba, canvas_w, canvas_h, margin=config.STICKER_MARGIN):
     return canvas
 
 
-def resize_to_sticker(img_rgba):
-    """Resize to LINE sticker canvas (370x320 with 10px margin)."""
-    return _fit_on_canvas(img_rgba, config.STICKER_MAX_W, config.STICKER_MAX_H, config.STICKER_MARGIN)
+def _detect_content_center(img_rgba):
+    """Return the vertical center of mass of non-transparent pixels (0.0=top, 1.0=bottom)."""
+    arr = np.array(img_rgba)
+    if arr.shape[2] < 4:
+        return 0.5
+    alpha = arr[:, :, 3]
+    rows = np.where(alpha > 10)[0]
+    if len(rows) == 0:
+        return 0.5
+    return float(np.mean(rows)) / arr.shape[0]
+
+
+def resize_to_sticker(img_rgba, text=None, text_pos="bottom"):
+    """Resize to LINE sticker canvas (370x320).
+
+    If text is provided, shrink cat and place it opposite to text_pos.
+    """
+    if text:
+        margin = config.STICKER_MARGIN
+        canvas_w = config.STICKER_MAX_W
+        canvas_h = config.STICKER_MAX_H
+        inner_w = canvas_w - margin * 2
+        inner_h = int((canvas_h - margin * 2) * 0.82)
+
+        w, h = img_rgba.size
+        scale = min(inner_w / w, inner_h / h)
+        new_w = max(1, int(w * scale))
+        new_h = max(1, int(h * scale))
+
+        resized = img_rgba.resize((new_w, new_h), Image.LANCZOS)
+        canvas = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
+        x = (canvas_w - new_w) // 2
+
+        if text_pos == "top":
+            # Text on top → cat goes to bottom
+            y = canvas_h - new_h - margin
+        else:
+            # Text on bottom → cat goes to top
+            y = margin
+
+        canvas.paste(resized, (x, y), resized)
+        return canvas
+    else:
+        return _fit_on_canvas(img_rgba, config.STICKER_MAX_W, config.STICKER_MAX_H, config.STICKER_MARGIN)
 
 
 def create_main_image(img_rgba):
@@ -231,6 +366,16 @@ def format_all(theme, version):
         print(f"No raw sticker images found in {raw_dir}")
         return
 
+    # Load prompts.json for text overlay
+    prompts_file = config.get_prompts_file(theme, version)
+    text_map = {}
+    if os.path.exists(prompts_file):
+        with open(prompts_file, "r", encoding="utf-8") as pf:
+            pdata = json.load(pf)
+        for s in pdata.get("stickers", []):
+            sid = s.get("id")
+            text_map[sid] = s.get("text", s.get("emotion", ""))
+
     indices = sorted(index_map.keys())
     print(f"\nFormatting {len(indices)} stickers for [{theme}/{version}]...\n")
 
@@ -242,7 +387,12 @@ def format_all(theme, version):
         print(f"  [#{idx:02d}] Removing background...")
         img = remove_background(raw_path, nobg_path)
 
-        sticker = resize_to_sticker(img)
+        text = text_map.get(idx, "")
+        text_pos = "top" if idx % 2 == 1 else "bottom"
+        sticker = resize_to_sticker(img, text=text, text_pos=text_pos)
+        if text:
+            sticker = add_text_overlay(sticker, text, position=text_pos, sticker_id=idx)
+            print(f"  [#{idx:02d}] Text overlay: {text} ({text_pos})")
         sticker_data = optimize_png(sticker)
         sticker_path = os.path.join(fmt_dir, f"sticker_{idx:02d}.png")
         with open(sticker_path, "wb") as f_out:

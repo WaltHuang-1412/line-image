@@ -28,9 +28,10 @@ SAMPLER = "euler_ancestral"
 SCHEDULER = "normal"
 
 NEGATIVE_PROMPT = (
-    "bad anatomy, bad hands, missing fingers, extra fingers, "
-    "blurry, low quality, watermark, text, signature, "
-    "realistic, photo, 3d render, complex background"
+    "lowres, bad anatomy, text, error, worst quality, low quality, "
+    "jpeg artifacts, signature, watermark, blurry, multiple cats, "
+    "realistic, human, humanoid, catgirl, anime girl, person, clothing, "
+    "extra limbs, japanese text, kanji, hiragana, katakana"
 )
 
 # === LINE Sticker Specs ===

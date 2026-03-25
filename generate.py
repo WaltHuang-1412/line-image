@@ -78,7 +78,7 @@ def upload_image(filepath, server_url=config.COMFYUI_URL):
 # SAM-based generation
 # ---------------------------------------------------------------------------
 
-def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed=None):
+def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed=None, negative_prompt=None):
     """Generate one sticker using the generate_with_sam.json workflow.
 
     The workflow produces two saved images per run:
@@ -96,7 +96,7 @@ def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed
 
     # Positive / negative prompts
     workflow["6"]["inputs"]["text"] = positive_prompt
-    workflow["7"]["inputs"]["text"] = config.NEGATIVE_PROMPT
+    workflow["7"]["inputs"]["text"] = negative_prompt or config.NEGATIVE_PROMPT
 
     # Sampler settings
     workflow["3"]["inputs"]["seed"] = seed if seed is not None else random.randint(0, 2**32 - 1)
@@ -115,11 +115,14 @@ def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed
     else:
         workflow["12"]["inputs"]["image"] = config.IPADAPTER_REFERENCE_IMAGE
 
+    # IP-Adapter weight
+    workflow["13"]["inputs"]["weight"] = config.IPADAPTER_WEIGHT
+
     # File name prefixes for SaveImage nodes
-    workflow["9"]["inputs"]["filename_prefix"] = f"sticker_{index:02d}_raw"
+    workflow["9"]["inputs"]["filename_prefix"] = f"sticker_{index:02d}"
     workflow["25"]["inputs"]["filename_prefix"] = f"sticker_{index:02d}_nobg"
 
-    print(f"  [#{index:02d}] Queuing SAM generation...")
+    print(f"  [#{index:02d}] Queuing generation...")
     prompt_id = queue_prompt(workflow)
 
     print(f"  [#{index:02d}] Waiting for completion...")
@@ -127,18 +130,18 @@ def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed
 
     outputs = history.get("outputs", {})
     raw_path = None
-    nobg_path = None
 
     # Save raw image (node 9)
     if "9" in outputs and outputs["9"].get("images"):
         img_info = outputs["9"]["images"][0]
         img_data = get_image(img_info["filename"], img_info["subfolder"], img_info["type"])
-        raw_path = os.path.join(raw_dir, f"sticker_{index:02d}_raw.png")
+        raw_path = os.path.join(raw_dir, f"sticker_{index:02d}.png")
         with open(raw_path, "wb") as f:
             f.write(img_data)
-        print(f"  [#{index:02d}] Raw saved: {raw_path}")
+        print(f"  [#{index:02d}] Saved: {raw_path}")
 
     # Save SAM nobg image (node 25)
+    nobg_path = None
     if "25" in outputs and outputs["25"].get("images"):
         img_info = outputs["25"]["images"][0]
         img_data = get_image(img_info["filename"], img_info["subfolder"], img_info["type"])
@@ -176,6 +179,7 @@ def generate_all(theme, version, sticker_ids=None):
 
     stickers = data["stickers"]
     style_prefix = data.get("style_prefix", "")
+    negative_prompt = data.get("negative_prompt", None)
 
     # Filter to requested sticker IDs if provided
     if sticker_ids:
@@ -204,7 +208,7 @@ def generate_all(theme, version, sticker_ids=None):
         full_prompt = f"{style_prefix}, {prompt_text}" if style_prefix else prompt_text
         seed = sticker.get("seed")
 
-        raw_path, nobg_path = generate_with_sam(full_prompt, idx, raw_dir, ref_name, seed)
+        raw_path, nobg_path = generate_with_sam(full_prompt, idx, raw_dir, ref_name, seed, negative_prompt)
         results.append({"id": idx, "raw": raw_path, "nobg": nobg_path})
 
     print(f"\nDone! {len(results)} stickers generated in {raw_dir}")
