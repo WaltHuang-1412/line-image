@@ -13,4 +13,4 @@
 - 説明：まんまるグレー猫の食いしん坊シリーズ！お腹すいた、いただきます、うまっ、お持ち帰り...16種の食いしん坊スタンプ。ダイエットは明日から～
 
 ### 版權
-Copyright (C) 2026 Walter Huang All Rights Reserved.
+Copyright (C) 2026 Walter Studio

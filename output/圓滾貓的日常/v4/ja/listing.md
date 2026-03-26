@@ -13,4 +13,4 @@
 - 說明：圓滾滾灰貓吃貨日文版！16種貪吃日常，お腹すいた、いただきます、うまっ...
 
 ### 版權
-Copyright (C) 2026 Walter Huang All Rights Reserved.
+Copyright (C) 2026 Walter Studio

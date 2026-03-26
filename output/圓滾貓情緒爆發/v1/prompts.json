@@ -1,0 +1,23 @@
+{
+  "title": "圓滾貓情緒爆發",
+  "description": "圓滾滾灰貓的情緒大爆發！16種崩潰日常",
+  "style_prefix": "indie cartoon style, chunky bold black outlines, round simple shapes, flat color fills, big expressive eyes, exaggerated mouth, quirky character design, chubby grey cat, full body, white background",
+  "stickers": [
+    {"id": 1, "emotion": "崩潰", "text": "崩潰", "prompt": "extremely angry screaming, puffed up, red face, steam from ears, fists clenched, mouth wide open, furious, bold Chinese text \"崩潰\" above the cat"},
+    {"id": 2, "emotion": "傻眼", "text": "傻眼", "prompt": "shocked stunned face, jaw dropped wide open, eyes popping out of head, frozen in disbelief, sweat drops, bold Chinese text \"傻眼\" above the cat"},
+    {"id": 3, "emotion": "白眼", "text": "白眼", "prompt": "rolling eyes dramatically, eyes rolled all the way up showing whites only, flat unamused mouth, arms crossed, deeply annoyed, bold Chinese text \"白眼\" above the cat"},
+    {"id": 4, "emotion": "爽", "text": "爽！", "prompt": "extremely happy satisfied, sunglasses on, leaning back cool pose, big grin showing teeth, thumbs up, sparkles around, bold Chinese text \"爽！\" above the cat"},
+    {"id": 5, "emotion": "哭笑不得", "text": "哭笑不得", "prompt": "one eye crying with tear, other eye laughing, mouth half smile half frown, confused mixed emotions, sweat drop, bold Chinese text \"哭笑不得\" above the cat"},
+    {"id": 6, "emotion": "心累", "text": "心累", "prompt": "exhausted tired, dark circles under eyes, soul leaving body as ghost, slouching, lifeless expression, drained, bold Chinese text \"心累\" above the cat"},
+    {"id": 7, "emotion": "怒", "text": "怒！", "prompt": "burning with rage, fire aura around body, veins popping on forehead, sharp teeth showing, fists raised, extreme anger, bold Chinese text \"怒！\" above the cat"},
+    {"id": 8, "emotion": "嚇死", "text": "嚇死", "prompt": "terrified scared, fur standing on end, jumping in shock, eyes huge round white, mouth screaming, tail puffed up, bold Chinese text \"嚇死\" above the cat"},
+    {"id": 9, "emotion": "厭世", "text": "厭世", "prompt": "lying flat on ground face down, completely given up on life, dead fish eyes, no energy, melted into floor, existential crisis, bold Chinese text \"厭世\" above the cat"},
+    {"id": 10, "emotion": "委屈", "text": "委屈", "prompt": "pouting with big watery puppy eyes, lower lip trembling, tears forming but not falling, clutching own tail for comfort, feeling wronged, bold Chinese text \"委屈\" above the cat"},
+    {"id": 11, "emotion": "暴走", "text": "暴走", "prompt": "going berserk crazy, running wildly, limbs flailing everywhere, wild crazy eyes, tongue out, chaotic energy lines, out of control, bold Chinese text \"暴走\" above the cat"},
+    {"id": 12, "emotion": "無語", "text": "無語", "prompt": "completely speechless, blank stare, three dots above head, mouth as straight flat line, dead inside expression, frozen, bold Chinese text \"無語\" above the cat"},
+    {"id": 13, "emotion": "翻桌", "text": "翻桌", "prompt": "flipping a table angrily, table flying in air, furious expression, veins on forehead, extreme frustration, dramatic action pose, bold Chinese text \"翻桌\" above the cat"},
+    {"id": 14, "emotion": "煩", "text": "煩！", "prompt": "irritated annoyed, scratching own head frantically with both paws, messy fur, gritting teeth, stress marks around head, agitated, bold Chinese text \"煩！\" above the cat"},
+    {"id": 15, "emotion": "放空", "text": "放空", "prompt": "staring into space blankly, empty hollow eyes, drooling slightly, soul floating out of body, completely zoned out, nobody home, bold Chinese text \"放空\" above the cat"},
+    {"id": 16, "emotion": "炸了", "text": "炸了", "prompt": "exploding with anger, mushroom cloud explosion behind, whole body shaking, face bright red, smoke coming out of ears, nuclear rage, bold Chinese text \"炸了\" above the cat"}
+  ]
+}
