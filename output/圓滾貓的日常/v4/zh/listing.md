@@ -9,7 +9,7 @@
 - Description: The chubby round grey cat is a total foodie! 16 stickers for every eating moment - from starving to food coma, dieting starts tomorrow~
 
 ### Japanese
-- タイトル：まんまるネコの日常 4
+- タイトル：まんまるネコの食いしん坊日記
 - 説明：まんまるグレー猫の食いしん坊シリーズ！お腹すいた、いただきます、うまっ、お持ち帰り...16種の食いしん坊スタンプ。ダイエットは明日から～
 
 ### 版權

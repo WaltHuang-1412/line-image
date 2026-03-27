@@ -177,10 +177,54 @@ def flood_fill_remove_bg(img_rgba, tolerance=30):
     return Image.fromarray(result_arr.astype(np.uint8), "RGBA")
 
 
+def _has_interior_holes(img_rgba, hole_threshold=0.02):
+    """Detect if SAM created holes inside the subject (white cat problem).
+
+    Compares the convex-hull area of non-transparent pixels against the actual
+    non-transparent area.  A large difference means SAM punched holes in the subject.
+    """
+    arr = np.array(img_rgba)
+    if arr.shape[2] < 4:
+        return False
+    alpha = arr[:, :, 3] > 10
+    rows, cols = np.where(alpha)
+    if len(rows) == 0:
+        return False
+
+    # Bounding box area of content
+    bbox_area = (rows.max() - rows.min() + 1) * (cols.max() - cols.min() + 1)
+    content_area = np.sum(alpha)
+
+    # Content within bounding box should be mostly filled
+    # If SAM ate holes, fill ratio inside bbox will be low
+    fill_ratio = content_area / bbox_area if bbox_area > 0 else 1.0
+
+    # Compare SAM result against raw to detect missing body parts.
+    # Check if there are transparent patches surrounded by opaque pixels
+    # (SAM ate through the subject).
+    cropped_alpha = alpha[rows.min():rows.max()+1, cols.min():cols.max()+1]
+    h, w = cropped_alpha.shape
+
+    # Scan for interior transparent holes using morphological analysis:
+    # dilate the alpha, then check if dilated - original has interior patches
+    from scipy import ndimage
+    dilated = ndimage.binary_dilation(cropped_alpha, iterations=3)
+    holes_mask = dilated & ~cropped_alpha
+    # Exclude edge regions (top/bottom 5%) where gaps are expected
+    interior_holes = holes_mask[int(h*0.05):int(h*0.95), int(w*0.05):int(w*0.95)]
+    hole_ratio = np.sum(interior_holes) / interior_holes.size if interior_holes.size > 0 else 0
+
+    if hole_ratio > hole_threshold:
+        return True
+
+    return False
+
+
 def remove_background(raw_path, nobg_path):
     """Decide which background-removal strategy to use and return an RGBA image.
 
-    Prefers the SAM nobg image.  Falls back to flood fill if SAM ate too much.
+    Prefers the SAM nobg image.  Falls back to flood fill if SAM ate too much
+    or if SAM created holes inside the subject (white cat problem).
 
     Args:
         raw_path: Path to the raw (with background) PNG.
@@ -189,13 +233,38 @@ def remove_background(raw_path, nobg_path):
     Returns:
         PIL RGBA image with background removed.
     """
-    # Try SAM result first
+    # Try SAM result first, but compare with flood-fill to pick the better one
+    sam_img = None
     if nobg_path and os.path.exists(nobg_path):
         sam_img = Image.open(nobg_path).convert("RGBA")
         ratio = _content_ratio(sam_img)
-        if ratio >= config.SAM_CONTENT_RATIO_MIN:
-            return sam_img
-        print(f"    SAM content ratio too low ({ratio:.2%}), falling back to flood fill.")
+        if ratio < config.SAM_CONTENT_RATIO_MIN:
+            print(f"    SAM content ratio too low ({ratio:.2%}), using flood fill.")
+            sam_img = None
+        elif _has_interior_holes(sam_img):
+            print(f"    SAM created holes in subject, using flood fill.")
+            sam_img = None
+
+    # Always compute flood-fill for comparison
+    flood_img = None
+    if raw_path and os.path.exists(raw_path):
+        raw_img = Image.open(raw_path).convert("RGBA")
+        flood_img = flood_fill_remove_bg(raw_img)
+
+    # If SAM passed checks, compare: pick whichever preserves more content
+    if sam_img is not None and flood_img is not None:
+        sam_content = _content_ratio(sam_img)
+        flood_content = _content_ratio(flood_img)
+        # If flood-fill preserves significantly more (>5% more), SAM likely ate body parts
+        if flood_content > sam_content + 0.05:
+            print(f"    Flood-fill preserves more ({flood_content:.1%} vs SAM {sam_content:.1%}), using flood fill.")
+            return flood_img
+        return sam_img
+    elif sam_img is not None:
+        return sam_img
+    elif flood_img is not None:
+        print(f"    Applying flood-fill background removal...")
+        return flood_img
 
     # Fallback: flood fill on raw image
     if raw_path and os.path.exists(raw_path):
