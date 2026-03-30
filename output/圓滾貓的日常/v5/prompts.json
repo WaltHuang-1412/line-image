@@ -14,7 +14,7 @@
     {"id": 8, "emotion": "救命", "prompt": "both paws on cheeks, screaming with wide open mouth, shocked horrified eyes, panicking, terrified crying"},
     {"id": 9, "emotion": "摸魚", "prompt": "sleeping at desk with eyes closed, drooling, one paw dangling off edge, peaceful napping face, zzz"},
     {"id": 10, "emotion": "午餐", "prompt": "holding bento box up high, sparkling excited eyes, huge happy smile, drooling, lunchtime joy"},
-    {"id": 11, "emotion": "好累", "prompt": "sitting slouched forward, eyes barely open, drooping head, both paws hanging limp at sides, completely drained, exhausted sitting pose"},
+    {"id": 11, "emotion": "好累", "prompt": "eyes closed, head tilted down, sweating, both paws drooping, tired yawning mouth, sleepy exhausted face, dark circles under eyes"},
     {"id": 12, "emotion": "下班", "prompt": "peace sign with one paw, winking one eye, big cheerful grin, carefree happy expression, bye bye pose"},
     {"id": 13, "emotion": "不想上班", "prompt": "curled up hiding under blanket, only ears and eyes peeking out, sad reluctant expression, refusing to get up"},
     {"id": 14, "emotion": "薪水", "prompt": "holding gold coin in both paws, heart shaped eyes, blushing, drooling slightly, greedy happy expression, money love"},
