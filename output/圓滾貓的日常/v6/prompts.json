@@ -1,0 +1,24 @@
+{
+  "title": "圓滾貓的情侶日常",
+  "description": "圓滾滾灰貓的戀愛日常！黏人、撒嬌、鬧彆扭...16種情侶必備貼圖",
+  "style_prefix": "1cat, solo, simple background, white background, full body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, sticker, round chubby body, blush stickers, big head small body, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, centered composition, correct anatomy, no text, grey cat",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana",
+  "stickers": [
+    {"id": 1,  "emotion": "黏你",   "prompt": "hugging a large red heart tightly with both paws, eyes closed contentedly, cheek pressed against heart, blissful smile, rosy cheeks"},
+    {"id": 2,  "emotion": "討抱",   "prompt": "both arms stretched wide open reaching forward, enormous watery puppy eyes, mouth open in a whimper, desperate adorable begging pose, clean composition"},
+    {"id": 3,  "emotion": "鬧彆扭", "prompt": "sitting with back turned, arms crossed, cheeks puffed, one eye glancing back suspiciously, sulking pouty expression"},
+    {"id": 4,  "emotion": "和好",   "prompt": "shy tentative smile, one paw gently reaching forward, rosy blush on cheeks, eyes slightly downcast, reconciling expression"},
+    {"id": 5,  "emotion": "不理你", "prompt": "facing away completely, nose tilted up in the air, arms crossed firmly, tail flicking, haughty ignoring pose"},
+    {"id": 6,  "emotion": "陪我",   "prompt": "grabbing with both paws and clinging, wide desperate pleading eyes, mouth open begging, do not let go expression"},
+    {"id": 7,  "emotion": "親親",   "prompt": "lips puckered forward for a kiss, eyes closed, leaning in slightly, deep rosy blush on cheeks, sweet anticipating expression"},
+    {"id": 8,  "emotion": "你最好了","prompt": "heart-shaped sparkling eyes, huge beaming smile, both paws giving double thumbs up, radiant happy expression, stars around"},
+    {"id": 9,  "emotion": "好喜歡你","prompt": "deeply blushing red cheeks, both paws covering face shyly, eyes peeking over paws, embarrassed overwhelmed happy expression"},
+    {"id": 10, "emotion": "好想你", "prompt": "teary glistening eyes, hugging a pillow tightly, lower lip trembling, longing sad expression, missing someone"},
+    {"id": 11, "emotion": "等你",   "prompt": "sitting upright with arms crossed, bored impatient expression, eyes half-closed, foot tapping, waiting and sulking, no speech bubble, no text bubble"},
+    {"id": 12, "emotion": "幫我",   "prompt": "both paws pressed together in pleading prayer, wide innocent eyes, small hopeful smile, begging expression"},
+    {"id": 13, "emotion": "你壞壞", "prompt": "one paw pointing forward accusingly, stern face with narrowed eyes, puffed cheeks, blush marks, pretend-angry expression, clean white background"},
+    {"id": 14, "emotion": "人家嘛", "prompt": "one paw resting on cheek, pouty lips, droopy sad eyes, whining spoiled expression, head tilted slightly"},
+    {"id": 15, "emotion": "撒嬌",   "prompt": "lying on back with all four paws in the air, irresistible belly-up pose, wide sparkling cute eyes, completely adorable vulnerable expression"},
+    {"id": 16, "emotion": "嫉妒",   "prompt": "narrowed half-closed jealous eyes glaring sideways, arms crossed tight, puffed angry cheeks, furrowed brows, displeased sulking face, no smile, no text, no letters, no writing"}
+  ]
+}
