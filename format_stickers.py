@@ -384,7 +384,7 @@ def optimize_png(img, max_size_kb=config.MAX_FILE_SIZE_KB):
 # Main format pass
 # ---------------------------------------------------------------------------
 
-def format_all(theme, version):
+def format_all(theme, version, lang=None):
     """Process all raw images into LINE-ready stickers.
 
     Looks for pairs of:
@@ -394,14 +394,17 @@ def format_all(theme, version):
     Also accepts the old naming convention (sticker_{N:02d}.png) for
     backwards compatibility with existing raw directories.
 
-    Outputs:
-      formatted/sticker_{N:02d}.png  - LINE sticker (370x320)
-      formatted/main.png             - cover image (240x240), from sticker #1
-      formatted/tab.png              - tab image (96x74), from sticker #1
+    If lang is given (e.g. "ja", "zh"), reads emotions from
+    {version}/{lang}/prompts.json and outputs to {version}/{lang}/.
+    Otherwise outputs to {version}/formatted/.
     """
     paths = config.get_paths(theme, version)
     raw_dir = paths["raw"]
-    fmt_dir = paths["formatted"]
+    if lang:
+        ver_dir = config.get_version_dir(theme, version)
+        fmt_dir = os.path.join(ver_dir, lang)
+    else:
+        fmt_dir = paths["formatted"]
     os.makedirs(fmt_dir, exist_ok=True)
 
     # Collect sticker indices from raw directory
@@ -445,7 +448,13 @@ def format_all(theme, version):
         return
 
     # Load prompts.json for text overlay
-    prompts_file = config.get_prompts_file(theme, version)
+    if lang:
+        ver_dir = config.get_version_dir(theme, version)
+        prompts_file = os.path.join(ver_dir, lang, "prompts.json")
+        if not os.path.exists(prompts_file):
+            prompts_file = config.get_prompts_file(theme, version)
+    else:
+        prompts_file = config.get_prompts_file(theme, version)
     text_map = {}
     if os.path.exists(prompts_file):
         with open(prompts_file, "r", encoding="utf-8") as pf:

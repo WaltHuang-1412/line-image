@@ -74,11 +74,12 @@ def cmd_generate(theme, version):
     generate_all(theme, version)
 
 
-def cmd_format(theme, version):
+def cmd_format(theme, version, lang=None):
     """Format raw images to LINE spec."""
-    _section(f"FORMAT  [{theme}/{version}]")
+    label = f"{theme}/{version}" + (f"/{lang}" if lang else "")
+    _section(f"FORMAT  [{label}]")
     from format_stickers import format_all
-    format_all(theme, version)
+    format_all(theme, version, lang=lang)
 
 
 def cmd_package(theme, version):
@@ -224,10 +225,13 @@ def main():
 
     elif cmd == "format":
         if len(args) < 3:
-            print("Usage: python main.py format <theme> <version>")
+            print("Usage: python main.py format <theme> <version> [--lang zh|ja]")
             sys.exit(1)
         theme, version = args[1], args[2]
-        cmd_format(theme, version)
+        lang = None
+        if "--lang" in args:
+            lang = args[args.index("--lang") + 1]
+        cmd_format(theme, version, lang=lang)
 
     elif cmd == "package":
         if len(args) < 3:
