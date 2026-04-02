@@ -4,3 +4,6 @@ ComfyUI/
 # raw files are large and regenerable, exclude them
 output/*/v*/raw/
 v3.png
+# sensitive session/credentials
+line_session.json
+api_log.json
