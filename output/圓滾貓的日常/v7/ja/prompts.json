@@ -1,0 +1,22 @@
+{
+  "title": "まんまるネコの友達日常",
+  "description": "まんまるグレー猫の友達日常！誘う、笑う、驚く...グループチャット必須の16種スタンプ",
+  "stickers": [
+    {"id": 1,  "emotion": "遊ぼ！"},
+    {"id": 2,  "emotion": "いいね"},
+    {"id": 3,  "emotion": "お先に"},
+    {"id": 4,  "emotion": "まってー"},
+    {"id": 5,  "emotion": "どこ？"},
+    {"id": 6,  "emotion": "ついた！"},
+    {"id": 7,  "emotion": "なんでも"},
+    {"id": 8,  "emotion": "おまかせ"},
+    {"id": 9,  "emotion": "ウケる"},
+    {"id": 10, "emotion": "マジ？"},
+    {"id": 11, "emotion": "行かないで"},
+    {"id": 12, "emotion": "会いたい"},
+    {"id": 13, "emotion": "貸して"},
+    {"id": 14, "emotion": "返して"},
+    {"id": 15, "emotion": "ありがと"},
+    {"id": 16, "emotion": "バイバイ"}
+  ]
+}

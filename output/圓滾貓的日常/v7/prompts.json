@@ -1,0 +1,24 @@
+{
+  "title": "圓滾貓的朋友日常",
+  "description": "圓滾滾灰貓的朋友社交日常！揪團、+1、笑死、真假...16種群組必備貼圖",
+  "style_prefix": "1cat, solo, simple background, white background, full body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, sticker, round chubby body, blush stickers, big head small body, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, centered composition, correct anatomy, no text, grey cat",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana",
+  "stickers": [
+    {"id": 1,  "emotion": "約嗎",   "prompt": "one paw waving enthusiastically, excited wide grin, eyes sparkling with anticipation, energetic inviting gesture, beckoning pose"},
+    {"id": 2,  "emotion": "+1",     "prompt": "one paw raised high giving a big thumbs up, confident smirk, eyes closed with satisfaction, bold approving pose"},
+    {"id": 3,  "emotion": "先走了", "prompt": "one paw raised in a small wave goodbye, turning away slightly, calm relaxed smile, casual farewell pose, walking away"},
+    {"id": 4,  "emotion": "等等我", "prompt": "running forward frantically with both paws reaching out, panicked wide eyes, mouth open yelling, desperate chasing pose, sweat drops"},
+    {"id": 5,  "emotion": "在哪",   "prompt": "one paw above eyes like a visor searching, squinting eyes looking left and right, confused searching expression, standing on tiptoes"},
+    {"id": 6,  "emotion": "到了",   "prompt": "both paws raised triumphantly in the air, big proud smile, eyes closed happily, victorious arrival pose, sparkles around"},
+    {"id": 7,  "emotion": "隨便",   "prompt": "lying on side lazily, half-closed bored eyes, one paw waving dismissively, completely indifferent expression, limp body"},
+    {"id": 8,  "emotion": "都可以", "prompt": "both paws open shrugging, gentle easygoing smile, tilted head, relaxed unbothered expression, go with the flow pose"},
+    {"id": 9,  "emotion": "笑死",   "prompt": "rolling on back laughing hysterically, tears streaming from eyes, mouth wide open, belly shaking, uncontrollable laughter, paws in air"},
+    {"id": 10, "emotion": "真假",   "prompt": "jaw dropped wide open, eyes bulging in shock, both paws on cheeks, stunned disbelief expression, dramatic surprise pose"},
+    {"id": 11, "emotion": "不要走", "prompt": "grabbing forward desperately with both paws, teary watery eyes, trembling lower lip, dramatic pleading expression, reaching out"},
+    {"id": 12, "emotion": "想你們", "prompt": "hugging a pillow gently, soft warm smile, slightly teary glistening eyes, nostalgic fond expression, missing friends"},
+    {"id": 13, "emotion": "借我",   "prompt": "both paws pressed together in prayer position, wide sparkling begging eyes, nervous hopeful grin, shameless pleading pose"},
+    {"id": 14, "emotion": "還我",   "prompt": "one paw pointing forward demandingly, stern serious face, narrowed angry eyes, tapping foot impatiently, debt collector pose"},
+    {"id": 15, "emotion": "謝啦",   "prompt": "slight bow with one paw behind head, grateful warm smile, eyes closed happily, humble thankful expression, appreciative gesture"},
+    {"id": 16, "emotion": "掰掰",   "prompt": "both paws waving goodbye enthusiastically, big cheerful smile, eyes squeezed shut with joy, energetic farewell pose"}
+  ]
+}
