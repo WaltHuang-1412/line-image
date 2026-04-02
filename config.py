@@ -34,6 +34,11 @@ NEGATIVE_PROMPT = (
     "extra limbs, japanese text, kanji, hiragana, katakana"
 )
 
+# === Per-theme defaults (overridable via prompts.json) ===
+SAM_DETECT_PROMPT = "cat"
+CHARACTER_DESC = "round chubby grey cat, ink painting style"
+CHARACTER_PARTS = "ears, belly, paws"
+
 # === LINE Sticker Specs ===
 STICKER_MAX_W = 370
 STICKER_MAX_H = 320

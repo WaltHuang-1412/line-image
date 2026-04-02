@@ -56,27 +56,29 @@ def ask_ollama(image_path, prompt):
     return result.get("response", "")
 
 
-def check_sticker(image_path, emotion, is_raw=False):
+def check_sticker(image_path, emotion, is_raw=False, character_desc=None, character_parts=None):
     """Single ollama call covering all QA checks. Returns raw response string."""
+    desc = character_desc or config.CHARACTER_DESC
+    parts = character_parts or config.CHARACTER_PARTS
     if is_raw:
         prompt = (
-            f'LINE sticker — round chubby grey cat, ink painting style. '
+            f'LINE sticker — {desc}. '
             f'Intended emotion: "{emotion}".\n\n'
             f'Answer each line exactly as shown:\n'
-            f'SEMANTIC: YES or NO — does the cat expression match "{emotion}"?\n'
+            f'SEMANTIC: YES or NO — does the character expression match "{emotion}"?\n'
             f'TEXT: NO — or YES:"exact unwanted text" (ignore punctuation/symbols/decorative marks)\n'
             f'QUALITY: 1-5 — one sentence reason'
         )
     else:
         prompt = (
-            f'LINE sticker — round chubby grey cat, ink painting style. '
+            f'LINE sticker — {desc}. '
             f'The Chinese label "{emotion}" is intentional — ignore it.\n\n'
             f'Answer each line exactly as shown:\n'
-            f'SEMANTIC: YES or NO — does the cat expression match "{emotion}"?\n'
+            f'SEMANTIC: YES or NO — does the character expression match "{emotion}"?\n'
             f'TEXT: NO — or YES:"exact unwanted text" (ignore the "{emotion}" label and punctuation/symbols)\n'
             f'BG: CLEAN or DIRTY — ink brush strokes and shadows are NORMAL; '
             f'mark DIRTY only for large opaque patches, rectangular artifacts, '
-            f'or clearly cut-off body parts (ears, belly, paws)\n'
+            f'or clearly cut-off body parts ({parts})\n'
             f'QUALITY: 1-5 — one sentence reason'
         )
     return ask_ollama(image_path, prompt)
@@ -151,6 +153,8 @@ def run_qa(theme, version, sticker_ids=None, check_raw=False, lang=None):
         pdata = json.load(f)
 
     sticker_defs = {s["id"]: s for s in pdata.get("stickers", [])}
+    character_desc = pdata.get("character_desc", None)
+    character_parts = pdata.get("character_parts", None)
 
     if sticker_ids is None:
         sticker_ids = sorted(sticker_defs.keys())
@@ -191,7 +195,7 @@ def run_qa(theme, version, sticker_ids=None, check_raw=False, lang=None):
 
         print(f"  #{sid:02d} [{emotion}] checking...", end="", flush=True)
         try:
-            response = check_sticker(img_path, emotion, is_raw=check_raw)
+            response = check_sticker(img_path, emotion, is_raw=check_raw, character_desc=character_desc, character_parts=character_parts)
             issues = parse_pass_fail(response, is_raw=check_raw)
         except urllib.error.URLError as e:
             print(f" ERROR (ollama: {e})")

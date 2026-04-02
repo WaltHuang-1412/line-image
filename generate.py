@@ -78,7 +78,7 @@ def upload_image(filepath, server_url=config.COMFYUI_URL):
 # SAM-based generation
 # ---------------------------------------------------------------------------
 
-def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed=None, negative_prompt=None):
+def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed=None, negative_prompt=None, sam_detect_prompt=None, ipadapter_weight=None):
     """Generate one sticker using the generate_with_sam.json workflow.
 
     The workflow produces two saved images per run:
@@ -116,7 +116,10 @@ def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed
         workflow["12"]["inputs"]["image"] = config.IPADAPTER_REFERENCE_IMAGE
 
     # IP-Adapter weight
-    workflow["13"]["inputs"]["weight"] = config.IPADAPTER_WEIGHT
+    workflow["13"]["inputs"]["weight"] = ipadapter_weight if ipadapter_weight is not None else config.IPADAPTER_WEIGHT
+
+    # SAM GroundingDINO detect prompt
+    workflow["22"]["inputs"]["prompt"] = sam_detect_prompt or config.SAM_DETECT_PROMPT
 
     # File name prefixes for SaveImage nodes
     workflow["9"]["inputs"]["filename_prefix"] = f"sticker_{index:02d}"
@@ -180,6 +183,8 @@ def generate_all(theme, version, sticker_ids=None):
     stickers = data["stickers"]
     style_prefix = data.get("style_prefix", "")
     negative_prompt = data.get("negative_prompt", None)
+    sam_detect_prompt = data.get("sam_detect_prompt", None)
+    ipadapter_weight = data.get("ipadapter_weight", None)
 
     # Filter to requested sticker IDs if provided
     if sticker_ids:
@@ -189,7 +194,22 @@ def generate_all(theme, version, sticker_ids=None):
             return []
 
     # Ensure reference image is uploaded to ComfyUI
-    ref_local = config.REFERENCE_IMAGE
+    # Per-theme reference image: check prompts.json, then theme dir, then global default
+    ref_image_cfg = data.get("reference_image", None)
+    if ref_image_cfg:
+        # Try as path relative to theme/version dir, then theme dir, then absolute/base dir
+        candidates = [
+            os.path.join(config.get_version_dir(theme, version), ref_image_cfg),
+            os.path.join(config.get_theme_dir(theme), ref_image_cfg),
+            os.path.join(config.BASE_DIR, ref_image_cfg),
+        ]
+        ref_local = next((c for c in candidates if os.path.exists(c)), None)
+        if not ref_local:
+            print(f"  Warning: reference_image '{ref_image_cfg}' not found, using global default.")
+            ref_local = config.REFERENCE_IMAGE
+    else:
+        ref_local = config.REFERENCE_IMAGE
+
     if os.path.exists(ref_local):
         print(f"\nUploading reference image to ComfyUI: {ref_local}")
         ref_name = upload_image(ref_local)
@@ -208,7 +228,7 @@ def generate_all(theme, version, sticker_ids=None):
         full_prompt = f"{style_prefix}, {prompt_text}" if style_prefix else prompt_text
         seed = sticker.get("seed")
 
-        raw_path, nobg_path = generate_with_sam(full_prompt, idx, raw_dir, ref_name, seed, negative_prompt)
+        raw_path, nobg_path = generate_with_sam(full_prompt, idx, raw_dir, ref_name, seed, negative_prompt, sam_detect_prompt, ipadapter_weight)
         results.append({"id": idx, "raw": raw_path, "nobg": nobg_path})
 
     print(f"\nDone! {len(results)} stickers generated in {raw_dir}")

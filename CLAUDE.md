@@ -24,9 +24,14 @@ python main.py fix <theme> <version> <id> [<id> ...]
 python main.py list
 ```
 
-ComfyUI must be running before generate/fix:
+ComfyUI must be running before generate/fix (auto-start if not running):
 ```bash
-cd ComfyUI && python main.py --listen
+cd ComfyUI && python main.py --listen    # run in background
+```
+
+Ollama must be running before QA:
+```bash
+ollama serve                              # if not already running
 ```
 
 ## Architecture
@@ -102,6 +107,11 @@ SAM segments by detecting "cat" via GroundingDINO. When the subject is white/lig
   "description": "Pack description",
   "style_prefix": "prepended to all prompts",
   "negative_prompt": "overrides config.NEGATIVE_PROMPT if set",
+  "sam_detect_prompt": "cat",
+  "reference_image": "v3.png",
+  "ipadapter_weight": 0.5,
+  "character_desc": "round chubby grey cat, ink painting style",
+  "character_parts": "ears, belly, paws",
   "stickers": [
     {"id": 1, "emotion": "smug", "prompt": "sly smirk, half-closed eyes", "seed": 12345},
     {"id": 2, "emotion": "angry", "prompt": "puffed up, red face"}
@@ -112,6 +122,18 @@ SAM segments by detecting "cat" via GroundingDINO. When the subject is white/lig
 - `style_prefix` is concatenated with each sticker's `prompt`. `seed` is optional (random if omitted).
 - `negative_prompt` overrides `config.NEGATIVE_PROMPT` when set. Always save the actual negative prompt used here to preserve reproducibility.
 - `emotion` field is used as text overlay during format step.
+
+### Per-theme Config (all optional, fallback to config.py defaults)
+
+| Field | Default | Purpose |
+|-------|---------|---------|
+| `sam_detect_prompt` | `"cat"` | GroundingDINO detection word for SAM segmentation (workflow node 22) |
+| `reference_image` | `v3.png` | IP-Adapter reference image. Searched in: version dir → theme dir → project root |
+| `ipadapter_weight` | `0.5` | IP-Adapter style conditioning strength |
+| `character_desc` | `"round chubby grey cat, ink painting style"` | Used in QA prompts to describe the character |
+| `character_parts` | `"ears, belly, paws"` | Body parts listed in QA bg-check prompt for cutoff detection |
+
+Old prompts.json files without these fields work unchanged — all fallback to `config.py` constants.
 
 ### Format Text Overlay
 
@@ -136,13 +158,64 @@ Each language folder contains the final formatted stickers ready for packaging. 
 
 ## Development Workflow
 
-1. **Design style** — Test prompts + IP-Adapter in ComfyUI UI, lock down `v3.png` reference image
+1. **Design style** — Test prompts + IP-Adapter in ComfyUI UI, lock down reference image
 2. **Record settings** — Save the working `style_prefix` and `negative_prompt` into prompts.json (extract from PNG metadata if needed: `PIL.Image.open(img).info['prompt']`)
-3. **Plan content** — Define 16 emotions + action prompts in prompts.json
-4. **Generate** — `python main.py generate <theme> <version>`
-5. **Review raw** — Check each raw image for: wrong expression, extra limbs, text artifacts, non-white background
-6. **Fix bad ones** — `python main.py fix <theme> <version> <id>` then `python main.py format <theme> <version>`
-7. **Review formatted** — Check background removal quality, text overlay, sizing
-8. **Copy to language folder** — Copy final formatted/ to zh/ (or ja/ for Japanese)
-9. **Package** — `python main.py package <theme> <version>`
-10. **Prepare listing** — Write title/description in 3 languages, save to listing.md
+3. **Plan content** — Define 16 emotions + action prompts in prompts.json. Check against all v3+ emotions to avoid duplicates.
+4. **Generate** — Start ComfyUI if not running, then `python main.py generate <theme> <version>`
+5. **Raw QA** — Run full QA checklist on every raw image (see QA Checklist below). Fix failures and re-QA until all pass.
+6. **Format zh** — `python main.py format <theme> <version> --lang zh`. Do NOT format to ja/ until zh is confirmed.
+7. **zh QA** — Run full QA checklist on zh/ stickers. Fix and re-format until all pass.
+8. **User confirms zh** — Wait for explicit user approval before proceeding.
+9. **Format ja** — Create `ja/prompts.json` with Japanese emotions, then `python main.py format <theme> <version> --lang ja`
+10. **ja QA** — Run full QA checklist on ja/ stickers.
+11. **User confirms ja** — Wait for explicit user approval.
+12. **Package** — `python main.py package <theme> <version>`
+13. **Prepare listing** — Write title/description in 3 languages, save to listing.md
+
+## QA Checklist
+
+Use Ollama (`qa_vision.py` or custom prompts with gemma3:4b) for all image checks. Never use Claude tokens on images.
+
+### Raw QA (every sticker, no exceptions)
+
+| Check | What to look for | Auto-pass criteria |
+|-------|------------------|--------------------|
+| **Style consistency** | Same character, same art style across all 16 | All match reference |
+| **Anatomy** | Extra limbs, fused legs, missing body parts, deformed face | None found |
+| **Semantic match** | Expression/pose matches intended emotion | YES (relax for abstract social emotions) |
+| **Text artifacts** | AI-generated random text in the image | None found |
+| **Quality / Aesthetics** | Clean, appealing, sellable as a commercial sticker | Score >= 3, no ugly/broken |
+| **nobg quality** | SAM didn't eat body parts, no holes in subject | Visual check, not just content ratio |
+
+### Formatted / Language QA (every sticker)
+
+| Check | What to look for | Auto-pass criteria |
+|-------|------------------|--------------------|
+| **Background** | Fully transparent, no leftover color patches or artifacts | CLEAN |
+| **Body cutoff** | Cat body parts not clipped at image edges | None cut off |
+| **Text overlay** | Label displays correctly, positioned right, doesn't cover cat face | Correct |
+| **Background removal** | No remnants from flood-fill or SAM, clean edges | Clean |
+| **Overall quality** | Commercial-grade sticker, would you buy it? | Score >= 3 |
+
+### QA Rules
+
+- **Check ALL items** — never skip checks because one category failed. Semantic fail does not excuse skipping anatomy/text/quality.
+- **Don't trust numbers alone** — content ratio OK doesn't mean nobg is OK. Visually verify.
+- **Ollama PASS is not user PASS** — QA passing means ready for user review, not approved for production.
+- **Fix → re-QA → confirm** — every fix must be followed by re-QA of the fixed stickers. Loop until all pass.
+- **Don't advance stages without user confirmation** — zh must be user-approved before ja. ja must be user-approved before package.
+- **Second-pass flagged items** — when Ollama flags TEXT or CUTOFF, run a focused second check before marking as real failure. Ollama frequently misreports Chinese labels as unwanted text.
+
+### Ollama Known Limitations (gemma3:4b)
+
+- **Semantic check unreliable for non-expression emotions** — social/action concepts (約嗎, +1, 在哪) can't be matched to facial expressions. Expect false negatives; don't skip other checks because of semantic failures.
+- **TEXT false positives** — frequently flags intentional Chinese text labels or decorative marks (～！？) as unwanted text. Always do a second-pass confirmation.
+- **CUTOFF false positives** — may confuse text overlay areas near edges with body cutoff. Confirm with a focused prompt.
+- **Inconsistent response format** — sometimes doesn't follow the requested answer format. Parse defensively and fall back to detailed prompts when structured QA fails.
+
+### Operations Notes
+
+- **Auto-start ComfyUI** — if ComfyUI is not running, start it yourself with `cd ComfyUI && python main.py --listen` (run_in_background). Never ask the user to start it.
+- **GPU memory** — after timeouts or multiple generations, free ComfyUI memory with `POST http://127.0.0.1:8188/free` before retrying.
+- **Japanese format encoding** — use `PYTHONIOENCODING=utf-8` when running format with `--lang ja` to avoid cp950 encoding errors on Windows.
+- **fix command does NOT apply text overlay** — always run `python main.py format <theme> <version> --lang <lang>` after fix to get proper text overlays.
