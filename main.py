@@ -82,11 +82,12 @@ def cmd_format(theme, version, lang=None):
     format_all(theme, version, lang=lang)
 
 
-def cmd_package(theme, version):
+def cmd_package(theme, version, lang=None):
     """Package formatted stickers into a ZIP."""
-    _section(f"PACKAGE  [{theme}/{version}]")
+    label = f"{theme}/{version}" + (f"/{lang}" if lang else "")
+    _section(f"PACKAGE  [{label}]")
     from package import create_package
-    create_package(theme, version)
+    create_package(theme, version, lang=lang)
 
 
 def cmd_all(theme, version):
@@ -235,10 +236,13 @@ def main():
 
     elif cmd == "package":
         if len(args) < 3:
-            print("Usage: python main.py package <theme> <version>")
+            print("Usage: python main.py package <theme> <version> [--lang zh|ja]")
             sys.exit(1)
         theme, version = args[1], args[2]
-        cmd_package(theme, version)
+        lang = None
+        if "--lang" in args:
+            lang = args[args.index("--lang") + 1]
+        cmd_package(theme, version, lang=lang)
 
     elif cmd == "all":
         if len(args) < 2:

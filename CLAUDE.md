@@ -200,7 +200,7 @@ Triggered by: user explicitly requests a full pipeline step (generate, format, Q
 16. **ja QA** — Run full QA checklist on ja/ stickers.
 17. **User confirms ja** — Wait for explicit user approval.
 18. **Package** — `python main.py package <theme> <version>`
-19. **Prepare listing** — Write title/description in 3 languages, save to listing.md
+19. **Prepare listing** — Write title/description in 3 languages, save to listing.md. For ja version, append「日文篇」/「日本語編」/「- Japanese」to zh/ja/en titles to avoid duplicate rejection on LINE Creators Market.
 20. **Commit** — Commit all output files to git.
 
 ## QA Checklist

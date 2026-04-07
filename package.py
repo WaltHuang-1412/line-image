@@ -7,21 +7,27 @@ import zipfile
 import config
 
 
-def create_package(theme, version):
+def create_package(theme, version, lang=None):
     """Create a ZIP file with all formatted stickers + metadata.
 
-    Reads from:  output/{theme}/{version}/formatted/
-    Writes to:   output/{theme}/{version}/package/stickers.zip
-                 output/{theme}/{version}/package/metadata.json
+    Reads from:  output/{theme}/{version}/{lang}/ (if lang given)
+                 output/{theme}/{version}/formatted/ (fallback)
+    Writes to:   output/{theme}/{version}/{lang}/package/ (if lang given)
+                 output/{theme}/{version}/package/ (fallback)
 
     The ZIP contains:
       main.png        - cover image (240x240)
       tab.png         - tab image (96x74)
       01.png ... NN.png - sticker images (370x320), numbered sequentially
     """
-    paths = config.get_paths(theme, version)
-    fmt_dir = paths["formatted"]
-    pkg_dir = paths["package"]
+    ver_dir = config.get_version_dir(theme, version)
+    if lang:
+        fmt_dir = os.path.join(ver_dir, lang)
+        pkg_dir = os.path.join(ver_dir, lang, "package")
+    else:
+        paths = config.get_paths(theme, version)
+        fmt_dir = paths["formatted"]
+        pkg_dir = paths["package"]
     os.makedirs(pkg_dir, exist_ok=True)
 
     sticker_files = sorted(glob.glob(os.path.join(fmt_dir, "sticker_*.png")))
@@ -83,4 +89,7 @@ if __name__ == "__main__":
     import sys
     theme = sys.argv[1] if len(sys.argv) > 1 else "default"
     version = sys.argv[2] if len(sys.argv) > 2 else config.get_latest_version(theme) or "v1"
-    create_package(theme, version)
+    lang = None
+    if "--lang" in sys.argv:
+        lang = sys.argv[sys.argv.index("--lang") + 1]
+    create_package(theme, version, lang=lang)

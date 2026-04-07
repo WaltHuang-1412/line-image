@@ -5,6 +5,8 @@ Usage:
 
 Opens browser with your saved session. Manually fill in and submit the sticker
 form. All API calls are printed and saved to api_log.json for analysis.
+
+Press Enter in the terminal when done to save the log.
 """
 import json
 import os
@@ -14,8 +16,11 @@ SESSION_FILE = os.path.join(os.path.dirname(__file__), "line_session.json")
 LOG_FILE = os.path.join(os.path.dirname(__file__), "api_log.json")
 LINE_DASHBOARD_URL = "https://creator.line.me/my/7LHIQLNaztCXeJE8/sticker/?status=all&query=&page=1"
 
-IGNORE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".css")
-IGNORE_PREFIXES = ("https://www.google", "https://fonts.", "https://static.", "https://sentry")
+IGNORE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".css", ".js")
+IGNORE_PREFIXES = (
+    "https://www.google", "https://fonts.", "https://static.", "https://sentry",
+    "https://d.line-scdn.net", "https://optout-api", "https://uts-front",
+)
 
 
 def should_record(url: str) -> bool:
@@ -37,61 +42,72 @@ def run():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         ctx = browser.new_context(storage_state=SESSION_FILE)
-        page = ctx.new_page()
 
+        # Use context-level listeners so they survive page navigations and redirects
         def on_request(request):
+            if not should_record(request.url):
+                return
             entry = {
                 "method": request.method,
                 "url": request.url,
                 "post_data": request.post_data,
             }
             log.append(entry)
-            print(f"  [{request.method}] {request.url[:120]}")
+            if request.method in ("POST", "PUT", "PATCH", "DELETE"):
+                print(f"  >>> [{request.method}] {request.url[:150]}")
+                if request.post_data:
+                    print(f"      body: {request.post_data[:300]}")
+            else:
+                print(f"  [{request.method}] {request.url[:150]}")
 
         def on_response(response):
             if not should_record(response.url):
                 return
+            if response.request.method not in ("POST", "PUT", "PATCH", "DELETE", "GET"):
+                return
             try:
-                body = response.json()
+                text = response.text()
+                # LINE API responses have XSS protection prefix )]}'
+                if text.startswith(")]}'"):
+                    text = text[text.index("\n") + 1:] if "\n" in text else text[4:]
+                body = json.loads(text)
                 for entry in reversed(log):
-                    if entry["url"] == response.url:
+                    if entry["url"] == response.url and "response" not in entry:
+                        entry["response_status"] = response.status
                         entry["response"] = body
                         break
-                print(f"<<< {response.status} {json.dumps(body, ensure_ascii=False)[:200]}")
+                if response.request.method in ("POST", "PUT", "PATCH", "DELETE"):
+                    print(f"  <<< {response.status} {json.dumps(body, ensure_ascii=False)[:300]}")
             except Exception:
                 pass
 
-        def on_websocket(ws):
-            print(f"\n[WS OPEN] {ws.url}")
-            ws_entry = {"type": "websocket", "url": ws.url, "messages": []}
-            log.append(ws_entry)
+        ctx.on("request", on_request)
+        ctx.on("response", on_response)
 
-            def on_send(payload):
-                print(f"  [WS SEND] {str(payload)[:200]}")
-                ws_entry["messages"].append({"dir": "send", "data": payload})
-
-            def on_recv(payload):
-                print(f"  [WS RECV] {str(payload)[:200]}")
-                ws_entry["messages"].append({"dir": "recv", "data": payload})
-
-            ws.on("framesent", lambda p: on_send(p))
-            ws.on("framereceived", lambda p: on_recv(p))
-
-        page.on("request", on_request)
-        page.on("response", on_response)
-        page.on("websocket", on_websocket)
-
+        page = ctx.new_page()
         page.goto(LINE_DASHBOARD_URL)
-        print("Browser opened. Manually complete the full sticker upload flow.")
-        print("All POST/PUT/PATCH requests will be recorded.")
-        print("When done, press Enter here to save the log.\n")
+
+        print("\n" + "=" * 60)
+        print("  Browser opened. Complete the full sticker upload flow.")
+        print("  All API calls are being recorded (context-level).")
+        print("  Press Enter here when done to save the log.")
+        print("=" * 60 + "\n")
 
         input(">> Press Enter to save log and close...")
 
-        with open(LOG_FILE, "w", encoding="utf-8") as f:
-            json.dump(log, f, ensure_ascii=False, indent=2)
+        # Save updated session (in case re-login happened)
+        ctx.storage_state(path=SESSION_FILE)
+        print(f"Session saved to {SESSION_FILE}")
 
-        print(f"\nSaved {len(log)} API calls to {LOG_FILE}")
+        # Filter log to only meaningful entries
+        filtered = [e for e in log if should_record(e["url"])]
+
+        with open(LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(filtered, f, ensure_ascii=False, indent=2)
+
+        print(f"\nSaved {len(filtered)} API calls to {LOG_FILE}")
+        print(f"  POST/PUT/PATCH: {sum(1 for e in filtered if e['method'] in ('POST','PUT','PATCH'))}")
+        print(f"  GET: {sum(1 for e in filtered if e['method'] == 'GET')}")
         browser.close()
 
 
