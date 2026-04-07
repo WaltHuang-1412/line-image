@@ -67,7 +67,7 @@ output/{theme}/
     ├── prompts.json          # Version-specific (style_prefix + negative_prompt + stickers)
     ├── listing.md            # LINE Creators Market listing text (ZH/EN/JA)
     ├── raw/                  # sticker_XX.png + sticker_XX_nobg.png (gitignored)
-    ├── formatted/            # Working dir, intermediate output (gitignored, not final)
+    ├── formatted/            # Working dir, intermediate output (gitignored from v8 onwards)
     ├── zh/                   # Chinese version final stickers (with text overlay)
     ├── ja/                   # Japanese version final stickers (with text overlay)
     └── package/              # stickers.zip + metadata.json
