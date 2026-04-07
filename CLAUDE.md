@@ -66,10 +66,10 @@ output/{theme}/
 └── {version}/
     ├── prompts.json          # Version-specific (style_prefix + negative_prompt + stickers)
     ├── listing.md            # LINE Creators Market listing text (ZH/EN/JA)
-    ├── raw/                  # sticker_XX.png + sticker_XX_nobg.png
-    ├── formatted/            # sticker_XX.png (370×320) + main.png + tab.png (working dir)
-    ├── zh/                   # Chinese version final stickers
-    ├── ja/                   # Japanese version final stickers
+    ├── raw/                  # sticker_XX.png + sticker_XX_nobg.png (gitignored)
+    ├── formatted/            # Working dir, intermediate output (gitignored, not final)
+    ├── zh/                   # Chinese version final stickers (with text overlay)
+    ├── ja/                   # Japanese version final stickers (with text overlay)
     └── package/              # stickers.zip + metadata.json
 ```
 
@@ -152,9 +152,9 @@ output/{theme}/{version}/
 └── ...
 ```
 
-Each language folder contains the final formatted stickers ready for packaging. The `formatted/` folder is the working directory used by `format` command.
+Each language folder (zh/, ja/) contains the final stickers ready for packaging. The `formatted/` folder is a working directory (gitignored) — not final output.
 
-**Note:** `fix` command's built-in reformat does NOT apply text overlay. Always run `python main.py format` after `fix` to get text.
+**Note:** `fix` command's built-in reformat outputs to `formatted/` without text overlay. Always run `python main.py format --lang <lang>` after fix to update the language folders with proper text overlays. Only format the changed stickers when possible, not all 16.
 
 ## Execution Modes
 
@@ -175,23 +175,37 @@ Triggered by: user explicitly requests a full pipeline step (generate, format, Q
 
 ## Development Workflow
 
-1. **Design style** — Test prompts + IP-Adapter in ComfyUI UI, lock down reference image
-2. **Record settings** — Save the working `style_prefix` and `negative_prompt` into prompts.json (extract from PNG metadata if needed: `PIL.Image.open(img).info['prompt']`)
-3. **Plan content** — Define 16 emotions + action prompts in prompts.json. Check against all v3+ emotions to avoid duplicates.
-4. **Generate** — Start ComfyUI if not running, then `python main.py generate <theme> <version>`
-5. **Raw QA** — Run full QA checklist on every raw image (see QA Checklist below). Fix failures and re-QA until all pass.
-6. **Format zh** — `python main.py format <theme> <version> --lang zh`. Do NOT format to ja/ until zh is confirmed.
-7. **zh QA** — Run full QA checklist on zh/ stickers. Fix and re-format until all pass.
-8. **User confirms zh** — Wait for explicit user approval before proceeding.
-9. **Format ja** — Create `ja/prompts.json` with Japanese emotions, then `python main.py format <theme> <version> --lang ja`
-10. **ja QA** — Run full QA checklist on ja/ stickers.
-11. **User confirms ja** — Wait for explicit user approval.
-12. **Package** — `python main.py package <theme> <version>`
-13. **Prepare listing** — Write title/description in 3 languages, save to listing.md
+### Phase 1: Planning
+1. **Market research** — Search LINE sticker trends, popular themes, identify gaps in the market.
+2. **Theme discussion** — Discuss direction with user, propose theme concepts and get approval.
+3. **Emotion planning** — Plan 16 emotions/scenarios. Collect all v3+ emotions and ensure zero duplicates. Present the list for user approval.
+4. **zh/ja mapping** — Map each zh emotion to a natural ja equivalent. Do NOT create ja/ files yet.
+5. **LINE rule check** — Cross-check all emotions against `line_rule.md` (especially 3.11 offensive content, 3.21 bullying).
+
+### Phase 2: Style
+6. **Design style** — Test prompts + IP-Adapter in ComfyUI UI, generate test images for user to compare styles.
+7. **Record settings** — Save the working `style_prefix` and `negative_prompt` into prompts.json (extract from PNG metadata if needed: `PIL.Image.open(img).info['prompt']`).
+8. **User confirms style** — Wait for user to pick a style direction before full generation.
+
+### Phase 3: Generation & QA
+9. **Generate** — Auto-start ComfyUI if not running (`ollama stop` first to free GPU), then `python main.py generate <theme> <version>`.
+10. **Raw QA** — Run full QA checklist on every raw image using gemma3:12b (see QA Checklist below). Fix failures and re-QA until all pass. After fix, only format the changed stickers, not all 16.
+11. **Format zh** — `python main.py format <theme> <version> --lang zh`. Do NOT format to ja/ until zh is confirmed.
+12. **zh QA** — Run full QA checklist on zh/ stickers using gemma3:12b. Fix → re-format only changed stickers → re-QA loop.
+13. **LINE text review** — Check all zh/ja text against `line_rule.md` for review compliance.
+14. **User confirms zh** — Wait for explicit user approval before proceeding.
+
+### Phase 4: Japanese & Package
+15. **Format ja** — Create `ja/prompts.json` with Japanese emotions, then `PYTHONIOENCODING=utf-8 python main.py format <theme> <version> --lang ja`.
+16. **ja QA** — Run full QA checklist on ja/ stickers.
+17. **User confirms ja** — Wait for explicit user approval.
+18. **Package** — `python main.py package <theme> <version>`
+19. **Prepare listing** — Write title/description in 3 languages, save to listing.md
+20. **Commit** — Commit all output files to git.
 
 ## QA Checklist
 
-Use Ollama (`qa_vision.py` or custom prompts with gemma3:4b) for all image checks. Never use Claude tokens on images.
+Use Ollama (`qa_vision.py` or custom prompts with **gemma3:12b**) for all image checks. Never use Claude tokens on images. gemma3:4b is unreliable for quality scoring (caps at 3/5 regardless of actual quality).
 
 ### Raw QA (every sticker, no exceptions)
 
@@ -222,6 +236,13 @@ Use Ollama (`qa_vision.py` or custom prompts with gemma3:4b) for all image check
 - **Fix → re-QA → confirm** — every fix must be followed by re-QA of the fixed stickers. Loop until all pass.
 - **Don't advance stages without user confirmation** — zh must be user-approved before ja. ja must be user-approved before package.
 - **Second-pass flagged items** — when Ollama flags TEXT or CUTOFF, run a focused second check before marking as real failure. Ollama frequently misreports Chinese labels as unwanted text.
+
+### GPU Resource Management
+
+ComfyUI and Ollama gemma3:12b cannot run simultaneously on a single GPU (GTX 1080 Ti 11GB).
+- **Before generate/fix**: `ollama stop gemma3:12b` → free GPU → then run ComfyUI.
+- **Before QA with 12b**: Stop or ensure ComfyUI is idle, clear queue if stuck (`POST /queue` with `{"clear": true}`).
+- **After timeouts**: Always clear ComfyUI queue and `POST /free` before retrying.
 
 ### Ollama Known Limitations (gemma3:4b)
 

@@ -3,6 +3,8 @@ __pycache__/
 ComfyUI/
 # raw files are large and regenerable, exclude them
 output/*/v*/raw/
+# formatted/ is an intermediate working dir, final output is in zh/ and ja/
+output/*/v*/formatted/
 v3.png
 # sensitive session/credentials
 line_session.json
