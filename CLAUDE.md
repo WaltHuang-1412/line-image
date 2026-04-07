@@ -203,6 +203,24 @@ Triggered by: user explicitly requests a full pipeline step (generate, format, Q
 19. **Prepare listing** — Write title/description in 3 languages, save to listing.md. For ja version, append「日文篇」/「日本語編」/「- Japanese」to zh/ja/en titles to avoid duplicate rejection on LINE Creators Market.
 20. **Commit** — Commit all output files to git.
 
+### Phase 5: Publish
+21. **Upload & submit** — `python upload_line.py <theme> <version> --lang <lang>`. Automated flow: create sticker set → set count → upload 18 images (16 stickers + main + tab) → tag each sticker (9 tags per sticker) → submit for review.
+22. **Verify on dashboard** — Check LINE Creators Market dashboard that the submission went through.
+23. **Repeat for other language** — Upload the other language version (zh/ja) as a separate sticker set.
+
+#### Upload API Details
+- Session: `line_session.json` (Playwright browser context, refresh with `--login` if expired)
+- Tag mapping: `line_tags.json` (444 tags, scraped from LINE Creators Market tag page)
+- CSRF: `X-XSRF-TOKEN` header from `XSRF-TOKEN` cookie
+- API prefix: `https://creator.line.me/my/{seller_id}`
+- Create: `POST /api/v2/sticker` (JSON: type, metas, copyright, categoryIds, isAiGenerated, etc.)
+- Set count: `POST /api/sticker/{id}/stickers_per_set` (FormData)
+- Upload image: `POST /api/sticker/{id}/upload_image` (FormData: field name is `image`, not `sticker_image`)
+- Tag: `POST /api/sticker/{id}/update_taggings` (JSON: `{"01": ["tag_id_1", ...]}`)
+- Submit: `POST /sticker/{id}/do_request`
+- Cancel: `POST /sticker/{id}/cancel_request`
+- LINE API responses have `)]}'` XSS prefix — strip before JSON parsing.
+
 ## QA Checklist
 
 Use Ollama (`qa_vision.py` or custom prompts with **gemma3:12b**) for all image checks. Never use Claude tokens on images. gemma3:4b is unreliable for quality scoring (caps at 3/5 regardless of actual quality).
