@@ -156,6 +156,23 @@ Each language folder contains the final formatted stickers ready for packaging. 
 
 **Note:** `fix` command's built-in reformat does NOT apply text overlay. Always run `python main.py format` after `fix` to get text.
 
+## Execution Modes
+
+### Explore Mode (default)
+Triggered by: 測試、看看、試試、比較、給我看、風格、or any exploratory/creative request.
+- Do exactly what was asked, nothing more.
+- After completing the task, STOP and wait for the user's next instruction.
+- Do NOT run QA, checks, status polls, or any follow-up commands.
+- Do NOT run background commands to monitor progress after the task completes.
+
+### Pipeline Mode
+Triggered by: user explicitly requests a full pipeline step (generate, format, QA, fix, package) or says to run the full flow.
+- Follow the Development Workflow and QA Checklist below.
+- Advance through QA → fix → re-QA loops as documented.
+- Still wait for user confirmation at stage gates (zh → ja → package).
+
+**When in doubt, treat it as Explore Mode.** Only enter Pipeline Mode when the user clearly asks for a pipeline operation.
+
 ## Development Workflow
 
 1. **Design style** — Test prompts + IP-Adapter in ComfyUI UI, lock down reference image

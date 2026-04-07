@@ -7,8 +7,8 @@
     {"id": 1,  "emotion": "約嗎",   "prompt": "one paw waving enthusiastically, excited wide grin, eyes sparkling with anticipation, energetic inviting gesture, beckoning pose"},
     {"id": 2,  "emotion": "+1",     "prompt": "one paw raised high giving a big thumbs up, confident smirk, eyes closed with satisfaction, bold approving pose"},
     {"id": 3,  "emotion": "先走了", "prompt": "one paw raised in a small wave goodbye, turning away slightly, calm relaxed smile, casual farewell pose, walking away"},
-    {"id": 4,  "emotion": "等等我", "prompt": "running forward frantically with both paws reaching out, panicked wide eyes, mouth open yelling, desperate chasing pose, sweat drops"},
     {"id": 5,  "emotion": "在哪",   "prompt": "one paw above eyes like a visor searching, squinting eyes looking left and right, confused searching expression, standing on tiptoes"},
+    {"id": 4,  "emotion": "等等我", "prompt": "both paws reaching forward desperately, enormous panicked eyes, mouth wide open crying, running pose with sweat drops, frantic chasing expression"},
     {"id": 6,  "emotion": "到了",   "prompt": "both paws raised triumphantly in the air, big proud smile, eyes closed happily, victorious arrival pose, sparkles around"},
     {"id": 7,  "emotion": "隨便",   "prompt": "lying on side lazily, half-closed bored eyes, one paw waving dismissively, completely indifferent expression, limp body"},
     {"id": 8,  "emotion": "都可以", "prompt": "both paws open shrugging, gentle easygoing smile, tilted head, relaxed unbothered expression, go with the flow pose"},
@@ -19,6 +19,6 @@
     {"id": 13, "emotion": "借我",   "prompt": "both paws pressed together in prayer position, wide sparkling begging eyes, nervous hopeful grin, shameless pleading pose"},
     {"id": 14, "emotion": "還我",   "prompt": "one paw pointing forward demandingly, stern serious face, narrowed angry eyes, tapping foot impatiently, debt collector pose"},
     {"id": 15, "emotion": "謝啦",   "prompt": "slight bow with one paw behind head, grateful warm smile, eyes closed happily, humble thankful expression, appreciative gesture"},
-    {"id": 16, "emotion": "掰掰",   "prompt": "both paws waving goodbye enthusiastically, big cheerful smile, eyes squeezed shut with joy, energetic farewell pose"}
+    {"id": 16, "emotion": "掰掰",   "prompt": "both paws waving high, eyes squeezed shut with huge beaming smile, cheerful energetic farewell, rosy cheeks, clean composition"}
   ]
 }
