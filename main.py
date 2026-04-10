@@ -63,15 +63,16 @@ def _section(title):
 # Commands
 # ---------------------------------------------------------------------------
 
-def cmd_generate(theme, version):
+def cmd_generate(theme, version, with_sam=True):
     """Generate raw stickers for a theme/version."""
-    _section(f"GENERATE  [{theme}/{version}]")
+    mode = "generate+SAM" if with_sam else "generate only"
+    _section(f"GENERATE  [{theme}/{version}] ({mode})")
     if not check_comfyui():
         sys.exit(1)
     if not check_prompts(theme, version):
         sys.exit(1)
     from generate import generate_all
-    generate_all(theme, version)
+    generate_all(theme, version, with_sam=with_sam)
 
 
 def cmd_format(theme, version, lang=None):
@@ -157,6 +158,15 @@ def cmd_list():
     print()
 
 
+def cmd_nobg(theme, version):
+    """Run SAM background removal on existing raw images."""
+    _section(f"SAM NOBG  [{theme}/{version}]")
+    if not check_comfyui():
+        sys.exit(1)
+    from generate import sam_remove_bg_all
+    sam_remove_bg_all(theme, version)
+
+
 def cmd_fix(theme, version, sticker_ids):
     """Regenerate specific stickers by ID, then re-format only those stickers."""
     id_list = [int(x) for x in sticker_ids]
@@ -218,11 +228,12 @@ def main():
 
     elif cmd == "generate":
         if len(args) < 2:
-            print("Usage: python main.py generate <theme> [version]")
+            print("Usage: python main.py generate <theme> [version] [--no-sam]")
             sys.exit(1)
         theme = args[1]
-        version = args[2] if len(args) > 2 else config.get_next_version(theme)
-        cmd_generate(theme, version)
+        version = args[2] if len(args) > 2 and not args[2].startswith("--") else config.get_next_version(theme)
+        with_sam = "--sam" in args
+        cmd_generate(theme, version, with_sam=with_sam)
 
     elif cmd == "format":
         if len(args) < 3:
@@ -251,6 +262,13 @@ def main():
         theme = args[1]
         version = args[2] if len(args) > 2 else config.get_next_version(theme)
         cmd_all(theme, version)
+
+    elif cmd == "nobg":
+        if len(args) < 3:
+            print("Usage: python main.py nobg <theme> <version>")
+            sys.exit(1)
+        theme, version = args[1], args[2]
+        cmd_nobg(theme, version)
 
     elif cmd == "fix":
         if len(args) < 4:

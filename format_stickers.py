@@ -49,6 +49,11 @@ EMOTION_DECO = {
     "在哪": "？",   "到了": "！",   "隨便": "～",      "都可以": "～",
     "笑死": "！",   "真假": "？",   "不要走": "！",    "想你們": "～",
     "借我": "！",   "還我": "！",   "謝啦": "～",      "掰掰": "～",
+    # v8 lazy/chill emotions
+    "不想動": "…",   "追劇中": "～",   "再一集": "！",    "WiFi咧": "！",
+    "好無聊": "…",   "耍廢中": "～",   "別吵我": "！",    "充電中": "～",
+    "已讀不回": "～", "沙發是我的": "！","今天就這樣": "～", "睡到自然醒": "～",
+    "外面好可怕": "！","手機沒電": "！", "來點零食": "～",  "明天的事明天說": "～",
 }
 
 # Slight horizontal offset per sticker for variety (-1=left, 0=center, 1=right)
@@ -179,6 +184,14 @@ def flood_fill_remove_bg(img_rgba, tolerance=30):
     result = img_rgba.convert("RGBA").copy()
     result_arr = np.array(result)
     result_arr[:, :, 3] = np.where(alpha, result_arr[:, :, 3], 0)
+
+    # Chroma key pass: remove only strongly green pixels not reached by flood fill
+    # (handles green background split into disconnected regions by the subject)
+    # Strict threshold: green must dominate heavily to avoid eating greenish cat pixels
+    r, g, b = result_arr[:, :, 0], result_arr[:, :, 1], result_arr[:, :, 2]
+    green_mask = (g > r + 50) & (g > b + 50) & (g > 120)
+    result_arr[:, :, 3] = np.where(green_mask, 0, result_arr[:, :, 3])
+
     return Image.fromarray(result_arr.astype(np.uint8), "RGBA")
 
 
@@ -225,11 +238,16 @@ def _has_interior_holes(img_rgba, hole_threshold=0.02):
     return False
 
 
+def rembg_remove_bg(img_rgba):
+    """Remove background using rembg (U2Net model). Best quality for foreground segmentation."""
+    from rembg import remove
+    return remove(img_rgba)
+
+
 def remove_background(raw_path, nobg_path):
     """Decide which background-removal strategy to use and return an RGBA image.
 
-    Prefers the SAM nobg image.  Falls back to flood fill if SAM ate too much
-    or if SAM created holes inside the subject (white cat problem).
+    Priority: nobg (SAM pre-processed) → rembg (U2Net) → flood fill.
 
     Args:
         raw_path: Path to the raw (with background) PNG.
@@ -238,44 +256,26 @@ def remove_background(raw_path, nobg_path):
     Returns:
         PIL RGBA image with background removed.
     """
-    # Try SAM result first, but compare with flood-fill to pick the better one
-    sam_img = None
+    # Try SAM result first
     if nobg_path and os.path.exists(nobg_path):
         sam_img = Image.open(nobg_path).convert("RGBA")
         ratio = _content_ratio(sam_img)
         if ratio < config.SAM_CONTENT_RATIO_MIN:
-            print(f"    SAM content ratio too low ({ratio:.2%}), using flood fill.")
-            sam_img = None
+            print(f"    SAM content ratio too low ({ratio:.2%}), trying rembg.")
         elif _has_interior_holes(sam_img):
-            print(f"    SAM created holes in subject, using flood fill.")
-            sam_img = None
+            print(f"    SAM created holes in subject, trying rembg.")
+        else:
+            return sam_img
 
-    # Always compute flood-fill for comparison
-    flood_img = None
+    # rembg fallback (U2Net — better than flood fill for foreground segmentation)
     if raw_path and os.path.exists(raw_path):
         raw_img = Image.open(raw_path).convert("RGBA")
-        flood_img = flood_fill_remove_bg(raw_img)
-
-    # If SAM passed checks, compare: pick whichever preserves more content
-    if sam_img is not None and flood_img is not None:
-        sam_content = _content_ratio(sam_img)
-        flood_content = _content_ratio(flood_img)
-        # If flood-fill preserves significantly more (>5% more), SAM likely ate body parts
-        if flood_content > sam_content + 0.05:
-            print(f"    Flood-fill preserves more ({flood_content:.1%} vs SAM {sam_content:.1%}), using flood fill.")
-            return flood_img
-        return sam_img
-    elif sam_img is not None:
-        return sam_img
-    elif flood_img is not None:
-        print(f"    Applying flood-fill background removal...")
-        return flood_img
-
-    # Fallback: flood fill on raw image
-    if raw_path and os.path.exists(raw_path):
-        raw_img = Image.open(raw_path).convert("RGBA")
-        print(f"    Applying flood-fill background removal...")
-        return flood_fill_remove_bg(raw_img)
+        try:
+            print(f"    Applying rembg background removal...")
+            return rembg_remove_bg(raw_img)
+        except Exception as e:
+            print(f"    rembg failed ({e}), falling back to flood fill.")
+            return flood_fill_remove_bg(raw_img)
 
     raise FileNotFoundError(
         f"Neither raw nor nobg image available: raw={raw_path}, nobg={nobg_path}"

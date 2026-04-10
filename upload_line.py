@@ -284,6 +284,23 @@ ZH_EMOTION_TAGS = {
     "煩欸": ["cat", "angry_dissatisfied", "sad", "lazy"],
     "比心": ["cat", "love", "happy", "shy"],
     "才不要": ["cat", "angry_dissatisfied", "surprise"],
+    # v8 lazy/chill emotions
+    "不想動": ["cat", "lazy", "sleep", "sad"],
+    "追劇中": ["cat", "happy", "excited", "lazy"],
+    "再一集": ["cat", "excited", "sleep", "happy", "lazy"],
+    "WiFi咧": ["cat", "panic", "cry", "surprise", "angry_dissatisfied"],
+    "好無聊": ["cat", "lazy", "sad", "sleep"],
+    "耍廢中": ["cat", "lazy", "happy", "sleep"],
+    "別吵我": ["cat", "angry_dissatisfied", "lazy", "no"],
+    "充電中": ["cat", "sleep", "lazy", "happy"],
+    "已讀不回": ["cat", "lazy", "no", "shy"],
+    "沙發是我的": ["cat", "angry_dissatisfied", "happy", "lazy"],
+    "今天就這樣": ["cat", "lazy", "bye", "ok", "happy"],
+    "睡到自然醒": ["cat", "sleep", "happy", "lazy"],
+    "外面好可怕": ["cat", "cry", "panic", "anxious", "sad"],
+    "手機沒電": ["cat", "cry", "sad", "panic", "surprise"],
+    "來點零食": ["cat", "eat", "please", "happy", "excited"],
+    "明天的事明天說": ["cat", "lazy", "bye", "happy", "sleep"],
 }
 
 

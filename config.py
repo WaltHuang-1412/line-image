@@ -47,9 +47,13 @@ MAIN_IMAGE_SIZE = (240, 240)
 TAB_IMAGE_SIZE = (96, 74)
 MAX_FILE_SIZE_KB = 1000   # 1MB
 
-# === SAM / Background Removal ===
-# Content ratio below this threshold means SAM likely ate the subject (white cat issue).
-# Fall back to flood-fill background removal in that case.
+# === Background Removal ===
+# Use light green background instead of white for generation.
+# White background causes SAM/flood-fill to eat white cat faces.
+# Green background provides clear color separation for easy removal.
+BG_COLOR = "light green background"
+
+# Content ratio below this threshold means SAM likely ate the subject.
 SAM_CONTENT_RATIO_MIN = 0.05   # at least 5% of pixels should be non-transparent after SAM
 
 # Output structure per theme/version:

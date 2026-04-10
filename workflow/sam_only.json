@@ -1,0 +1,50 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "input.png"
+    }
+  },
+  "20": {
+    "class_type": "SAMModelLoader (segment anything)",
+    "inputs": {
+      "model_name": "sam_vit_b (375MB)"
+    }
+  },
+  "21": {
+    "class_type": "GroundingDinoModelLoader (segment anything)",
+    "inputs": {
+      "model_name": "GroundingDINO_SwinT_OGC (694MB)"
+    }
+  },
+  "22": {
+    "class_type": "GroundingDinoSAMSegment (segment anything)",
+    "inputs": {
+      "sam_model": ["20", 0],
+      "grounding_dino_model": ["21", 0],
+      "image": ["1", 0],
+      "prompt": "cat",
+      "threshold": 0.3
+    }
+  },
+  "23": {
+    "class_type": "InvertMask (segment anything)",
+    "inputs": {
+      "mask": ["22", 1]
+    }
+  },
+  "24": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": ["1", 0],
+      "alpha": ["23", 0]
+    }
+  },
+  "25": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "nobg",
+      "images": ["24", 0]
+    }
+  }
+}

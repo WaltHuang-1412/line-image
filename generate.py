@@ -9,6 +9,8 @@ import urllib.parse
 import config
 
 SAM_WORKFLOW_FILE = os.path.join(config.BASE_DIR, "workflow", "generate_with_sam.json")
+GENERATE_ONLY_WORKFLOW_FILE = os.path.join(config.BASE_DIR, "workflow", "generate_only.json")
+SAM_ONLY_WORKFLOW_FILE = os.path.join(config.BASE_DIR, "workflow", "sam_only.json")
 
 
 # ---------------------------------------------------------------------------
@@ -75,8 +77,184 @@ def upload_image(filepath, server_url=config.COMFYUI_URL):
 
 
 # ---------------------------------------------------------------------------
+# SAM-only background removal
+# ---------------------------------------------------------------------------
+
+def sam_remove_bg(raw_path, nobg_output_path, sam_detect_prompt=None):
+    """Run SAM background removal on an existing raw image via ComfyUI.
+
+    Uploads the raw image, runs SAM segmentation, downloads the result.
+    Returns nobg_output_path on success, None on failure.
+    """
+    with open(SAM_ONLY_WORKFLOW_FILE, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    # Upload raw image to ComfyUI
+    uploaded_name = upload_image(raw_path)
+    workflow["1"]["inputs"]["image"] = uploaded_name
+    workflow["22"]["inputs"]["prompt"] = sam_detect_prompt or config.SAM_DETECT_PROMPT
+
+    idx_str = os.path.basename(raw_path).replace("sticker_", "").replace(".png", "")
+    workflow["25"]["inputs"]["filename_prefix"] = f"sticker_{idx_str}_nobg"
+
+    prompt_id = queue_prompt(workflow)
+    history = wait_for_completion(prompt_id)
+
+    outputs = history.get("outputs", {})
+    if "25" in outputs and outputs["25"].get("images"):
+        img_info = outputs["25"]["images"][0]
+        img_data = get_image(img_info["filename"], img_info["subfolder"], img_info["type"])
+        with open(nobg_output_path, "wb") as f:
+            f.write(img_data)
+        return nobg_output_path
+    return None
+
+
+def _check_nobg_quality(raw_path, nobg_path):
+    """Check SAM nobg quality. Returns (ok, reason) tuple."""
+    from format_stickers import _content_ratio, _has_interior_holes
+    from PIL import Image
+
+    nobg_img = Image.open(nobg_path).convert("RGBA")
+    ratio = _content_ratio(nobg_img)
+
+    if ratio < config.SAM_CONTENT_RATIO_MIN:
+        return False, f"content ratio too low ({ratio:.1%})"
+
+    if _has_interior_holes(nobg_img):
+        return False, "interior holes detected"
+
+    # Compare with raw: if SAM lost >5% content vs flood fill, SAM ate body parts
+    from format_stickers import flood_fill_remove_bg
+    raw_img = Image.open(raw_path).convert("RGBA")
+    flood_img = flood_fill_remove_bg(raw_img)
+    flood_ratio = _content_ratio(flood_img)
+
+    if flood_ratio > ratio + 0.05:
+        return False, f"SAM lost content ({ratio:.1%} vs flood {flood_ratio:.1%})"
+
+    return True, "ok"
+
+
+def sam_remove_bg_all(theme, version, sticker_ids=None):
+    """Run SAM background removal on all (or selected) raw stickers.
+
+    After each SAM run, checks quality (content ratio, holes, body parts).
+    Falls back to flood fill if SAM quality is bad.
+
+    Args:
+        theme: Theme name.
+        version: Version string.
+        sticker_ids: Optional list of sticker IDs. If None, process all.
+    """
+    from format_stickers import rembg_remove_bg
+    from PIL import Image
+
+    paths = config.get_paths(theme, version)
+    raw_dir = paths["raw"]
+
+    prompts_file = config.get_prompts_file(theme, version)
+    with open(prompts_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    sam_detect_prompt = data.get("sam_detect_prompt", None)
+    stickers = data["stickers"]
+    if sticker_ids:
+        stickers = [s for s in stickers if s["id"] in sticker_ids]
+
+    print(f"\n=== Background removal: {len(stickers)} stickers [{theme}/{version}] ===\n")
+
+    failed = []
+    for s in stickers:
+        idx = s["id"]
+        raw_path = os.path.join(raw_dir, f"sticker_{idx:02d}.png")
+        nobg_path = os.path.join(raw_dir, f"sticker_{idx:02d}_nobg.png")
+
+        if not os.path.exists(raw_path):
+            print(f"  [#{idx:02d}] raw not found, skipping")
+            continue
+
+        print(f"  [#{idx:02d}] SAM...", end="", flush=True)
+        result = sam_remove_bg(raw_path, nobg_path, sam_detect_prompt)
+        if not result:
+            print(f" SAM FAILED, using rembg...", end="", flush=True)
+            raw_img = Image.open(raw_path).convert("RGBA")
+            rembg_img = rembg_remove_bg(raw_img)
+            rembg_img.save(nobg_path, "PNG")
+            failed.append((idx, "SAM failed → rembg"))
+            print(f" done")
+            continue
+
+        # Check quality
+        ok, reason = _check_nobg_quality(raw_path, nobg_path)
+        if ok:
+            print(f" PASS")
+        else:
+            print(f" FAIL ({reason}), using rembg...", end="", flush=True)
+            raw_img = Image.open(raw_path).convert("RGBA")
+            rembg_img = rembg_remove_bg(raw_img)
+            rembg_img.save(nobg_path, "PNG")
+            failed.append((idx, reason + " → rembg"))
+            print(f" done")
+
+    # Summary
+    passed = len(stickers) - len(failed)
+    print(f"\n  PASS: {passed}/{len(stickers)}")
+    if failed:
+        print(f"  Flood fill fallback: {[(f'#{i:02d} {r}') for i, r in failed]}")
+    print(f"\nDone!")
+
+
+# ---------------------------------------------------------------------------
 # SAM-based generation
 # ---------------------------------------------------------------------------
+
+def generate_one(positive_prompt, index, raw_dir, ref_image_name=None, seed=None, negative_prompt=None, ipadapter_weight=None):
+    """Generate one sticker image only (no SAM background removal).
+
+    Uses generate_only.json workflow. Faster than generate_with_sam.
+    Returns raw_path (str) or None.
+    """
+    with open(GENERATE_ONLY_WORKFLOW_FILE, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    workflow["6"]["inputs"]["text"] = positive_prompt
+    workflow["7"]["inputs"]["text"] = negative_prompt or config.NEGATIVE_PROMPT
+    workflow["3"]["inputs"]["seed"] = seed if seed is not None else random.randint(0, 2**32 - 1)
+    workflow["3"]["inputs"]["steps"] = config.STEPS
+    workflow["3"]["inputs"]["cfg"] = config.CFG_SCALE
+    workflow["3"]["inputs"]["sampler_name"] = config.SAMPLER
+    workflow["3"]["inputs"]["scheduler"] = config.SCHEDULER
+    workflow["5"]["inputs"]["width"] = config.IMAGE_WIDTH
+    workflow["5"]["inputs"]["height"] = config.IMAGE_HEIGHT
+
+    if ref_image_name:
+        workflow["12"]["inputs"]["image"] = ref_image_name
+    else:
+        workflow["12"]["inputs"]["image"] = config.IPADAPTER_REFERENCE_IMAGE
+
+    workflow["13"]["inputs"]["weight"] = ipadapter_weight if ipadapter_weight is not None else config.IPADAPTER_WEIGHT
+    workflow["9"]["inputs"]["filename_prefix"] = f"sticker_{index:02d}"
+
+    print(f"  [#{index:02d}] Queuing generation...")
+    prompt_id = queue_prompt(workflow)
+
+    print(f"  [#{index:02d}] Waiting for completion...")
+    history = wait_for_completion(prompt_id)
+
+    outputs = history.get("outputs", {})
+    raw_path = None
+
+    if "9" in outputs and outputs["9"].get("images"):
+        img_info = outputs["9"]["images"][0]
+        img_data = get_image(img_info["filename"], img_info["subfolder"], img_info["type"])
+        raw_path = os.path.join(raw_dir, f"sticker_{index:02d}.png")
+        with open(raw_path, "wb") as f:
+            f.write(img_data)
+        print(f"  [#{index:02d}] Saved: {raw_path}")
+
+    return raw_path
+
 
 def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed=None, negative_prompt=None, sam_detect_prompt=None, ipadapter_weight=None):
     """Generate one sticker using the generate_with_sam.json workflow.
@@ -160,14 +338,16 @@ def generate_with_sam(positive_prompt, index, raw_dir, ref_image_name=None, seed
 # Batch generation
 # ---------------------------------------------------------------------------
 
-def generate_all(theme, version, sticker_ids=None):
-    """Generate all (or selected) stickers for a theme/version using the SAM workflow.
+def generate_all(theme, version, sticker_ids=None, with_sam=True):
+    """Generate all (or selected) stickers for a theme/version.
 
     Args:
         theme: Theme name (folder name under output/).
         version: Version string, e.g. "v1".
         sticker_ids: Optional list of 1-based sticker IDs to regenerate. If None,
                      all stickers in prompts.json are generated.
+        with_sam: If True (default), use SAM workflow for generation + bg removal.
+                  If False, generate images only (faster, no _nobg files).
     """
     paths = config.get_paths(theme, version)
     raw_dir = paths["raw"]
@@ -228,8 +408,12 @@ def generate_all(theme, version, sticker_ids=None):
         full_prompt = f"{style_prefix}, {prompt_text}" if style_prefix else prompt_text
         seed = sticker.get("seed")
 
-        raw_path, nobg_path = generate_with_sam(full_prompt, idx, raw_dir, ref_name, seed, negative_prompt, sam_detect_prompt, ipadapter_weight)
-        results.append({"id": idx, "raw": raw_path, "nobg": nobg_path})
+        if with_sam:
+            raw_path, nobg_path = generate_with_sam(full_prompt, idx, raw_dir, ref_name, seed, negative_prompt, sam_detect_prompt, ipadapter_weight)
+            results.append({"id": idx, "raw": raw_path, "nobg": nobg_path})
+        else:
+            raw_path = generate_one(full_prompt, idx, raw_dir, ref_name, seed, negative_prompt, ipadapter_weight)
+            results.append({"id": idx, "raw": raw_path, "nobg": None})
 
     print(f"\nDone! {len(results)} stickers generated in {raw_dir}")
     return results
