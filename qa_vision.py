@@ -56,10 +56,19 @@ def ask_ollama(image_path, prompt):
     return result.get("response", "")
 
 
-def check_sticker(image_path, emotion, is_raw=False, character_desc=None, character_parts=None):
+def check_sticker(image_path, emotion, is_raw=False, character_desc=None, character_parts=None, product_type="sticker"):
     """Single ollama call covering all QA checks. Returns raw response string."""
     desc = character_desc or config.CHARACTER_DESC
     parts = character_parts or config.CHARACTER_PARTS
+
+    if product_type == "emoji":
+        return _check_emoji(image_path, emotion, desc, is_raw)
+    else:
+        return _check_sticker(image_path, emotion, desc, parts, is_raw)
+
+
+def _check_sticker(image_path, emotion, desc, parts, is_raw):
+    """QA prompt for sticker type."""
     if is_raw:
         prompt = (
             f'LINE sticker — {desc}. '
@@ -84,10 +93,56 @@ def check_sticker(image_path, emotion, is_raw=False, character_desc=None, charac
     return ask_ollama(image_path, prompt)
 
 
-def parse_pass_fail(response, is_raw=False):
+def _check_emoji(image_path, emotion, desc, is_raw):
+    """QA prompt for emoji type."""
+    if is_raw:
+        prompt = (
+            f'LINE emoji — {desc}. Chibi style (big head, small body). '
+            f'Intended emotion: "{emotion}".\n\n'
+            f'Answer each line exactly as shown:\n'
+            f'SEMANTIC: YES or NO — does the expression clearly convey "{emotion}"?\n'
+            f'EXPRESSION: STRONG or WEAK — is the facial expression exaggerated enough to read at small size?\n'
+            f'COMPOSITION: GOOD or BAD — does the character fill most of the image? (should not be tiny or off-center)\n'
+            f'TEXT: NO — or YES:"exact unwanted text" (ignore punctuation/symbols)\n'
+            f'QUALITY: 1-5 — one sentence reason'
+        )
+    else:
+        prompt = (
+            f'LINE emoji — {desc}. Chibi style (big head, small body). '
+            f'This is a transparent background emoji.\n\n'
+            f'Answer each line exactly as shown:\n'
+            f'BG: CLEAN or DIRTY — any leftover background patches or cut-off body parts?\n'
+            f'BODY_INTACT: YES or NO — all body parts intact, nothing eaten by bg removal?\n'
+            f'QUALITY: 1-5 — one sentence reason'
+        )
+    return ask_ollama(image_path, prompt)
+
+
+def parse_pass_fail(response, is_raw=False, product_type="sticker"):
     """Parse combined ollama response into list of issue strings."""
     issues = []
     lines = response.upper()
+
+    # EXPRESSION (emoji only)
+    m = re.search(r'EXPRESSION:\s*(STRONG|WEAK)', lines)
+    if m and m.group(1) == "WEAK":
+        orig = re.search(r'(?i)EXPRESSION:.*', response)
+        snippet = orig.group(0)[:80] if orig else "WEAK"
+        issues.append(f"expression: {snippet}")
+
+    # COMPOSITION (emoji only)
+    m = re.search(r'COMPOSITION:\s*(GOOD|BAD)', lines)
+    if m and m.group(1) == "BAD":
+        orig = re.search(r'(?i)COMPOSITION:.*', response)
+        snippet = orig.group(0)[:80] if orig else "BAD"
+        issues.append(f"composition: {snippet}")
+
+    # BODY_INTACT (nobg check)
+    m = re.search(r'BODY_INTACT:\s*(YES|NO)', lines)
+    if m and m.group(1) == "NO":
+        orig = re.search(r'(?i)BODY_INTACT:.*', response)
+        snippet = orig.group(0)[:80] if orig else "NO"
+        issues.append(f"body_intact: {snippet}")
 
     # SEMANTIC
     m = re.search(r'SEMANTIC:\s*(YES|NO)', lines)
@@ -155,6 +210,7 @@ def run_qa(theme, version, sticker_ids=None, check_raw=False, lang=None):
     sticker_defs = {s["id"]: s for s in pdata.get("stickers", [])}
     character_desc = pdata.get("character_desc", None)
     character_parts = pdata.get("character_parts", None)
+    product_type = pdata.get("type", "sticker")
 
     if sticker_ids is None:
         sticker_ids = sorted(sticker_defs.keys())
@@ -195,8 +251,8 @@ def run_qa(theme, version, sticker_ids=None, check_raw=False, lang=None):
 
         print(f"  #{sid:02d} [{emotion}] checking...", end="", flush=True)
         try:
-            response = check_sticker(img_path, emotion, is_raw=check_raw, character_desc=character_desc, character_parts=character_parts)
-            issues = parse_pass_fail(response, is_raw=check_raw)
+            response = check_sticker(img_path, emotion, is_raw=check_raw, character_desc=character_desc, character_parts=character_parts, product_type=product_type)
+            issues = parse_pass_fail(response, is_raw=check_raw, product_type=product_type)
         except urllib.error.URLError as e:
             print(f" ERROR (ollama: {e})")
             all_issues[sid] = [f"ollama error: {e}"]

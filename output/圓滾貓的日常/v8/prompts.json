@@ -1,0 +1,25 @@
+{
+  "title": "圓滾貓表情貼",
+  "description": "圓滾滾灰貓的16種超實用表情！開心、生氣、大笑、翻白眼...聊天必備表情貼",
+  "type": "emoji",
+  "style_prefix": "1cat, solo, simple background, light green background, chibi, super deformed, big head small body, full body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, round chubby body, blush stickers, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, big round eyes with black pupils, expressive eyes, centered composition, correct anatomy, no text, very expressive face, exaggerated expression, emoji style",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana",
+  "stickers": [
+    {"id": 1,  "emotion": "開心", "prompt": "extremely wide beaming grin showing teeth, eyes squeezed into happy crescents, very rosy red cheeks, radiating pure joy"},
+    {"id": 2,  "emotion": "大笑", "prompt": "mouth wide open laughing, tears of joy streaming, eyes squeezed shut, uncontrollable laughter"},
+    {"id": 3,  "emotion": "愛心眼", "prompt": "heart-shaped eyes, dreamy loving expression, blushing cheeks, smitten lovestruck face"},
+    {"id": 4,  "emotion": "哭哭", "prompt": "big teardrop rolling down cheek, trembling lower lip, sad watery eyes, about to cry expression"},
+    {"id": 5,  "emotion": "生氣", "prompt": "extremely furrowed angry brows, cheeks puffed up huge and bright red, sharp fangs showing, steam coming from ears, veins popping, maximum rage face"},
+    {"id": 6,  "emotion": "驚訝", "prompt": "jaw dropped wide open, eyes bulging huge, shocked stunned expression, dramatic surprise"},
+    {"id": 7,  "emotion": "尷尬", "prompt": "nervous awkward smile, single sweat drop on forehead, slightly tilted head, embarrassed expression"},
+    {"id": 8,  "emotion": "睡覺", "prompt": "eyes closed peacefully, tiny snoring bubble from nose, calm serene sleeping face, zzz"},
+    {"id": 9,  "emotion": "比讚", "prompt": "confident smirk, one eye winking, thumbs up gesture near face, approving cool expression"},
+    {"id": 10, "emotion": "壞笑", "prompt": "extremely sly wide smirk, eyes narrowed into devious slits, one eyebrow raised very high, dark scheming shadow over face, evil plotting expression"},
+    {"id": 11, "emotion": "嫌棄", "prompt": "tongue sticking out, squinting disgusted eyes, nose wrinkled, grossed out nauseated expression"},
+    {"id": 12, "emotion": "委屈", "prompt": "huge watery puppy eyes looking up, trembling lip, teary glistening eyes, pitiful pleading expression"},
+    {"id": 13, "emotion": "翻白眼", "prompt": "eyes rolled up to the top, flat unimpressed mouth, completely done expression, exasperated face"},
+    {"id": 14, "emotion": "害羞", "prompt": "bright red blushing cheeks, eyes looking away shyly, tiny nervous smile, bashful flustered expression"},
+    {"id": 15, "emotion": "發呆", "prompt": "spiral swirl eyes, mouth wide open with tongue out, dizzy confused dazed expression, stars and spirals around head, completely stunned frozen face"},
+    {"id": 16, "emotion": "哼", "prompt": "chin tilted up proudly, eyes closed, puffed cheeks, turned away slightly, proud huffy tsundere expression"}
+  ]
+}

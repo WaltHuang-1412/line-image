@@ -39,13 +39,52 @@ SAM_DETECT_PROMPT = "cat"
 CHARACTER_DESC = "round chubby grey cat, ink painting style"
 CHARACTER_PARTS = "ears, belly, paws"
 
-# === LINE Sticker Specs ===
+# === Product Profiles ===
+# prompts.json "type" field selects the profile. Default is "sticker".
+PRODUCT_PROFILES = {
+    "sticker": {
+        "canvas": (370, 320),
+        "margin": 10,
+        "text_overlay": True,
+        "main_image": (240, 240),
+        "tab_image": (96, 74),
+        "max_file_size_kb": 1000,
+        "raw_qa": ["semantic", "quality", "text_artifacts"],
+        "nobg_qa": ["body_intact", "holes", "bg_clean"],
+        "format_qa": ["bg_clean", "body_cutoff", "text_overlay", "quality"],
+    },
+    "emoji": {
+        "canvas": (180, 180),
+        "margin": 0,
+        "text_overlay": False,
+        "main_image": None,
+        "tab_image": (96, 74),
+        "max_file_size_kb": 1000,
+        "raw_qa": ["semantic", "quality", "text_artifacts", "composition_fill", "expression_clear"],
+        "nobg_qa": ["body_intact", "holes", "bg_clean"],
+        "format_qa": ["bg_clean", "expression_visible_small", "quality"],
+    },
+}
+
+# Legacy constants (for backwards compatibility)
 STICKER_MAX_W = 370
 STICKER_MAX_H = 320
-STICKER_MARGIN = 10       # px margin on each side when fitting subject
+STICKER_MARGIN = 10
 MAIN_IMAGE_SIZE = (240, 240)
 TAB_IMAGE_SIZE = (96, 74)
-MAX_FILE_SIZE_KB = 1000   # 1MB
+MAX_FILE_SIZE_KB = 1000
+
+
+def get_profile(theme, version=None):
+    """Get the product profile for a theme/version based on prompts.json type field."""
+    import json
+    prompts_file = get_prompts_file(theme, version)
+    if os.path.exists(prompts_file):
+        with open(prompts_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        product_type = data.get("type", "sticker")
+        return PRODUCT_PROFILES.get(product_type, PRODUCT_PROFILES["sticker"])
+    return PRODUCT_PROFILES["sticker"]
 
 # === Background Removal ===
 # Use light green background instead of white for generation.
