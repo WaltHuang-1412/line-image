@@ -194,11 +194,16 @@ prompts.json 的 `"type"` 欄位決定用哪個流程（`"sticker"` 或 `"emoji"
 ### Sticker Pipeline (type: "sticker")
 
 ```
-Phase 3: Generation
- 8. Generate (--no-sam)
- 9. Raw QA (auto): semantic, text_artifacts, quality, aesthetics
-10. Fix loop: 沒過的重生 → 重跑 Raw QA → 直到全過
-11. ★ USER CONFIRMS RAW — 不能跳過，等用戶明確說 OK
+Phase 3: 生圖
+ 8. 生圖（不含去背）
+ 9. Raw QA（自動）：語意、文字、品質、美感、背景均勻、角色分離
+10. 修復循環：
+    a. 沒過的重生（同 prompt，換 seed）
+    b. 重跑 Raw QA
+    c. 還沒過 → 回到 a（最多 3 次）
+    d. 3 次還沒過 → 調整 prompt 再重試
+    e. prompt 調整後還沒過 → 停下來報告用戶
+11. ★ 用戶確認 Raw
 
 Phase 4: Background Removal
 12. nobg (SAM → rembg → flood fill)
@@ -226,11 +231,16 @@ Phase 7: Package & Publish
 ### Emoji Pipeline (type: "emoji")
 
 ```
-Phase 3: Generation
- 8. Generate (--no-sam)
- 9. Raw QA (auto): semantic, expression, composition, text_artifacts, quality, aesthetics, decorations
-10. Fix loop: 沒過的重生 → 重跑 Raw QA → 直到全過
-11. ★ USER CONFIRMS RAW — 不能跳過，等用戶明確說 OK
+Phase 3: 生圖
+ 8. 生圖（不含去背）
+ 9. Raw QA（自動）：語意、表情、構圖、文字、品質、美感、裝飾、背景均勻、角色分離
+10. 修復循環：
+    a. 沒過的重生（同 prompt，換 seed）
+    b. 重跑 Raw QA
+    c. 還沒過 → 回到 a（最多 3 次）
+    d. 3 次還沒過 → 調整 prompt 再重試
+    e. prompt 調整後還沒過 → 停下來報告用戶
+11. ★ 用戶確認 Raw
 
 Phase 4: Background Removal
 12. nobg (SAM → flood fill)
