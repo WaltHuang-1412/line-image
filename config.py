@@ -49,9 +49,9 @@ PRODUCT_PROFILES = {
         "main_image": (240, 240),
         "tab_image": (96, 74),
         "max_file_size_kb": 1000,
-        "raw_qa": ["semantic", "quality", "text_artifacts"],
-        "nobg_qa": ["body_intact", "holes", "bg_clean"],
-        "format_qa": ["bg_clean", "body_cutoff", "text_overlay", "quality"],
+        "raw_qa": ["semantic", "text_artifacts", "quality", "aesthetics"],
+        "nobg_qa": ["bg_clean", "body_intact"],
+        "format_qa": ["bg_clean", "quality"],
     },
     "emoji": {
         "canvas": (180, 180),
@@ -60,9 +60,9 @@ PRODUCT_PROFILES = {
         "main_image": None,
         "tab_image": (96, 74),
         "max_file_size_kb": 1000,
-        "raw_qa": ["semantic", "quality", "text_artifacts", "composition_fill", "expression_clear"],
-        "nobg_qa": ["body_intact", "holes", "bg_clean"],
-        "format_qa": ["bg_clean", "expression_visible_small", "quality"],
+        "raw_qa": ["semantic", "expression", "composition", "text_artifacts", "quality", "aesthetics", "decorations"],
+        "nobg_qa": ["bg_clean", "body_intact"],
+        "format_qa": ["bg_clean", "quality"],
     },
 }
 

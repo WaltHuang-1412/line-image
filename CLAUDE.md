@@ -9,15 +9,14 @@ LINE sticker auto-generation pipeline. Generates AI sticker images via ComfyUI, 
 ## Commands
 
 ```bash
-# Full pipeline (generate → format → package), auto-increments version
-python main.py all <theme> [version]
-
 # Individual steps
-python main.py generate <theme> [version]
-python main.py format <theme> <version>
-python main.py package <theme> <version>
+python main.py generate <theme> [version]          # Generate raw images (no SAM by default)
+python main.py generate <theme> [version] --sam     # Generate with SAM bg removal
+python main.py nobg <theme> <version>               # SAM bg removal on existing raw images
+python main.py format <theme> <version>             # Format to LINE spec
+python main.py package <theme> <version>            # Package into ZIP
 
-# Fix specific stickers by ID (regenerate + re-format)
+# Fix specific stickers by ID (regenerate only, no format)
 python main.py fix <theme> <version> <id> [<id> ...]
 
 # List all themes and versions
@@ -175,38 +174,88 @@ Triggered by: user explicitly requests a full pipeline step (generate, format, Q
 
 ## Development Workflow
 
-### Phase 1: Planning
-1. **Market research** — Search LINE sticker trends, popular themes, identify gaps in the market.
-2. **Theme discussion** — Discuss direction with user, propose theme concepts and get approval.
-3. **Emotion planning** — Plan 16 emotions/scenarios. Collect all v3+ emotions and ensure zero duplicates. Present the list for user approval.
-4. **zh/ja mapping** — Map each zh emotion to a natural ja equivalent. Do NOT create ja/ files yet.
-5. **LINE rule check** — Cross-check all emotions against `line_rule.md` (especially 3.11 offensive content, 3.21 bullying).
+prompts.json 的 `"type"` 欄位決定用哪個流程（`"sticker"` 或 `"emoji"`）。
 
-### Phase 2: Style
-6. **Design style** — Test prompts + IP-Adapter in ComfyUI UI, generate test images for user to compare styles.
-7. **Record settings** — Save the working `style_prefix` and `negative_prompt` into prompts.json (extract from PNG metadata if needed: `PIL.Image.open(img).info['prompt']`).
-8. **User confirms style** — Wait for user to pick a style direction before full generation.
+### Shared: Planning (Phase 1)
+1. **Market research** — Search LINE sticker/emoji trends, identify gaps.
+2. **Theme discussion** — Propose concepts, get user approval.
+3. **Emotion planning** — Plan emotions. Collect all v3+ emotions and ensure zero duplicates. Present for user approval.
+4. **LINE rule check** — Cross-check emotions against `line_rule.md`.
 
-### Phase 3: Generation & QA
-9. **Generate** — Auto-start ComfyUI if not running (`ollama stop` first to free GPU), then `python main.py generate <theme> <version>`.
-10. **Raw QA** — Run full QA checklist on every raw image using gemma3:12b (see QA Checklist below). Fix failures and re-QA until all pass. After fix, only format the changed stickers, not all 16.
-11. **Format zh** — `python main.py format <theme> <version> --lang zh`. Do NOT format to ja/ until zh is confirmed.
-12. **zh QA** — Run full QA checklist on zh/ stickers using gemma3:12b. Fix → re-format only changed stickers → re-QA loop.
-13. **LINE text review** — Check all zh/ja text against `line_rule.md` for review compliance.
-14. **User confirms zh** — Wait for explicit user approval before proceeding.
+### Shared: Style (Phase 2)
+5. **Test style** — Generate 2-3 test images, let user compare.
+6. **Record settings** — Save `style_prefix` and `negative_prompt` into prompts.json.
+7. **Style confirmation** — 判斷條件：
+   - 沿用舊風格（style_prefix / IP-Adapter 跟之前版本一樣）→ 自動通過
+   - 新風格（新角色、新 style_prefix、第一版）→ ★ USER CONFIRMS STYLE
 
-### Phase 4: Japanese & Package
-15. **Format ja** — Create `ja/prompts.json` with Japanese emotions, then `PYTHONIOENCODING=utf-8 python main.py format <theme> <version> --lang ja`.
-16. **ja QA** — Run full QA checklist on ja/ stickers.
-17. **User confirms ja** — Wait for explicit user approval.
-18. **Package** — `python main.py package <theme> <version>`
-19. **Prepare listing** — Write title/description in 3 languages, save to listing.md. For ja version, append「日文篇」/「日本語編」/「- Japanese」to zh/ja/en titles to avoid duplicate rejection on LINE Creators Market.
-20. **Commit** — Commit all output files to git.
+---
 
-### Phase 5: Publish
-21. **Upload & submit** — `python upload_line.py <theme> <version> --lang <lang>`. Automated flow: create sticker set → set count → upload 18 images (16 stickers + main + tab) → tag each sticker (9 tags per sticker) → submit for review.
-22. **Verify on dashboard** — Check LINE Creators Market dashboard that the submission went through.
-23. **Repeat for other language** — Upload the other language version (zh/ja) as a separate sticker set.
+### Sticker Pipeline (type: "sticker")
+
+```
+Phase 3: Generation
+ 8. Generate (--no-sam)
+ 9. Raw QA (auto): semantic, text_artifacts, quality, aesthetics
+10. Fix loop: 沒過的重生 → 重跑 Raw QA → 直到全過
+11. ★ USER CONFIRMS RAW — 不能跳過，等用戶明確說 OK
+
+Phase 4: Background Removal
+12. nobg (SAM → rembg → flood fill)
+13. Nobg QA (auto): bg_clean, body_intact
+14. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
+15. ★ USER CONFIRMS NOBG
+
+Phase 5: Format (zh)
+16. format --lang zh (加文字 overlay)
+17. Format QA (auto): bg_clean, quality
+18. ★ USER CONFIRMS ZH
+
+Phase 6: Format (ja)
+19. format --lang ja
+20. ja QA
+21. ★ USER CONFIRMS JA
+
+Phase 7: Package & Publish
+22. Package
+23. Prepare listing.md
+24. Commit
+25. Upload & submit
+```
+
+### Emoji Pipeline (type: "emoji")
+
+```
+Phase 3: Generation
+ 8. Generate (--no-sam)
+ 9. Raw QA (auto): semantic, expression, composition, text_artifacts, quality, aesthetics, decorations
+10. Fix loop: 沒過的重生 → 重跑 Raw QA → 直到全過
+11. ★ USER CONFIRMS RAW — 不能跳過，等用戶明確說 OK
+
+Phase 4: Background Removal
+12. nobg (SAM → flood fill)
+13. Nobg QA (auto): bg_clean, body_intact
+14. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
+15. ★ USER CONFIRMS NOBG
+
+Phase 5: Format
+16. format (縮到 180×180，無邊距，無文字)
+17. Format QA (auto): bg_clean, quality
+18. ★ USER CONFIRMS FORMAT
+
+Phase 6: Package & Publish
+19. Package
+20. Prepare listing.md
+21. Commit
+22. Upload & submit
+```
+
+### ★ USER CONFIRMS 規則
+
+- 標有 ★ 的步驟必須等用戶明確說 OK 才能繼續下一階段
+- QA 通過 ≠ 用戶通過。QA 通過只代表可以給用戶看
+- **絕對不能跳過 USER CONFIRMS 步驟**
+- 用戶確認前不要開始下一階段的任何操作
 
 #### Upload API Details
 - Session: `line_session.json` (Playwright browser context, refresh with `--login` if expired)
@@ -221,39 +270,44 @@ Triggered by: user explicitly requests a full pipeline step (generate, format, Q
 - Cancel: `POST /sticker/{id}/cancel_request`
 - LINE API responses have `)]}'` XSS prefix — strip before JSON parsing.
 
-## QA Checklist
+## QA System
 
-Use Ollama (`qa_vision.py` or custom prompts with **gemma3:12b**) for all image checks. Never use Claude tokens on images. gemma3:4b is unreliable for quality scoring (caps at 3/5 regardless of actual quality).
+QA 使用模組化架構 `qa/`，每個檢查項目是獨立的 `.py` 檔。用 Ollama gemma3:12b，不用 Claude tokens。
 
-### Raw QA (every sticker, no exceptions)
+### QA 模組
 
-| Check | What to look for | Auto-pass criteria |
-|-------|------------------|--------------------|
-| **Style consistency** | Same character, same art style across all 16 | All match reference |
-| **Anatomy** | Extra limbs, fused legs, missing body parts, deformed face | None found |
-| **Semantic match** | Expression/pose matches intended emotion | YES (relax for abstract social emotions) |
-| **Text artifacts** | AI-generated random text in the image | None found |
-| **Quality / Aesthetics** | Clean, appealing, sellable as a commercial sticker | Score >= 3, no ugly/broken |
-| **nobg quality** | SAM didn't eat body parts, no holes in subject | Visual check, not just content ratio |
+```
+qa/
+├── __init__.py        — 流程控制，根據 profile 跑對應 checks
+├── ollama.py          — Ollama API 共用
+├── semantic.py        — 表情是否匹配 emotion
+├── expression.py      — 表情誇張度（emoji）
+├── composition.py     — 構圖是否填滿（emoji）
+├── text_artifacts.py  — 有沒有亂生文字
+├── quality.py         — 品質評分（≥3 才過）
+├── aesthetics.py      — 美感評分（≥4 才過）
+├── bg_clean.py        — 背景是否乾淨
+├── body_intact.py     — 身體是否完整
+└── decorations.py     — 裝飾元素有沒有畫出來（emoji）
+```
 
-### Formatted / Language QA (every sticker)
+### 使用方式
 
-| Check | What to look for | Auto-pass criteria |
-|-------|------------------|--------------------|
-| **Background** | Fully transparent, no leftover color patches or artifacts | CLEAN |
-| **Body cutoff** | Cat body parts not clipped at image edges | None cut off |
-| **Text overlay** | Label displays correctly, positioned right, doesn't cover cat face | Correct |
-| **Background removal** | No remnants from flood-fill or SAM, clean edges | Clean |
-| **Overall quality** | Commercial-grade sticker, would you buy it? | Score >= 3 |
+```python
+import qa
+failed = qa.run_stage('圓滾貓的日常', 'v8', 'raw_qa')        # 跑 raw QA
+failed = qa.run_stage('圓滾貓的日常', 'v8', 'nobg_qa')       # 跑 nobg QA
+failed = qa.run_stage('圓滾貓的日常', 'v8', 'raw_qa', sticker_ids=[3, 5])  # 只跑特定張
+```
 
-### QA Rules
+哪個 stage 跑哪些 checks 由 `config.PRODUCT_PROFILES` 定義，根據 prompts.json 的 `type` 自動選擇。
 
-- **Check ALL items** — never skip checks because one category failed. Semantic fail does not excuse skipping anatomy/text/quality.
-- **Don't trust numbers alone** — content ratio OK doesn't mean nobg is OK. Visually verify.
-- **Ollama PASS is not user PASS** — QA passing means ready for user review, not approved for production.
-- **Fix → re-QA → confirm** — every fix must be followed by re-QA of the fixed stickers. Loop until all pass.
-- **Don't advance stages without user confirmation** — zh must be user-approved before ja. ja must be user-approved before package.
-- **Second-pass flagged items** — when Ollama flags TEXT or CUTOFF, run a focused second check before marking as real failure. Ollama frequently misreports Chinese labels as unwanted text.
+### QA 規則
+
+- **QA 通過 ≠ 用戶通過** — QA 通過只代表可以給用戶看，不代表可以進下一步
+- **Fix → re-QA** — 每次 fix 後必須重跑 QA
+- **不能跳過 USER CONFIRMS** — 見上方 Pipeline 的 ★ 標記
+- **加新 check** — 新增 `qa/xxx.py`，在 `config.PRODUCT_PROFILES` 的對應 list 加名字
 
 ### GPU Resource Management
 
