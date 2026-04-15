@@ -168,7 +168,7 @@ def cmd_nobg(theme, version):
 
 
 def cmd_fix(theme, version, sticker_ids):
-    """Regenerate specific stickers by ID, then re-format only those stickers."""
+    """Regenerate specific stickers by ID (raw only, no SAM, no format)."""
     id_list = [int(x) for x in sticker_ids]
     _section(f"FIX stickers {id_list}  [{theme}/{version}]")
 
@@ -178,33 +178,10 @@ def cmd_fix(theme, version, sticker_ids):
         sys.exit(1)
 
     from generate import generate_all
-    from format_stickers import remove_background, resize_to_sticker, optimize_png
-    import glob
 
-    paths = config.get_paths(theme, version)
-    fmt_dir = paths["formatted"]
-    os.makedirs(fmt_dir, exist_ok=True)
-
-    # Regenerate the requested stickers
-    results = generate_all(theme, version, sticker_ids=id_list)
-
-    # Re-format only the regenerated stickers
-    print(f"\nRe-formatting {len(results)} sticker(s)...")
-    for entry in results:
-        idx = entry["id"]
-        raw_path = entry.get("raw")
-        nobg_path = entry.get("nobg")
-
-        print(f"  [#{idx:02d}] Re-formatting...")
-        img = remove_background(raw_path, nobg_path)
-        sticker = resize_to_sticker(img)
-        sticker_data = optimize_png(sticker)
-        sticker_path = os.path.join(fmt_dir, f"sticker_{idx:02d}.png")
-        with open(sticker_path, "wb") as f:
-            f.write(sticker_data)
-        print(f"  [#{idx:02d}] Updated: {sticker_path}")
-
-    print(f"\nFix complete. Run 'python main.py package {theme} {version}' to repackage.")
+    # Raw only — no SAM, no format. Each pipeline step is separate.
+    results = generate_all(theme, version, sticker_ids=id_list, with_sam=False)
+    print(f"\nFix complete. {len(results)} sticker(s) regenerated (raw only).")
 
 
 # ---------------------------------------------------------------------------

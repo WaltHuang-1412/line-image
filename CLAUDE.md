@@ -9,19 +9,21 @@ LINE sticker auto-generation pipeline. Generates AI sticker images via ComfyUI, 
 ## Commands
 
 ```bash
-# Individual steps
-python main.py generate <theme> [version]          # Generate raw images (no SAM by default)
-python main.py generate <theme> [version] --sam     # Generate with SAM bg removal
-python main.py nobg <theme> <version>               # SAM bg removal on existing raw images
-python main.py format <theme> <version>             # Format to LINE spec
-python main.py package <theme> <version>            # Package into ZIP
+# Individual steps — 每個指令只做一件事，不會偷跑其他步驟
+python main.py generate <theme> [version]          # 生 raw 圖（不含去背）
+python main.py generate <theme> [version] --sam     # 生 raw 圖 + SAM 去背（產 _nobg.png）
+python main.py nobg <theme> <version>               # 對已有的 raw 圖跑 SAM 去背
+python main.py format <theme> <version>             # 去背 + 縮圖 + 文字（LINE 規格）
+python main.py package <theme> <version>            # 打包 ZIP
 
-# Fix specific stickers by ID (regenerate only, no format)
+# 重生特定張（只產 raw，不跑 SAM，不跑 format）
 python main.py fix <theme> <version> <id> [<id> ...]
 
-# List all themes and versions
+# 列出所有主題和版本
 python main.py list
 ```
+
+**`fix` 指令行為：只重生 raw 圖。** 不產 `_nobg.png`，不做 format，不做任何後續步驟。去背、格式化都是獨立指令，要用就自己跑。
 
 ComfyUI must be running before generate/fix (auto-start if not running):
 ```bash
@@ -77,6 +79,30 @@ output/{theme}/
 ### Background Removal Strategy
 
 SAM segments by detecting "cat" via GroundingDINO. When the subject is white/light-colored, SAM may remove body parts along with the background. The fallback flood-fill algorithm seeds from all four image corners and removes connected similar-color regions, preserving the subject regardless of color.
+
+### Prompt Strengthening for Clean Backgrounds (v8+ learning)
+
+AnimagineXL + ink painting style 必然產生背景紋理/漸層。新版 prompts.json 的 `style_prefix` 和 `negative_prompt` **必須**加以下強化詞，否則背景會糟到過不了 `bg_uniform` QA：
+
+**style_prefix 必備：**
+```
+solid flat single color background, plain background, no gradient, no shadow, no texture, light green background
+```
+
+**negative_prompt 必備：**
+```
+gradient background, textured background, shadow on background, dark background, detailed background
+```
+
+單純寫 `light green background` 不夠，v8 實測 15/16 張會失敗。加了強化詞才能穩定產出可去背的圖。
+
+### bg_uniform QA 判定標準（v8+）
+
+`qa/bg_uniform.py` 的判定邏輯是「去背可行性」，**不是**「完美純色」。容許畫風紋理（ink painting 的筆觸），但會抓真正影響去背的問題：強漸層、暗影、多色塊、vignette。
+
+**為什麼：** ink painting style 永遠有筆觸紋理，如果要求「完美純色」，v8 實測不管怎麼調 prompt 都只有 1/16 能過。改成「可去除」標準後 14/16 通過。
+
+新畫風（watercolor、sketch 等有筆觸的）沿用這個標準。純數位風格（flat vector）可以自訂更嚴格的 check。
 
 ## Models (stored in ComfyUI/models/)
 
@@ -153,7 +179,7 @@ output/{theme}/{version}/
 
 Each language folder (zh/, ja/) contains the final stickers ready for packaging. The `formatted/` folder is a working directory (gitignored) — not final output.
 
-**Note:** `fix` command's built-in reformat outputs to `formatted/` without text overlay. Always run `python main.py format --lang <lang>` after fix to update the language folders with proper text overlays. Only format the changed stickers when possible, not all 16.
+**Note:** `fix` 只重生 raw 圖。後續步驟（nobg、format）需要自己分別跑。
 
 ## Execution Modes
 
@@ -195,34 +221,41 @@ prompts.json 的 `"type"` 欄位決定用哪個流程（`"sticker"` 或 `"emoji"
 
 ```
 Phase 3: 生圖
- 8. 生圖（不含去背）
- 9. Raw QA（自動）：語意、文字、品質、美感、背景均勻、角色分離
+ 8. python main.py generate <theme> <version>
+    → 只產 raw/sticker_XX.png，不產 nobg
+ 9. Raw QA（用 Ollama，不用 Claude）：
+    → python -c "import qa; qa.run_stage('<theme>', '<version>', 'raw_qa')"
+    → checks: semantic, text_artifacts, quality, aesthetics, bg_uniform, separation
+    → bg_uniform + separation 必須通過才能進 Phase 4（不通過 = 去背會爛）
 10. 修復循環：
-    a. 沒過的重生（同 prompt，換 seed）
-    b. 重跑 Raw QA
+    a. python main.py fix <theme> <version> <失敗的 id>（只重生 raw，不跑 SAM，不跑 format）
+    b. 重跑 Raw QA（只跑失敗的張）
     c. 還沒過 → 回到 a（最多 3 次）
     d. 3 次還沒過 → 調整 prompt 再重試
     e. prompt 調整後還沒過 → 停下來報告用戶
 11. ★ 用戶確認 Raw
 
 Phase 4: Background Removal
-12. nobg (SAM → rembg → flood fill)
-13. Nobg QA (auto): bg_clean, body_intact
+12. python main.py nobg <theme> <version>
+    → SAM → rembg → flood fill fallback
+13. Nobg QA（用 Ollama）：
+    → python -c "import qa; qa.run_stage('<theme>', '<version>', 'nobg_qa')"
+    → checks: bg_clean, body_intact
 14. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
 15. ★ USER CONFIRMS NOBG
 
 Phase 5: Format (zh)
-16. format --lang zh (加文字 overlay)
-17. Format QA (auto): bg_clean, quality
+16. python main.py format <theme> <version> --lang zh
+17. Format QA（用 Ollama）：bg_clean, quality
 18. ★ USER CONFIRMS ZH
 
 Phase 6: Format (ja)
-19. format --lang ja
+19. PYTHONIOENCODING=utf-8 python main.py format <theme> <version> --lang ja
 20. ja QA
 21. ★ USER CONFIRMS JA
 
 Phase 7: Package & Publish
-22. Package
+22. python main.py package <theme> <version>
 23. Prepare listing.md
 24. Commit
 25. Upload & submit
@@ -232,33 +265,49 @@ Phase 7: Package & Publish
 
 ```
 Phase 3: 生圖
- 8. 生圖（不含去背）
- 9. Raw QA（自動）：語意、表情、構圖、文字、品質、美感、裝飾、背景均勻、角色分離
+ 8. python main.py generate <theme> <version>
+    → 只產 raw/sticker_XX.png，不產 nobg
+ 9. Raw QA（用 Ollama，不用 Claude）：
+    → python -c "import qa; qa.run_stage('<theme>', '<version>', 'raw_qa')"
+    → checks: semantic, expression, composition, text_artifacts, quality, aesthetics, decorations, bg_uniform, separation
+    → bg_uniform + separation 必須通過才能進 Phase 4（不通過 = 去背會爛）
 10. 修復循環：
-    a. 沒過的重生（同 prompt，換 seed）
-    b. 重跑 Raw QA
+    a. python main.py fix <theme> <version> <失敗的 id>（只重生 raw，不跑 SAM，不跑 format）
+    b. 重跑 Raw QA（只跑失敗的張）：
+       → python -c "import qa; qa.run_stage('<theme>', '<version>', 'raw_qa', sticker_ids=[...])"
     c. 還沒過 → 回到 a（最多 3 次）
     d. 3 次還沒過 → 調整 prompt 再重試
     e. prompt 調整後還沒過 → 停下來報告用戶
 11. ★ 用戶確認 Raw
 
 Phase 4: Background Removal
-12. nobg (SAM → flood fill)
-13. Nobg QA (auto): bg_clean, body_intact
+12. python main.py nobg <theme> <version>
+    → SAM → flood fill fallback
+13. Nobg QA（用 Ollama）：
+    → python -c "import qa; qa.run_stage('<theme>', '<version>', 'nobg_qa')"
+    → checks: bg_clean, body_intact
 14. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
 15. ★ USER CONFIRMS NOBG
 
 Phase 5: Format
-16. format (縮到 180×180，無邊距，無文字)
-17. Format QA (auto): bg_clean, quality
+16. python main.py format <theme> <version>
+    → 縮到 180×180，無邊距，無文字
+17. Format QA（用 Ollama）：bg_clean, quality
 18. ★ USER CONFIRMS FORMAT
 
 Phase 6: Package & Publish
-19. Package
+19. python main.py package <theme> <version>
 20. Prepare listing.md
 21. Commit
 22. Upload & submit
 ```
+
+### 關鍵規則（每次都要遵守，不要再犯）
+
+- **QA 用 Ollama（`qa.run_stage()`），絕對不用 Claude 看圖** — 浪費 token 且不可靠
+- **fix 只重生 raw** — 不產 nobg，不做 format，不做任何後續步驟
+- **bg_uniform + separation 是去背的前置條件** — 這兩項沒過就不能進 Phase 4，要修到過
+- **每個步驟用上面寫的指令** — 不要自己猜指令、加參數、組合步驟
 
 ### ★ USER CONFIRMS 規則
 
@@ -296,7 +345,9 @@ qa/
 ├── text_artifacts.py  — 有沒有亂生文字
 ├── quality.py         — 品質評分（≥3 才過）
 ├── aesthetics.py      — 美感評分（≥4 才過）
-├── bg_clean.py        — 背景是否乾淨
+├── bg_uniform.py      — 背景是否均勻純色（去背前置條件）
+├── separation.py      — 角色是否與背景分離清楚（去背前置條件）
+├── bg_clean.py        — 去背後背景是否乾淨（nobg/format QA 用）
 ├── body_intact.py     — 身體是否完整
 └── decorations.py     — 裝飾元素有沒有畫出來（emoji）
 ```
@@ -338,4 +389,4 @@ ComfyUI and Ollama gemma3:12b cannot run simultaneously on a single GPU (GTX 108
 - **Auto-start ComfyUI** — if ComfyUI is not running, start it yourself with `cd ComfyUI && python main.py --listen` (run_in_background). Never ask the user to start it.
 - **GPU memory** — after timeouts or multiple generations, free ComfyUI memory with `POST http://127.0.0.1:8188/free` before retrying.
 - **Japanese format encoding** — use `PYTHONIOENCODING=utf-8` when running format with `--lang ja` to avoid cp950 encoding errors on Windows.
-- **fix command does NOT apply text overlay** — always run `python main.py format <theme> <version> --lang <lang>` after fix to get proper text overlays.
+- **fix 只重生 raw** — 不產 nobg，不做 format。後續步驟（nobg、format）各自獨立跑。
