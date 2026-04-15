@@ -46,7 +46,8 @@ prompts.json → [GENERATE via ComfyUI] → raw/ → [FORMAT: bg removal + resiz
 ### Key Modules
 
 - **`generate.py`** — ComfyUI API client. Submits `workflow/generate_with_sam.json` with per-sticker prompts. Produces two outputs per sticker: `sticker_XX.png` (with background) and `sticker_XX_nobg.png` (SAM-segmented transparent). Uses IP-Adapter with `v3.png` reference for style consistency. Reads `style_prefix` and `negative_prompt` from prompts.json.
-- **`format_stickers.py`** — Background removal + LINE spec conversion + text overlay. Tries SAM nobg first; falls back to flood-fill from corners if SAM ate too much (content ratio < 5%). Adds emotion text with decorative marks, alternating top/bottom position. Outputs 370×320 stickers, 240×240 main, 96×74 tab.
+- **`format_stickers.py`** — Sticker-only format（type="sticker"）。Background removal + LINE spec conversion + text overlay. Adds emotion text with decorative marks, alternating top/bottom position. Outputs 370×320 stickers, 240×240 main, 96×74 tab.
+- **`format_emoji.py`** — Emoji-only format（type="emoji"）。Background removal + 縮到 180×180，無邊距，無文字。輸出 180×180 emoji + 96×74 tab。共用 `format_stickers.py` 的底層 helper（remove_background、optimize_png、_fit_on_canvas）。
 - **`package.py`** — ZIPs formatted stickers with sequential naming (01.png, 02.png...) + metadata.json.
 - **`config.py`** — All constants, path helpers, version management. `get_prompts_file()` checks version-level then theme-level prompts.json.
 

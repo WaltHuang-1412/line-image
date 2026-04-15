@@ -1,0 +1,28 @@
+{
+  "theme": "圓滾貓的日常",
+  "version": "v8",
+  "title": "圓滾貓表情貼",
+  "description": "圓滾滾灰貓的16種超實用表情！開心、生氣、大笑、翻白眼...聊天必備表情貼",
+  "sticker_count": 16,
+  "files": {
+    "stickers": [
+      "01.png",
+      "02.png",
+      "03.png",
+      "04.png",
+      "05.png",
+      "06.png",
+      "07.png",
+      "08.png",
+      "09.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "14.png",
+      "15.png",
+      "16.png"
+    ],
+    "tab": "tab.png"
+  }
+}

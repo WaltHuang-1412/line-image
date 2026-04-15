@@ -58,17 +58,21 @@ def create_package(theme, version, lang=None):
         for seq, sticker_path in enumerate(sticker_files, 1):
             zf.write(sticker_path, f"{seq:02d}.png")
 
+    files_meta = {
+        "stickers": [f"{seq:02d}.png" for seq in range(1, len(sticker_files) + 1)],
+    }
+    if os.path.exists(main_file):
+        files_meta["main"] = "main.png"
+    if os.path.exists(tab_file):
+        files_meta["tab"] = "tab.png"
+
     metadata = {
         "theme": theme,
         "version": version,
         "title": title,
         "description": desc,
         "sticker_count": len(sticker_files),
-        "files": {
-            "main": "main.png",
-            "tab": "tab.png",
-            "stickers": [f"{seq:02d}.png" for seq in range(1, len(sticker_files) + 1)],
-        },
+        "files": files_meta,
     }
 
     meta_path = os.path.join(pkg_dir, "metadata.json")

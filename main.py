@@ -76,10 +76,22 @@ def cmd_generate(theme, version, with_sam=True):
 
 
 def cmd_format(theme, version, lang=None):
-    """Format raw images to LINE spec."""
+    """Format raw images to LINE spec. Routes to sticker or emoji module by prompts.json type."""
     label = f"{theme}/{version}" + (f"/{lang}" if lang else "")
     _section(f"FORMAT  [{label}]")
-    from format_stickers import format_all
+
+    prompts_file = config.get_prompts_file(theme, version)
+    product_type = "sticker"
+    if os.path.exists(prompts_file):
+        with open(prompts_file, "r", encoding="utf-8") as f:
+            product_type = json.load(f).get("type", "sticker")
+
+    if product_type == "emoji":
+        print(f"  type=emoji → format_emoji")
+        from format_emoji import format_all
+    else:
+        print(f"  type=sticker → format_stickers")
+        from format_stickers import format_all
     format_all(theme, version, lang=lang)
 
 
