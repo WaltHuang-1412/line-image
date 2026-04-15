@@ -11,7 +11,7 @@ EXPECTED_DECORATIONS = {
     "生氣": "steam or veins",
     "驚訝": "exclamation marks",
     "尷尬": "sweat drops",
-    "睡覺": "ZZZ or snoring bubble",
+    "睡覺": "ZZZ, snoring bubble, nightcap, or closed eyes with peaceful face",
     "比讚": "thumbs up or sparkle",
     "壞笑": "dark shadow or aura",
     "嫌棄": "stink lines or wavy lines",

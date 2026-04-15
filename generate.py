@@ -147,7 +147,7 @@ def sam_remove_bg_all(theme, version, sticker_ids=None):
         version: Version string.
         sticker_ids: Optional list of sticker IDs. If None, process all.
     """
-    from format_stickers import rembg_remove_bg
+    from format_stickers import flood_fill_remove_bg
     from PIL import Image
 
     paths = config.get_paths(theme, version)
@@ -177,11 +177,11 @@ def sam_remove_bg_all(theme, version, sticker_ids=None):
         print(f"  [#{idx:02d}] SAM...", end="", flush=True)
         result = sam_remove_bg(raw_path, nobg_path, sam_detect_prompt)
         if not result:
-            print(f" SAM FAILED, using rembg...", end="", flush=True)
+            print(f" SAM FAILED, using flood fill...", end="", flush=True)
             raw_img = Image.open(raw_path).convert("RGBA")
-            rembg_img = rembg_remove_bg(raw_img)
-            rembg_img.save(nobg_path, "PNG")
-            failed.append((idx, "SAM failed → rembg"))
+            flood_img = flood_fill_remove_bg(raw_img)
+            flood_img.save(nobg_path, "PNG")
+            failed.append((idx, "SAM failed → flood fill"))
             print(f" done")
             continue
 
@@ -190,11 +190,11 @@ def sam_remove_bg_all(theme, version, sticker_ids=None):
         if ok:
             print(f" PASS")
         else:
-            print(f" FAIL ({reason}), using rembg...", end="", flush=True)
+            print(f" FAIL ({reason}), using flood fill...", end="", flush=True)
             raw_img = Image.open(raw_path).convert("RGBA")
-            rembg_img = rembg_remove_bg(raw_img)
-            rembg_img.save(nobg_path, "PNG")
-            failed.append((idx, reason + " → rembg"))
+            flood_img = flood_fill_remove_bg(raw_img)
+            flood_img.save(nobg_path, "PNG")
+            failed.append((idx, reason + " → flood fill"))
             print(f" done")
 
     # Summary

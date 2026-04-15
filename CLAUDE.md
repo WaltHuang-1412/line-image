@@ -225,23 +225,26 @@ Phase 3: 生圖
     → 只產 raw/sticker_XX.png，不產 nobg
  9. Raw QA（用 Ollama，不用 Claude）：
     → python -c "import qa; qa.run_stage('<theme>', '<version>', 'raw_qa')"
-    → checks: semantic, text_artifacts, quality, aesthetics, bg_uniform, separation
-    → bg_uniform + separation 必須通過才能進 Phase 4（不通過 = 去背會爛）
+    → checks: semantic, text_artifacts, quality, aesthetics, bg_uniform, bg_color, separation
+    → bg_uniform + bg_color + separation 必須通過才能進 Phase 4（不通過 = 去背會爛）
 10. 修復循環：
     a. python main.py fix <theme> <version> <失敗的 id>（只重生 raw，不跑 SAM，不跑 format）
     b. 重跑 Raw QA（只跑失敗的張）
     c. 還沒過 → 回到 a（最多 3 次）
     d. 3 次還沒過 → 調整 prompt 再重試
     e. prompt 調整後還沒過 → 停下來報告用戶
-11. ★ 用戶確認 Raw
+11. 風格一致性檢查（跨張比對，見下方「風格一致性」節）
+    → 用戶比對 16 張的姿勢/比例/構圖是否統一
+    → 找出 outlier（例：頭特大、全身姿、躺平等），調 prompt 重生
+12. ★ 用戶確認 Raw
 
 Phase 4: Background Removal
-12. python main.py nobg <theme> <version>
-    → SAM → rembg → flood fill fallback
-13. Nobg QA（用 Ollama）：
+13. python main.py nobg <theme> <version>
+    → SAM → flood fill fallback
+14. Nobg QA（用 Ollama）：
     → python -c "import qa; qa.run_stage('<theme>', '<version>', 'nobg_qa')"
     → checks: bg_clean, body_intact
-14. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
+15. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
 15. ★ USER CONFIRMS NOBG
 
 Phase 5: Format (zh)
@@ -269,8 +272,8 @@ Phase 3: 生圖
     → 只產 raw/sticker_XX.png，不產 nobg
  9. Raw QA（用 Ollama，不用 Claude）：
     → python -c "import qa; qa.run_stage('<theme>', '<version>', 'raw_qa')"
-    → checks: semantic, expression, composition, text_artifacts, quality, aesthetics, decorations, bg_uniform, separation
-    → bg_uniform + separation 必須通過才能進 Phase 4（不通過 = 去背會爛）
+    → checks: semantic, expression, composition, text_artifacts, quality, aesthetics, decorations, bg_uniform, bg_color, separation
+    → bg_uniform + bg_color + separation 必須通過才能進 Phase 4（不通過 = 去背會爛）
 10. 修復循環：
     a. python main.py fix <theme> <version> <失敗的 id>（只重生 raw，不跑 SAM，不跑 format）
     b. 重跑 Raw QA（只跑失敗的張）：
@@ -278,7 +281,10 @@ Phase 3: 生圖
     c. 還沒過 → 回到 a（最多 3 次）
     d. 3 次還沒過 → 調整 prompt 再重試
     e. prompt 調整後還沒過 → 停下來報告用戶
-11. ★ 用戶確認 Raw
+11. 風格一致性檢查（跨張比對，見下方「風格一致性」節）
+    → 用戶比對 16 張的姿勢/比例/構圖是否統一
+    → 找出 outlier（例：頭特大、全身姿、躺平等），調 prompt 重生
+12. ★ 用戶確認 Raw
 
 Phase 4: Background Removal
 12. python main.py nobg <theme> <version>
@@ -306,8 +312,30 @@ Phase 6: Package & Publish
 
 - **QA 用 Ollama（`qa.run_stage()`），絕對不用 Claude 看圖** — 浪費 token 且不可靠
 - **fix 只重生 raw** — 不產 nobg，不做 format，不做任何後續步驟
-- **bg_uniform + separation 是去背的前置條件** — 這兩項沒過就不能進 Phase 4，要修到過
+- **bg_uniform + bg_color + separation 是去背的前置條件** — 這 3 項沒過就不能進 Phase 4，要修到過
 - **每個步驟用上面寫的指令** — 不要自己猜指令、加參數、組合步驟
+
+### 風格一致性檢查
+
+Raw QA 是**逐張**判定，**不會抓跨張不一致**（單張看很好，16 張擺一起歪七扭八）。所以 Raw QA 過了之後，必須加一個跨張比對步驟才能進 ★ 用戶確認。
+
+**要一致的維度：**
+1. **姿勢（pose）** — 都坐姿？都全身？不要混
+2. **頭身比例（head-to-body ratio）** — chibi 通常頭佔 40-50%，其他張比例要差不多
+3. **構圖（composition）** — 都正面？都半身？畫面填滿程度要接近
+4. **身體形狀（body shape）** — 圓胖？拉長？攤平？不要混
+5. **四肢露出程度（limbs）** — 都露爪？都藏腿？不要混
+
+**怎麼比：** 把 16 張同時列出來（Claude 看），找出 outlier。例：v8 發現 #03 頭特大、#04 全身+4腳、#08 攤成橢圓，跟其他 13 張不一致。
+
+**怎麼修：**
+1. 先調 style_prefix 加強姿勢限制（如 `seated chibi pose, round chubby seated body, head and upper body visible, paws tucked near body, no legs shown`）
+2. 再改 outlier 的 per-sticker prompt（去掉「curled up」「full body」等會讓模型亂發揮的詞）
+3. `python main.py fix` 重生 outlier
+4. 重跑 Raw QA
+5. 再做一次跨張比對
+
+**為什麼這步只能用 Claude 不用 Ollama：** Ollama 逐張判定，沒辦法「同時看 16 張比較」。跨張風格一致性是人類視覺任務，Claude/人類直接比對最有效。
 
 ### ★ USER CONFIRMS 規則
 
@@ -345,7 +373,8 @@ qa/
 ├── text_artifacts.py  — 有沒有亂生文字
 ├── quality.py         — 品質評分（≥3 才過）
 ├── aesthetics.py      — 美感評分（≥4 才過）
-├── bg_uniform.py      — 背景是否均勻純色（去背前置條件）
+├── bg_uniform.py      — 背景是否均勻（去背前置條件）
+├── bg_color.py        — 背景是否是 prompts.json 指定的顏色（雙層：像素取樣 + Ollama）
 ├── separation.py      — 角色是否與背景分離清楚（去背前置條件）
 ├── bg_clean.py        — 去背後背景是否乾淨（nobg/format QA 用）
 ├── body_intact.py     — 身體是否完整
