@@ -12,14 +12,14 @@
     {"id": 5,  "emotion": "生氣", "prompt": "extremely furrowed angry brows, cheeks puffed up huge and bright red, sharp fangs showing, big steam clouds from ears, cross-shaped veins popping on forehead, clean flat solid color background, no shadow, no gradient"},
     {"id": 6,  "emotion": "驚訝", "prompt": "jaw dropped wide open, eyes bulging enormous, big exclamation mark above head, shocked frozen stiff pose, clean flat solid color background, no shadow, no gradient"},
     {"id": 7,  "emotion": "尷尬", "prompt": "nervous crooked smile, big sweat drops on forehead and cheek, slightly tilted head, awkward embarrassed expression"},
-    {"id": 8,  "emotion": "睡覺", "prompt": "sleeping cat, eyes fully closed two curved lines, mouth closed in tiny smile, completely asleep, big round transparent soap bubble coming out of nose, nightcap on head, blanket wrapped around body, seated chibi pose head drooping forward asleep"},
+    {"id": 8,  "emotion": "睡覺", "prompt": "sleeping cat, eyes fully closed two curved lines, mouth closed in tiny smile, completely asleep, big round transparent soap bubble coming out of nose, nightcap on head, seated chibi pose head drooping forward asleep, clean outline, no ink splashes, no background artifacts"},
     {"id": 9,  "emotion": "比讚", "prompt": "confident winking face, one paw giving big thumbs up with sparkle effects around it, cool approving grin"},
     {"id": 10, "emotion": "壞笑", "prompt": "extremely sly wide smirk, eyes narrowed into devious slits, dark purple shadow over face, evil aura emanating, scheming plotting expression"},
     {"id": 11, "emotion": "嫌棄", "prompt": "tongue sticking far out, squinting disgusted eyes, nose wrinkled, wavy stink lines nearby, grossed out nauseated face"},
     {"id": 12, "emotion": "委屈", "prompt": "huge watery puppy eyes looking up, trembling lip, single big teardrop on cheek, shaking trembling lines around body, pitiful pleading face"},
     {"id": 13, "emotion": "翻白眼", "prompt": "eyes rolled all the way up showing whites, flat unimpressed mouth, three dots floating above head, completely done exasperated face"},
     {"id": 14, "emotion": "害羞", "prompt": "bright red blushing cheeks glowing, eyes looking away shyly, paws covering face partially, steam puffs rising from head"},
-    {"id": 15, "emotion": "發呆", "prompt": "spiral swirl eyes, mouth hanging open, soul ghost floating out of head, completely blank empty zoned out expression"},
+    {"id": 15, "emotion": "發呆", "prompt": "big empty white circle eyes with tiny black dot pupils, mouth slightly open dazed, soul ghost floating out of head, spaced out zoned out expression, seated chibi pose, clean outline, no ink splashes, no background artifacts"},
     {"id": 16, "emotion": "哼", "prompt": "chin tilted up proudly, eyes closed smugly, puffed cheeks, big white puff of air from nose, turned away with attitude"}
   ]
 }

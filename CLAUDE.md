@@ -86,7 +86,7 @@ AnimagineXL + ink painting style 必然產生背景紋理/漸層。新版 prompt
 
 **style_prefix 必備：**
 ```
-solid flat single color background, plain background, no gradient, no shadow, no texture, light green background
+solid flat single color background, plain background, no gradient, no shadow, no texture, bright saturated orange background
 ```
 
 **negative_prompt 必備：**
@@ -95,6 +95,53 @@ gradient background, textured background, shadow on background, dark background,
 ```
 
 單純寫 `light green background` 不夠，v8 實測 15/16 張會失敗。加了強化詞才能穩定產出可去背的圖。
+
+### 背景色選擇原則（v8+ 血淚教訓）
+
+背景色不能跟角色身上或任何裝飾元素同色，否則 SAM/flood fill 會吃掉這些元素。選色前**必須**審一遍 prompts.json 的所有 emotion 裝飾。
+
+**角色色（圓滾貓例）：** 灰身、白臉白肚、粉頰、黑眼珠
+
+**表情裝飾色（要避開）：**
+- 白色：sparkles、stars、steam、puffs、ghost、bubbles、ZZZ
+- 藍色：tears、sweat drops、teardrops
+- 粉/紅：hearts、cheeks、veins
+- 黃色：sparkles、stars
+- 黑色：ZZZ 外框、dots
+- 綠色：stink lines
+
+**v8 實測流程：**
+1. `light green` → ink painting 產生紋理，QA 失敗 15/16
+2. `cyan` → 跟藍淚水撞色（#02, #04, #07, #12）
+3. `bright saturated orange` → 成功（不在任何角色/裝飾色上）
+
+### Ink Painting Style 去背陷阱（v8+）
+
+`ink painting style, brush strokes` 這類畫風**會在角色旁邊產生墨點噴濺**，SAM 會把噴濺當成貓的一部分納入 mask → 去背後有殘留黑塊。
+
+**解法：** outlier 的 per-sticker prompt 加
+```
+clean outline, no ink splashes, no background artifacts
+```
+不要全部加（太一致會失去畫風）。只在 nobg QA 失敗時，發現某張有背景噴濺，才加。
+
+### Flood Fill 吃掉同色細節（v8+）
+
+Flood fill 從四角填同色區域。如果角色內部有跟**背景同色的小細節**（例：橘色背景 + 淺橘瞳孔），flood fill 會把這些小細節一起吃掉 → `body_intact` 不一定抓得到（過小被忽略），但視覺上很明顯。
+
+**規避：**
+- 第一選擇：用 SAM（semantic 判定，不看顏色）
+- Flood fill 只在 SAM 壞掉時用，**且**確認角色內沒有跟背景同色的細節
+- 檢查瞳孔色是否跟背景色太接近，避免 pale pupils on similar bg
+
+### bg removal fix loop 策略（v8+）
+
+nobg QA 失敗時，照優先序試：
+
+1. **SAM 原結果** — 保留所有細節，但可能有邊緣殘留
+2. **後處理 alpha 閾值**（砍半透明邊）— 只對「半透明暈邊」有用，對不透明色塊殘留無效
+3. **重生 raw + 加 `clean outline, no ink splashes`** — 最根本，適用墨點噴濺
+4. **flood fill** — 最後手段，只在確定沒有同色細節時用
 
 ### bg_uniform QA 判定標準（v8+）
 
@@ -244,7 +291,10 @@ Phase 4: Background Removal
 14. Nobg QA（用 Ollama）：
     → python -c "import qa; qa.run_stage('<theme>', '<version>', 'nobg_qa')"
     → checks: bg_clean, body_intact
-15. Fix loop: 沒過的重跑去背 → 重跑 Nobg QA
+15. Fix loop（照優先序，見下方「bg removal fix loop 策略」）：
+    a. 先重試 SAM（呼叫 sam_remove_bg 直接，不要重跑 nobg 整體）
+    b. 還是 bg_clean FAIL → 重生 raw 加 "clean outline, no ink splashes, no background artifacts"
+    c. **不要**隨便用 flood fill 救場，會吃同色細節（如跟背景同色的瞳孔）
 15. ★ USER CONFIRMS NOBG
 
 Phase 5: Format (zh)
@@ -310,10 +360,12 @@ Phase 6: Package & Publish
 
 ### 關鍵規則（每次都要遵守，不要再犯）
 
-- **QA 用 Ollama（`qa.run_stage()`），絕對不用 Claude 看圖** — 浪費 token 且不可靠
+- **QA 用 Ollama（`qa.run_stage()`），絕對不用 Claude 看圖** — 浪費 token 且不可靠。**例外**：跨張風格一致性（Ollama 做不到）
 - **fix 只重生 raw** — 不產 nobg，不做 format，不做任何後續步驟
 - **bg_uniform + bg_color + separation 是去背的前置條件** — 這 3 項沒過就不能進 Phase 4，要修到過
 - **每個步驟用上面寫的指令** — 不要自己猜指令、加參數、組合步驟
+- **背景色不能跟角色/裝飾色撞** — 選色前審所有 emotion prompts，見「背景色選擇原則」
+- **nobg 失敗不要先 flood fill** — 會吃同色細節，優先重生 raw 加 "no ink splashes"
 
 ### 風格一致性檢查
 
