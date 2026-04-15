@@ -284,7 +284,25 @@ ZH_EMOTION_TAGS = {
     "煩欸": ["cat", "angry_dissatisfied", "sad", "lazy"],
     "比心": ["cat", "love", "happy", "shy"],
     "才不要": ["cat", "angry_dissatisfied", "surprise"],
-    # v8 lazy/chill emotions
+    # v8 emoji basic emotions (圓滾貓表情貼)
+    "開心": ["cat", "happy", "excited", "laugh"],
+    "大笑": ["cat", "laugh", "happy", "excited"],
+    "愛心眼": ["cat", "love", "happy", "shy", "hug"],
+    "哭哭": ["cat", "cry", "sad", "please"],
+    "生氣": ["cat", "angry", "angry_dissatisfied"],
+    "驚訝": ["cat", "surprise", "shock"],
+    "尷尬": ["cat", "shy", "anxious", "panic"],
+    "睡覺": ["cat", "sleep", "lazy"],
+    # v9 emoji reaction emotions (圓滾貓表情貼 2)
+    "比讚": ["cat", "ok", "happy", "thank"],
+    "壞笑": ["cat", "laugh", "happy"],
+    "嫌棄": ["cat", "angry_dissatisfied", "no", "exactly"],
+    "委屈": ["cat", "sad", "cry", "please", "miss"],
+    "翻白眼": ["cat", "angry_dissatisfied", "exactly", "never_mind"],
+    "害羞": ["cat", "shy", "love", "happy"],
+    "發呆": ["cat", "lazy", "still", "wait"],
+    # "哼" already defined in v3 sassy emotions above
+    # v8 lazy/chill emotions (legacy sticker pack)
     "不想動": ["cat", "lazy", "sleep", "sad"],
     "追劇中": ["cat", "happy", "excited", "lazy"],
     "再一集": ["cat", "excited", "sleep", "happy", "lazy"],

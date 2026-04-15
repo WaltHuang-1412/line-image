@@ -47,7 +47,7 @@ prompts.json → [GENERATE via ComfyUI] → raw/ → [FORMAT: bg removal + resiz
 
 - **`generate.py`** — ComfyUI API client. Submits `workflow/generate_with_sam.json` with per-sticker prompts. Produces two outputs per sticker: `sticker_XX.png` (with background) and `sticker_XX_nobg.png` (SAM-segmented transparent). Uses IP-Adapter with `v3.png` reference for style consistency. Reads `style_prefix` and `negative_prompt` from prompts.json.
 - **`format_stickers.py`** — Sticker-only format（type="sticker"）。Background removal + LINE spec conversion + text overlay. Adds emotion text with decorative marks, alternating top/bottom position. Outputs 370×320 stickers, 240×240 main, 96×74 tab.
-- **`format_emoji.py`** — Emoji-only format（type="emoji"）。Background removal + 縮到 180×180，無邊距，無文字。輸出 180×180 emoji + 96×74 tab。共用 `format_stickers.py` 的底層 helper（remove_background、optimize_png、_fit_on_canvas）。
+- **`format_emoji.py`** — Emoji-only format（type="emoji"）。Background removal + 縮到 180×180，無邊距，無文字。輸出 180×180 emoji + 96×74 tab（emoji **沒有獨立的 240×240 main**，sticker 才有；表情貼本體即為「主要圖片」）。共用 `format_stickers.py` 的底層 helper（remove_background、optimize_png、_fit_on_canvas）。
 - **`package.py`** — ZIPs formatted stickers with sequential naming (01.png, 02.png...) + metadata.json.
 - **`config.py`** — All constants, path helpers, version management. `get_prompts_file()` checks version-level then theme-level prompts.json.
 
@@ -367,6 +367,9 @@ Phase 6: Package & Publish
 - **每個步驟用上面寫的指令** — 不要自己猜指令、加參數、組合步驟
 - **背景色不能跟角色/裝飾色撞** — 選色前審所有 emotion prompts，見「背景色選擇原則」
 - **nobg 失敗不要先 flood fill** — 會吃同色細節，優先重生 raw 加 "no ink splashes"
+- **listing.md 全部用半形** — `:` 不是 `：`、`!` 不是 `！`、`,` 不是 `、`/`，`、(` 不是 `（`、`)` 不是 `）`、`...` 不是 `⋯⋯`、`/` 不是 `／`、`-` 不是 `—`
+- **listing.md 必填版權區塊** — 結尾要有 `### 版權\nCopyright (C) <year> Walter Studio`，否則 upload_line.py 抓不到送審會失敗
+- **標題不能跟既有作品撞** — 上架前先查 LINE Creators Market；同系列換版要在標題加區別詞（如「表情絵文字」對應 emoji，避開貼圖系列名）
 
 ### 風格一致性檢查
 

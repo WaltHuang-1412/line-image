@@ -96,10 +96,22 @@ def cmd_format(theme, version, lang=None):
 
 
 def cmd_package(theme, version, lang=None):
-    """Package formatted stickers into a ZIP."""
+    """Package formatted images into a ZIP. Routes to sticker or emoji module by prompts.json type."""
     label = f"{theme}/{version}" + (f"/{lang}" if lang else "")
     _section(f"PACKAGE  [{label}]")
-    from package import create_package
+
+    prompts_file = config.get_prompts_file(theme, version)
+    product_type = "sticker"
+    if os.path.exists(prompts_file):
+        with open(prompts_file, "r", encoding="utf-8") as f:
+            product_type = json.load(f).get("type", "sticker")
+
+    if product_type == "emoji":
+        print(f"  type=emoji → package_emoji")
+        from package_emoji import create_package
+    else:
+        print(f"  type=sticker → package")
+        from package import create_package
     create_package(theme, version, lang=lang)
 
 

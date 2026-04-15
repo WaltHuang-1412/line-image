@@ -1,0 +1,24 @@
+{
+  "title": "禿頭但自信",
+  "description": "禿頭大叔的自信日常！光頭反光、自我欣賞、霸氣十足...16種禿頭必備貼圖",
+  "style_prefix": "1boy, solo, simple background, white background, full body, chibi, cute, sticker, balding head, hair loss, receding hairline, thin hair on top, hair remaining on sides, male pattern baldness, round face, big head small body, middle aged man, office worker, short sleeve shirt, cute cartoon style, ink painting style, brush strokes, centered composition, no text",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple people, realistic photo, full head of hair, thick hair, long hair, wig, shaved head, completely bald, extra limbs, japanese text, kanji, hiragana, katakana, female, woman, girl",
+  "sam_detect_prompt": "person",
+  "character_desc": "cute chibi balding office worker with receding hairline, ink painting style",
+  "character_parts": "head, hands, ears",
+  "ipadapter_weight": 0.0,
+  "stickers": [
+    {"id": 1, "emotion": "閃亮", "prompt": "shiny balding head with thin hair on top glowing with sparkles and light rays, hair on sides only, proud confident smile, one hand on hip, bling bling effect around head"},
+    {"id": 2, "emotion": "自信", "prompt": "rubbing own balding head with thin wispy hair on top, hair remaining on sides, smug confident grin, eyes closed with satisfaction, proud pose"},
+    {"id": 3, "emotion": "帥吧", "prompt": "wearing cool sunglasses, balding head with receding hairline shining, sparse hair on top, finger guns pose, confident smirk, cool guy expression"},
+    {"id": 4, "emotion": "閃亮B", "prompt": "shiny balding head with thin hair on top glowing with sparkles, hair on sides only, proud confident smile, one hand on hip, flat color, simple line art, minimal shading, clean vector style"},
+    {"id": 5, "emotion": "自信B", "prompt": "rubbing own balding head with thin wispy hair, hair remaining on sides, smug confident grin, eyes closed, thick outline, bold lines, pop art style, vibrant, exaggerated expression"},
+    {"id": 6, "emotion": "帥吧B", "prompt": "wearing cool sunglasses, balding head with receding hairline, sparse hair on top, finger guns pose, confident smirk, soft watercolor style, pastel colors, gentle brush strokes, warm tones"},
+    {"id": 7, "emotion": "閃亮C", "prompt": "shiny balding head glowing with sparkles, thin hair on top, hair on sides, proud smile, one hand on hip, crayon drawing style, childlike illustration, rough texture, colorful, hand drawn feel"},
+    {"id": 8, "emotion": "自信C", "prompt": "rubbing own balding head, thin wispy hair on top, hair on sides, smug grin, eyes closed, pixel art style, 16bit retro game character, blocky cute"},
+    {"id": 9, "emotion": "帥吧C", "prompt": "wearing sunglasses, balding head with receding hairline, sparse hair, finger guns, confident smirk, rubber stamp style, single color, bold silhouette, simple graphic"},
+    {"id": 10, "emotion": "閃亮D", "prompt": "shiny balding head with thin hair glowing, hair on sides only, proud confident smile, one hand on hip, manga screentone style, halftone dots, black and white with pink accent, comic book style"},
+    {"id": 11, "emotion": "自信D", "prompt": "rubbing own balding head, thin wispy hair, hair on sides, smug confident grin, eyes closed, clay figure style, 3D render look, soft round shapes, plasticine texture"},
+    {"id": 12, "emotion": "帥吧D", "prompt": "wearing cool sunglasses, balding head receding hairline, sparse hair on top, finger guns pose, confident smirk, doodle sketch style, notebook paper feel, casual pen drawing, playful scribble"}
+  ]
+}

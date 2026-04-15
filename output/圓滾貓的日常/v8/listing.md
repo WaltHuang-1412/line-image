@@ -1,39 +1,43 @@
 ## LINE Creators Market 上架文案
 
-> 類型：表情貼（Emoji）／16 張／180×180
+> 類型: 表情貼 (Emoji) / 8 張 / 180x180
 
 ### Chinese (Traditional)
-- 標題：圓滾貓表情貼
-- 說明：圓滾滾灰貓的 16 種超實用表情！開心、生氣、大笑、翻白眼、害羞、發呆⋯⋯每一格情緒都到位，聊天必備的小表情。
-- 標籤建議：cat, emoji, expression, daily, cute, kawaii, chubby, grey
+- 標題: 圓滾貓表情貼
+- 說明: 圓滾滾灰貓的 8 款基本表情! 開心, 大笑, 愛心眼, 哭哭, 生氣, 驚訝, 尷尬, 睡覺. 聊天必備的小表情.
+- 標籤建議: cat, emoji, expression, daily, cute, kawaii, chubby, grey
 
 ### English
-- Title：Roly-Poly Cat Emojis
-- Description：16 super-handy emojis featuring the chubby grey cat — happy, angry, laughing, eye-rolling, shy, spaced out... a tiny expression for every chat moment.
-- Tags：cat, emoji, expression, daily, cute, kawaii, chubby, grey
+- Title: Roly-Poly Cat Emojis
+- Description: 8 everyday emojis of the chubby grey cat - happy, LOL, in love, crying, angry, surprised, awkward, sleeping.
+- Tags: cat, emoji, expression, daily, cute, kawaii, chubby, grey
 
 ### Japanese
-- 標題：まんまるネコの絵文字
-- 説明：まんまるグレー猫の使える絵文字16種類！うれしい、おこった、わらった、しらけた、はずかしい、ぼーっと⋯⋯チャットに使える小さな表情たち。
-- タグ：猫, 絵文字, 表情, 日常, かわいい, まんまる, グレー
+- タイトル: まんまるグレー猫の表情絵文字
+- 説明: まんまるグレー猫の基本絵文字 8 種類! うれしい, わらう, ラブ, なく, おこる, びっくり, きまずい, ねる.
+- タグ: 猫, 絵文字, 表情, 日常, かわいい, まんまる, グレー
 
-### 16 emoji 對照表
+### 版權
+Copyright (C) 2026 Walter Studio
+
+### 8 emoji 對照表
 
 | # | 中文 | English | 日本語 |
 |---|------|---------|--------|
-| 01 | 開心 | Happy | うれしい |
-| 02 | 大笑 | LOL | わらう |
-| 03 | 愛心眼 | In Love | ラブ |
-| 04 | 哭哭 | Crying | なく |
-| 05 | 生氣 | Angry | おこる |
-| 06 | 驚訝 | Surprised | びっくり |
-| 07 | 尷尬 | Awkward | きまずい |
-| 08 | 睡覺 | Sleeping | ねる |
-| 09 | 比讚 | Thumbs Up | いいね |
-| 10 | 壞笑 | Smirk | にやり |
-| 11 | 嫌棄 | Disgust | きらい |
-| 12 | 委屈 | Wronged | いじけ |
-| 13 | 翻白眼 | Eye Roll | しらけ |
-| 14 | 害羞 | Shy | はずかしい |
-| 15 | 發呆 | Dazed | ぼーっと |
-| 16 | 哼 | Hmph | ふん |
+| 001 | 開心 | Happy | うれしい |
+| 002 | 大笑 | LOL | わらう |
+| 003 | 愛心眼 | In Love | ラブ |
+| 004 | 哭哭 | Crying | なく |
+| 005 | 生氣 | Angry | おこる |
+| 006 | 驚訝 | Surprised | びっくり |
+| 007 | 尷尬 | Awkward | きまずい |
+| 008 | 睡覺 | Sleeping | ねる |
+
+### 4 張主要圖片建議
+
+情緒光譜型 (推薦): **003, 005, 004, 008**
+- 003 愛心眼 (戀愛, 粉色愛心眼最吸睛)
+- 005 生氣 (憤怒, 紅頰獠牙)
+- 004 哭哭 (悲傷, 藍淚閉眼)
+- 008 睡覺 (放鬆, 睡帽安詳)
+(避免 001/002 兩張笑臉撞、006/002 兩張張嘴撞)

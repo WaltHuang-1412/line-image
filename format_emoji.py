@@ -12,6 +12,8 @@ import config
 
 
 # LINE emoji spec
+# emoji 沒有獨立 240x240 main image（sticker 才有）
+# 表情貼本體（180x180 x 16-40 張）就是「主要圖片」
 EMOJI_CANVAS = (180, 180)
 EMOJI_MARGIN = 0
 EMOJI_TAB_SIZE = (96, 74)
@@ -76,7 +78,7 @@ def format_all(theme, version, lang=None):
             f_out.write(emoji_data)
         print(f"  [#{idx:02d}] Saved emoji ({len(emoji_data) // 1024}KB, {EMOJI_CANVAS[0]}x{EMOJI_CANVAS[1]}): {emoji_path}")
 
-        # tab image from first emoji
+        # tab image from first emoji (emoji has no separate main image)
         if i == 0:
             tab_img = _fit_on_canvas(img, EMOJI_TAB_SIZE[0], EMOJI_TAB_SIZE[1], 4)
             tab_data = optimize_png(tab_img, max_size_kb=EMOJI_MAX_FILE_SIZE_KB)
