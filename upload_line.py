@@ -319,6 +319,23 @@ ZH_EMOTION_TAGS = {
     "手機沒電": ["cat", "cry", "sad", "panic", "surprise"],
     "來點零食": ["cat", "eat", "please", "happy", "excited"],
     "明天的事明天說": ["cat", "lazy", "bye", "happy", "sleep"],
+    # v10 festival emotions (圓滾貓的節慶日常)
+    "新年快樂": ["cat", "happy", "excited", "anticipation", "hello"],
+    "恭喜發財": ["cat", "happy", "excited", "thank", "hello"],
+    "紅包拿來": ["cat", "please", "happy", "excited", "anticipation"],
+    "團圓": ["cat", "happy", "love", "hug", "eat"],
+    "聖誕快樂": ["cat", "happy", "excited", "love", "anticipation"],
+    "萬聖節": ["cat", "excited", "surprise", "anticipation", "happy"],
+    "中秋快樂": ["cat", "happy", "eat", "love", "anticipation"],
+    "端午快樂": ["cat", "happy", "eat", "excited", "anticipation"],
+    "情人節快樂": ["cat", "love", "happy", "shy", "hug"],
+    "母親節快樂": ["cat", "love", "thank", "happy", "hug"],
+    "父親節快樂": ["cat", "love", "thank", "happy", "ok"],
+    "元宵快樂": ["cat", "happy", "excited", "anticipation", "love"],
+    "跨年": ["cat", "happy", "excited", "laugh", "anticipation"],
+    "生日快樂": ["cat", "happy", "excited", "love", "anticipation"],
+    "感恩節": ["cat", "thank", "happy", "love", "eat"],
+    "畢業快樂": ["cat", "happy", "excited", "anticipation", "ok"],
 }
 
 
