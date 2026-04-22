@@ -1,0 +1,22 @@
+{
+  "title": "まんまるネコのイベント",
+  "description": "まんまるグレー猫とイベントを過ごそう! 16種類の祝日スタンプ. 新年, クリスマス, 誕生日, お月見など.",
+  "stickers": [
+    {"id": 1,  "emotion": "あけおめ"},
+    {"id": 2,  "emotion": "金運UP"},
+    {"id": 3,  "emotion": "お年玉"},
+    {"id": 4,  "emotion": "団らん"},
+    {"id": 5,  "emotion": "メリクリ"},
+    {"id": 6,  "emotion": "ハロウィン"},
+    {"id": 7,  "emotion": "お月見"},
+    {"id": 8,  "emotion": "こどもの日"},
+    {"id": 9,  "emotion": "バレンタイン"},
+    {"id": 10, "emotion": "母の日"},
+    {"id": 11, "emotion": "父の日"},
+    {"id": 12, "emotion": "元宵節"},
+    {"id": 13, "emotion": "カウントダウン"},
+    {"id": 14, "emotion": "お誕生日"},
+    {"id": 15, "emotion": "感謝祭"},
+    {"id": 16, "emotion": "卒業おめでとう"}
+  ]
+}
