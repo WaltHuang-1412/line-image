@@ -358,6 +358,8 @@ ZH_EMOTION_TAGS = {
 
 def get_tags_for_emotion(emotion):
     """Get tag IDs for a given emotion text. Returns up to 9 tags."""
+    if emotion and emotion not in ZH_EMOTION_TAGS:
+        print(f"  WARNING: emotion '{emotion}' not in ZH_EMOTION_TAGS, using default tags")
     keywords = ZH_EMOTION_TAGS.get(emotion, ["cat", "happy"])
     tag_ids = []
     for kw in keywords:
