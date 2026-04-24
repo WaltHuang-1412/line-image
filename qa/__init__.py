@@ -23,7 +23,7 @@ def _get_sticker_data(theme, version):
         return json.load(f)
 
 
-def run_stage(theme, version, stage, sticker_ids=None):
+def run_stage(theme, version, stage, sticker_ids=None, lang=None):
     """Run all QA checks for a given stage.
 
     Args:
@@ -31,6 +31,7 @@ def run_stage(theme, version, stage, sticker_ids=None):
         version: Version string.
         stage: "raw_qa", "nobg_qa", or "format_qa".
         sticker_ids: Optional list of IDs to check. None = all.
+        lang: Optional language subfolder ("zh", "ja") for format_qa.
 
     Returns:
         dict of {sticker_id: [(check_name, passed, detail), ...]} for failed stickers.
@@ -59,6 +60,9 @@ def run_stage(theme, version, stage, sticker_ids=None):
     elif stage == "nobg_qa":
         img_dir = paths["raw"]
         suffix = "_nobg"
+    elif lang:
+        img_dir = os.path.join(config.get_version_dir(theme, version), lang)
+        suffix = ""
     else:
         img_dir = paths["formatted"]
         suffix = ""

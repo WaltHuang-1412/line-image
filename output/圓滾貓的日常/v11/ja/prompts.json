@@ -1,0 +1,20 @@
+{
+  "stickers": [
+    {"id": 1,  "emotion": "寝坊"},
+    {"id": 2,  "emotion": "歯みがき"},
+    {"id": 3,  "emotion": "コーヒー"},
+    {"id": 4,  "emotion": "冷蔵庫"},
+    {"id": 5,  "emotion": "お料理"},
+    {"id": 6,  "emotion": "皿洗い"},
+    {"id": 7,  "emotion": "洗濯"},
+    {"id": 8,  "emotion": "お掃除"},
+    {"id": 9,  "emotion": "お風呂"},
+    {"id": 10, "emotion": "一気見"},
+    {"id": 11, "emotion": "スマホ"},
+    {"id": 12, "emotion": "デリバリー"},
+    {"id": 13, "emotion": "引きこもり"},
+    {"id": 14, "emotion": "ゴミ出し"},
+    {"id": 15, "emotion": "だらだら"},
+    {"id": 16, "emotion": "クーラー"}
+  ]
+}

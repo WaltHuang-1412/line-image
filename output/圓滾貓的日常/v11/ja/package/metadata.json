@@ -1,0 +1,29 @@
+{
+  "theme": "圓滾貓的日常",
+  "version": "v11",
+  "title": "圓滾貓的居家日常",
+  "description": "圓滾滾灰貓陪你過日子! 16款居家貼圖, 賴床、追劇、洗澡、煮飯... 每個居家場景都有圓滾貓.",
+  "sticker_count": 16,
+  "files": {
+    "stickers": [
+      "01.png",
+      "02.png",
+      "03.png",
+      "04.png",
+      "05.png",
+      "06.png",
+      "07.png",
+      "08.png",
+      "09.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "14.png",
+      "15.png",
+      "16.png"
+    ],
+    "main": "main.png",
+    "tab": "tab.png"
+  }
+}

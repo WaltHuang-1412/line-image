@@ -254,35 +254,23 @@ def rembg_remove_bg(img_rgba):
 def remove_background(raw_path, nobg_path):
     """Decide which background-removal strategy to use and return an RGBA image.
 
-    Priority: nobg (SAM pre-processed) → rembg (U2Net) → flood fill.
+    Priority: nobg (flood-fill pre-processed) → flood fill on raw.
 
     Args:
         raw_path: Path to the raw (with background) PNG.
-        nobg_path: Path to the SAM-processed transparent PNG (may be None).
+        nobg_path: Path to the flood-fill transparent PNG (may be None).
 
     Returns:
         PIL RGBA image with background removed.
     """
-    # Try SAM result first
+    # Use pre-processed nobg directly — flood fill results are trusted as-is
     if nobg_path and os.path.exists(nobg_path):
-        sam_img = Image.open(nobg_path).convert("RGBA")
-        ratio = _content_ratio(sam_img)
-        if ratio < config.SAM_CONTENT_RATIO_MIN:
-            print(f"    SAM content ratio too low ({ratio:.2%}), trying rembg.")
-        elif _has_interior_holes(sam_img):
-            print(f"    SAM created holes in subject, trying rembg.")
-        else:
-            return sam_img
+        return Image.open(nobg_path).convert("RGBA")
 
-    # rembg fallback (U2Net — better than flood fill for foreground segmentation)
+    # Fallback: flood fill on raw
     if raw_path and os.path.exists(raw_path):
-        raw_img = Image.open(raw_path).convert("RGBA")
-        try:
-            print(f"    Applying rembg background removal...")
-            return rembg_remove_bg(raw_img)
-        except Exception as e:
-            print(f"    rembg failed ({e}), falling back to flood fill.")
-            return flood_fill_remove_bg(raw_img)
+        print(f"    No nobg found, applying flood fill on raw...")
+        return flood_fill_remove_bg(Image.open(raw_path).convert("RGBA"))
 
     raise FileNotFoundError(
         f"Neither raw nor nobg image available: raw={raw_path}, nobg={nobg_path}"

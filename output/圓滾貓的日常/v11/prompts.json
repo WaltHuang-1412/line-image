@@ -10,7 +10,7 @@
   "stickers": [
     {"id": 1,  "emotion": "賴床",     "prompt": "not seated, lying flat sideways on (a striped mattress:1.3), head on pillow, blanket over lower body, (a ringing alarm clock in front of face:1.4), eyes tightly closed shut, mouth in grumpy frown, one paw swatting clock away, deeply sleepy unwilling expression, NOT open eyes, NOT surprised look"},
     {"id": 2,  "emotion": "刷牙",     "prompt": "both paws holding (a toothbrush with white foam:1.3) up to mouth, eyes half-closed drowsy morning expression, foam bubbles around mouth"},
-    {"id": 3,  "emotion": "喝咖啡",   "prompt": "actively sipping, mouth on rim of (a large steaming coffee cup:1.4), both paws gripping the cup tightly, eyes closed in bliss, steam rising from cup, clearly drinking action"},
+    {"id": 3,  "emotion": "喝咖啡",   "prompt": "clean outline, no ink splashes, no background artifacts, actively sipping, mouth on rim of (a large steaming coffee cup:1.4), both paws gripping the cup tightly, eyes closed in bliss, steam rising from cup, clearly drinking action"},
     {"id": 4,  "emotion": "開冰箱",   "prompt": "peeking with paws on edge of (a big open refrigerator filled with food:1.4), eyes wide sparkling with excitement, mouth slightly open in delight"},
     {"id": 5,  "emotion": "煮飯",     "prompt": "wearing (a white chef hat:1.2), holding (a large spatula:1.3) in one paw, (steam rising from a cooking pot:1.2) nearby, proud confident cooking expression"},
     {"id": 6,  "emotion": "洗碗",     "prompt": "wearing (blue rubber gloves:1.3) covered in white soap bubbles, holding (a sponge:1.2), big foam bubbles floating around, focused scrubbing expression"},
