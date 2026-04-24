@@ -336,6 +336,23 @@ ZH_EMOTION_TAGS = {
     "生日快樂": ["cat", "happy", "excited", "love", "anticipation"],
     "感恩節": ["cat", "thank", "happy", "love", "eat"],
     "畢業快樂": ["cat", "happy", "excited", "anticipation", "ok"],
+    # v11 home life emotions (圓滾貓的居家日常)
+    "賴床": ["cat", "sleep", "lazy", "sad"],
+    "刷牙": ["cat", "hello", "sleep", "happy"],
+    "喝咖啡": ["cat", "eat", "happy", "lazy"],
+    "開冰箱": ["cat", "eat", "happy", "excited", "anticipation"],
+    "煮飯": ["cat", "eat", "happy", "work"],
+    "洗碗": ["cat", "work", "sad", "lazy"],
+    "洗衣服": ["cat", "work", "lazy", "ok"],
+    "打掃": ["cat", "work", "ok", "happy"],
+    "洗澡": ["cat", "happy", "lazy", "sleep", "relief"],
+    "追劇": ["cat", "happy", "excited", "lazy"],
+    "看手機": ["cat", "lazy", "happy", "still"],
+    "叫外送": ["cat", "eat", "happy", "excited", "anticipation"],
+    "不想出門": ["cat", "lazy", "sad", "no", "sleep"],
+    "倒垃圾": ["cat", "work", "sad", "lazy"],
+    "懶得動": ["cat", "lazy", "sleep", "sad"],
+    "冷氣開起來": ["cat", "happy", "excited", "relief"],
 }
 
 
@@ -419,6 +436,22 @@ def do_submit(sticker_id):
         print(f"Submit {sticker_id}: {result['status']}")
         if result["status"] == 200:
             print("Submitted for review!")
+        else:
+            print(f"Failed: {result.get('body', '')}")
+        ctx.storage_state(path=SESSION_FILE)
+        browser.close()
+
+
+def do_cancel(sticker_id):
+    """Cancel a submitted sticker set."""
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        browser, ctx, page, token = _open_page(p)
+        url = f"{API_BASE}/sticker/{sticker_id}/cancel_request"
+        result = page.evaluate(JS_POST_JSON, [url, "{}", token])
+        print(f"Cancel {sticker_id}: {result['status']}")
+        if result["status"] == 200:
+            print("Cancelled!")
         else:
             print(f"Failed: {result.get('body', '')}")
         ctx.storage_state(path=SESSION_FILE)
@@ -596,6 +629,7 @@ def main():
     parser.add_argument("--sticker-id", type=int, help="Use existing sticker ID")
     parser.add_argument("--tags-only", action="store_true", help="Only update tags (requires --sticker-id)")
     parser.add_argument("--submit", type=int, metavar="ID", help="Submit sticker ID for review")
+    parser.add_argument("--cancel", type=int, metavar="ID", help="Cancel submitted sticker ID")
     args = parser.parse_args()
 
     if args.login:
@@ -604,6 +638,8 @@ def main():
         do_list()
     elif args.submit:
         do_submit(args.submit)
+    elif args.cancel:
+        do_cancel(args.cancel)
     elif args.tags_only:
         if not args.sticker_id or not args.theme or not args.version:
             print("ERROR: --tags-only requires --sticker-id, theme, and version")
