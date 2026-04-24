@@ -1,0 +1,28 @@
+{
+  "title": "圓滾貓的居家日常",
+  "description": "圓滾滾灰貓陪你過日子! 16款居家貼圖, 賴床、追劇、洗澡、煮飯... 每個居家場景都有圓滾貓.",
+  "type": "sticker",
+  "style_prefix": "1cat, solo, simple background, (solid bright orange background:1.3), plain background, no gradient, no shadow, no texture, chibi, super deformed, big head small body, seated chibi pose, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, round chubby body, blush stickers, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, big round eyes with black pupils, expressive eyes, centered composition, correct anatomy, no text, very expressive face, exaggerated expression",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, two cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana, gradient background, textured background, shadow on background, dark background, detailed background, white background, frame border",
+  "sam_detect_prompt": "cat",
+  "reference_image": "v3.png",
+  "ipadapter_weight": 0.5,
+  "stickers": [
+    {"id": 1,  "emotion": "賴床",     "prompt": "lying on side in bed, not seated, (a large fluffy white pillow under head:1.3), (a thick blanket covering body:1.3), (a ringing alarm clock on the side:1.2), eyes tightly shut, one paw pushing alarm clock away, stubborn refusing-to-wake expression"},
+    {"id": 2,  "emotion": "刷牙",     "prompt": "both paws holding (a toothbrush with white foam:1.3) up to mouth, eyes half-closed drowsy morning expression, foam bubbles around mouth"},
+    {"id": 3,  "emotion": "喝咖啡",   "prompt": "actively sipping, mouth on rim of (a large steaming coffee cup:1.4), both paws gripping the cup tightly, eyes closed in bliss, steam rising from cup, clearly drinking action"},
+    {"id": 4,  "emotion": "開冰箱",   "prompt": "peeking with paws on edge of (a big open refrigerator filled with food:1.4), eyes wide sparkling with excitement, mouth slightly open in delight"},
+    {"id": 5,  "emotion": "煮飯",     "prompt": "wearing (a white chef hat:1.2), holding (a large spatula:1.3) in one paw, (steam rising from a cooking pot:1.2) nearby, proud confident cooking expression"},
+    {"id": 6,  "emotion": "洗碗",     "prompt": "wearing (blue rubber gloves:1.3) covered in white soap bubbles, holding (a sponge:1.2), big foam bubbles floating around, focused scrubbing expression"},
+    {"id": 7,  "emotion": "洗衣服",   "prompt": "clean outline, no ink splashes, both paws gripping (a colorful shirt or t-shirt:1.4) and hanging it on (a clothesline with clothespins:1.3), clothes hanging above, determined working expression, no wooden tub, no bathtub"},
+    {"id": 8,  "emotion": "打掃",     "prompt": "holding (a tall broom:1.3) with both paws, sweeping seriously, (small dust cloud:1.1) near the ground, focused diligent expression"},
+    {"id": 9,  "emotion": "洗澡",     "prompt": "not seated, submerged in tub, head and tiny paws visible above (a round wooden bathtub filled with white bubbles:1.4), surrounded by soap foam, eyes closed in pure relaxation, blissful smile"},
+    {"id": 10, "emotion": "追劇",     "prompt": "hugging (a big bowl of popcorn:1.3) to chest, eyes wide and intensely fixated forward, leaning slightly forward, totally absorbed expression"},
+    {"id": 11, "emotion": "看手機",   "prompt": "seated, both paws holding (a small rectangular smartphone:1.4) out in front at arm length, staring intently at the phone screen, face glowing from screen light, eyes wide fixated, slack-jawed absorbed expression"},
+    {"id": 12, "emotion": "叫外送",   "prompt": "seated upright, tapping (a smartphone:1.3) with one paw, other paw raised in greedy anticipation, sly drooling grin, (small ramen bowl and pizza slice icons floating around:1.2)"},
+    {"id": 13, "emotion": "不想出門", "prompt": "both paws clinging desperately to (a large doorframe:1.4), body dragging flat along ground, stubborn sulking face, refusing to move"},
+    {"id": 14, "emotion": "倒垃圾",   "prompt": "holding (a tied black garbage bag:1.3) at arm's length, nose wrinkled in disgust, squinting one eye, leaning away from the bag"},
+    {"id": 15, "emotion": "懶得動",   "prompt": "lying flat, not seated, completely sprawled belly-down on the ground, limbs spread out, melted into a pancake shape, eyes half-closed utterly lazy expression"},
+    {"id": 16, "emotion": "冷氣開起來", "prompt": "head tilted all the way back looking straight up, sitting below (an air conditioner unit on the wall:1.3), eyes closed mouth wide open in ecstasy, fur blowing upward in cold breeze"}
+  ]
+}
