@@ -137,10 +137,10 @@ def _check_nobg_quality(raw_path, nobg_path):
 
 
 def sam_remove_bg_all(theme, version, sticker_ids=None):
-    """Run SAM background removal on all (or selected) raw stickers.
+    """Run background removal on all (or selected) raw stickers using flood fill.
 
-    After each SAM run, checks quality (content ratio, holes, body parts).
-    Falls back to flood fill if SAM quality is bad.
+    Flood fill is reliable when background color is chosen to avoid conflicts
+    with subject colors (enforced by prompt discipline since v8+).
 
     Args:
         theme: Theme name.
@@ -157,14 +157,12 @@ def sam_remove_bg_all(theme, version, sticker_ids=None):
     with open(prompts_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    sam_detect_prompt = data.get("sam_detect_prompt", None)
     stickers = data["stickers"]
     if sticker_ids:
         stickers = [s for s in stickers if s["id"] in sticker_ids]
 
     print(f"\n=== Background removal: {len(stickers)} stickers [{theme}/{version}] ===\n")
 
-    failed = []
     for s in stickers:
         idx = s["id"]
         raw_path = os.path.join(raw_dir, f"sticker_{idx:02d}.png")
@@ -174,34 +172,11 @@ def sam_remove_bg_all(theme, version, sticker_ids=None):
             print(f"  [#{idx:02d}] raw not found, skipping")
             continue
 
-        print(f"  [#{idx:02d}] SAM...", end="", flush=True)
-        result = sam_remove_bg(raw_path, nobg_path, sam_detect_prompt)
-        if not result:
-            print(f" SAM FAILED, using flood fill...", end="", flush=True)
-            raw_img = Image.open(raw_path).convert("RGBA")
-            flood_img = flood_fill_remove_bg(raw_img)
-            flood_img.save(nobg_path, "PNG")
-            failed.append((idx, "SAM failed → flood fill"))
-            print(f" done")
-            continue
+        print(f"  [#{idx:02d}] flood fill...", end="", flush=True)
+        raw_img = Image.open(raw_path).convert("RGBA")
+        flood_fill_remove_bg(raw_img).save(nobg_path, "PNG")
+        print(f" done")
 
-        # Check quality
-        ok, reason = _check_nobg_quality(raw_path, nobg_path)
-        if ok:
-            print(f" PASS")
-        else:
-            print(f" FAIL ({reason}), using flood fill...", end="", flush=True)
-            raw_img = Image.open(raw_path).convert("RGBA")
-            flood_img = flood_fill_remove_bg(raw_img)
-            flood_img.save(nobg_path, "PNG")
-            failed.append((idx, reason + " → flood fill"))
-            print(f" done")
-
-    # Summary
-    passed = len(stickers) - len(failed)
-    print(f"\n  PASS: {passed}/{len(stickers)}")
-    if failed:
-        print(f"  Flood fill fallback: {[(f'#{i:02d} {r}') for i, r in failed]}")
     print(f"\nDone!")
 
 

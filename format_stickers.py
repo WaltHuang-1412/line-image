@@ -176,7 +176,12 @@ def flood_fill_remove_bg(img_rgba, tolerance=30):
             if visited[y, x]:
                 continue
             visited[y, x] = True
-            diff = np.abs(arr[y, x, :3] - seed_color)
+            pixel = arr[y, x, :3]
+            r, g, b = int(pixel[0]), int(pixel[1]), int(pixel[2])
+            # Only remove pixels with orange chroma (R-B > 80); white/grey/cream have low R-B
+            if r - b <= 80:
+                continue
+            diff = np.abs(pixel - seed_color)
             if np.max(diff) <= tolerance:
                 alpha[y, x] = False  # mark as background
                 stack.extend([(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)])
@@ -187,8 +192,10 @@ def flood_fill_remove_bg(img_rgba, tolerance=30):
 
     # Chroma key pass: remove only strongly green pixels not reached by flood fill
     # (handles green background split into disconnected regions by the subject)
-    # Strict threshold: green must dominate heavily to avoid eating greenish cat pixels
-    r, g, b = result_arr[:, :, 0], result_arr[:, :, 1], result_arr[:, :, 2]
+    # Cast to int32 first to avoid uint8 overflow when adding 50
+    r = result_arr[:, :, 0].astype(np.int32)
+    g = result_arr[:, :, 1].astype(np.int32)
+    b = result_arr[:, :, 2].astype(np.int32)
     green_mask = (g > r + 50) & (g > b + 50) & (g > 120)
     result_arr[:, :, 3] = np.where(green_mask, 0, result_arr[:, :, 3])
 

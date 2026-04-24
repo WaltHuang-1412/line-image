@@ -79,7 +79,7 @@ output/{theme}/
 
 ### Background Removal Strategy
 
-SAM segments by detecting "cat" via GroundingDINO. When the subject is white/light-colored, SAM may remove body parts along with the background. The fallback flood-fill algorithm seeds from all four image corners and removes connected similar-color regions, preserving the subject regardless of color.
+Flood fill seeds from all four image corners and removes connected pixels matching the background color (orange chroma, R-B > 80). This is reliable when background color is chosen to avoid conflicts with subject colors (enforced by prompt discipline since v8+). SAM is no longer used as primary method — flood fill is faster and equally accurate given proper background color selection.
 
 ### Prompt Strengthening for Clean Backgrounds (v8+ learning)
 
@@ -135,14 +135,13 @@ Flood fill 從四角填同色區域。如果角色內部有跟**背景同色的�
 - Flood fill 只在 SAM 壞掉時用，**且**確認角色內沒有跟背景同色的細節
 - 檢查瞳孔色是否跟背景色太接近，避免 pale pupils on similar bg
 
-### bg removal fix loop 策略（v8+）
+### bg removal fix loop 策略（v11+）
 
 nobg QA 失敗時，照優先序試：
 
-1. **SAM 原結果** — 保留所有細節，但可能有邊緣殘留
-2. **後處理 alpha 閾值**（砍半透明邊）— 只對「半透明暈邊」有用，對不透明色塊殘留無效
-3. **重生 raw + 加 `clean outline, no ink splashes`** — 最根本，適用墨點噴濺
-4. **flood fill** — 最後手段，只在確定沒有同色細節時用
+1. **重跑 flood fill**（`python main.py nobg`）— 通常夠用，背景色不撞就 OK
+2. **重生 raw + 加 `clean outline, no ink splashes`** — 適用有墨點噴濺殘留的情況
+3. **調整背景色** — 如果背景色跟角色/裝飾撞色，換一個不撞的顏色重生
 
 ### bg_uniform QA 判定標準（v8+）
 
