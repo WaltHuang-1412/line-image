@@ -8,7 +8,7 @@
   "reference_image": "v3.png",
   "ipadapter_weight": 0.5,
   "stickers": [
-    {"id": 1,  "emotion": "賴床",     "prompt": "lying on side in bed, not seated, (a large fluffy white pillow under head:1.3), (a thick blanket covering body:1.3), (a ringing alarm clock on the side:1.2), eyes tightly shut, one paw pushing alarm clock away, stubborn refusing-to-wake expression"},
+    {"id": 1,  "emotion": "賴床",     "prompt": "not seated, lying flat sideways on (a striped mattress:1.3), head on pillow, blanket over lower body, (a ringing alarm clock in front of face:1.4), eyes tightly closed shut, mouth in grumpy frown, one paw swatting clock away, deeply sleepy unwilling expression, NOT open eyes, NOT surprised look"},
     {"id": 2,  "emotion": "刷牙",     "prompt": "both paws holding (a toothbrush with white foam:1.3) up to mouth, eyes half-closed drowsy morning expression, foam bubbles around mouth"},
     {"id": 3,  "emotion": "喝咖啡",   "prompt": "actively sipping, mouth on rim of (a large steaming coffee cup:1.4), both paws gripping the cup tightly, eyes closed in bliss, steam rising from cup, clearly drinking action"},
     {"id": 4,  "emotion": "開冰箱",   "prompt": "peeking with paws on edge of (a big open refrigerator filled with food:1.4), eyes wide sparkling with excitement, mouth slightly open in delight"},
@@ -20,7 +20,7 @@
     {"id": 10, "emotion": "追劇",     "prompt": "hugging (a big bowl of popcorn:1.3) to chest, eyes wide and intensely fixated forward, leaning slightly forward, totally absorbed expression"},
     {"id": 11, "emotion": "看手機",   "prompt": "seated, both paws holding (a small rectangular smartphone:1.4) out in front at arm length, staring intently at the phone screen, face glowing from screen light, eyes wide fixated, slack-jawed absorbed expression"},
     {"id": 12, "emotion": "叫外送",   "prompt": "seated upright, tapping (a smartphone:1.3) with one paw, other paw raised in greedy anticipation, sly drooling grin, (small ramen bowl and pizza slice icons floating around:1.2)"},
-    {"id": 13, "emotion": "不想出門", "prompt": "both paws clinging desperately to (a large doorframe:1.4), body dragging flat along ground, stubborn sulking face, refusing to move"},
+    {"id": 13, "emotion": "不想出門", "prompt": "seated, arms crossed tightly across chest, eyes shut tight in stubborn refusal, (a closed front door with doorknob clearly visible directly behind cat:1.5), back pressed against door, sitting firmly planted on floor, extreme pouty sulking refusing-to-leave expression"},
     {"id": 14, "emotion": "倒垃圾",   "prompt": "holding (a tied black garbage bag:1.3) at arm's length, nose wrinkled in disgust, squinting one eye, leaning away from the bag"},
     {"id": 15, "emotion": "懶得動",   "prompt": "lying flat, not seated, completely sprawled belly-down on the ground, limbs spread out, melted into a pancake shape, eyes half-closed utterly lazy expression"},
     {"id": 16, "emotion": "冷氣開起來", "prompt": "head tilted all the way back looking straight up, sitting below (an air conditioner unit on the wall:1.3), eyes closed mouth wide open in ecstasy, fur blowing upward in cold breeze"}
