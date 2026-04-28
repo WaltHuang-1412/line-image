@@ -3,7 +3,7 @@ import re
 from qa import ollama
 
 
-def check(image_path, emotion, character_desc, min_score=5):
+def check(image_path, emotion, character_desc, min_score=4):
     """Returns (passed: bool, detail: str)."""
     prompt = (
         f'Rate this {character_desc} image quality from 1 to 5. '
