@@ -1,0 +1,28 @@
+{
+  "title": "圓滾貓的運動日常",
+  "description": "圓滾滾灰貓陪你動起來! 16 款運動貼圖, 舉重、跑步、游泳、瑜珈、爬山... 每個運動場景都有圓滾貓.",
+  "type": "sticker",
+  "style_prefix": "1cat, solo, simple background, (solid bright orange background:1.3), plain background, no gradient, no shadow, no texture, chibi, super deformed, big head small body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, cute, round chubby body, blush stickers, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, big round eyes with black pupils, expressive eyes, centered composition, correct anatomy, no text, very expressive face, exaggerated expression",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, two cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, extra limbs, japanese text, kanji, hiragana, katakana, gradient background, textured background, shadow on background, dark background, detailed background, white background, frame border",
+  "sam_detect_prompt": "cat",
+  "reference_image": "v3.png",
+  "ipadapter_weight": 0.5,
+  "stickers": [
+    {"id": 1,  "emotion": "去健身房",  "prompt": "carrying (a large blue gym bag:1.3) on shoulder, holding (a water bottle:1.2) in other paw, determined confident expression, ready to go"},
+    {"id": 2,  "emotion": "舉重",      "prompt": "both paws gripping (a heavy barbell:1.4) overhead, arms fully extended, face deep red straining with effort, puffed cheeks, veins popping, intense grunt expression"},
+    {"id": 3,  "emotion": "跑步",      "prompt": "running at full speed on (a treadmill:1.3), tongue hanging out panting, (speed motion lines behind:1.2), eyes wide and exhausted, legs blurring from speed"},
+    {"id": 4,  "emotion": "跳繩",      "prompt": "mid-air jumping, both paws holding ends of (a red skipping rope:1.3) spinning overhead, ears flying straight upward, cheerful bouncing expression, feet off ground"},
+    {"id": 5,  "emotion": "游泳",      "prompt": "floating in water inside (a round blue inflatable swim ring:1.3), wearing (blue swim goggles:1.2) on face, happy relaxed expression, tiny paws splashing water droplets"},
+    {"id": 6,  "emotion": "瑜珈",      "prompt": "doing impossibly flexible yoga pose, one leg stretched straight up vertically, other paw on ground, (a purple yoga mat:1.2) beneath, calm serene focused expression, eyes closed"},
+    {"id": 7,  "emotion": "爬山",      "prompt": "crawling on all fours up a steep rocky slope, tongue hanging far out, completely exhausted, (large sweat drops:1.2) flying off, barely making it, holding (a wooden walking stick:1.2)"},
+    {"id": 8,  "emotion": "騎車",      "prompt": "seated on (a small green bicycle:1.3), pedaling hard, wind blowing fur dramatically backward, (speed lines:1.1) behind, determined squinting expression"},
+    {"id": 9,  "emotion": "打球",      "prompt": "one paw raised high holding (a blue tennis racket:1.5) clearly visible, (a yellow tennis ball:1.4) floating in air in front of cat, other paw braced for swing, focused intense expression, racket and ball both clearly visible in frame"},
+    {"id": 10, "emotion": "大流汗",    "prompt": "sitting slumped, completely drenched in sweat, (large sweat drops raining off body:1.4), dripping wet fur, wilted exhausted defeated expression, steam rising"},
+    {"id": 11, "emotion": "肌肉痠",    "prompt": "both arms barely raised to chest height, grimacing in pure agony, unable to lift arms higher, (pain sparkle marks on arms:1.2), whimpering sore expression"},
+    {"id": 12, "emotion": "喝蛋白質",  "prompt": "holding (a large white protein shaker bottle:1.3) to mouth, chugging it, one eye twitching, grimacing at the awful taste, throat moving as it gulps"},
+    {"id": 13, "emotion": "量體重",    "prompt": "standing on (a white bathroom scale:1.3), looking straight down at the number display, (eyes wide in absolute horror:1.3), mouth agape, shocked devastated expression"},
+    {"id": 14, "emotion": "今天有練",  "prompt": "arms crossed proudly, showing off (a tiny barely-visible flexed bicep:1.2), smug self-satisfied smirk, nose in air, showing off expression"},
+    {"id": 15, "emotion": "拉筋",      "prompt": "single cat seated upright, (both front legs stretched wide apart to sides:1.3), doing side splits on ground, round chubby body centered between outstretched legs, face grimacing in pain, one continuous cat body, no body separation"},
+    {"id": 16, "emotion": "翹掉了",    "prompt": "curled up under (a cozy fluffy blanket:1.3), only head peeking out, (a smartphone on floor showing gym reminder notification:1.2) visible next to cat, eyes firmly shut pretending not to see it, guilty hiding expression"}
+  ]
+}

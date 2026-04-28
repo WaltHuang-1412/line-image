@@ -3,7 +3,7 @@ import re
 from qa import ollama
 
 
-def check(image_path, emotion, character_desc, min_score=4):
+def check(image_path, emotion, character_desc, min_score=5):
     """Returns (passed: bool, detail: str)."""
     prompt = (
         f'This is a {character_desc} for a LINE sticker/emoji product. '
