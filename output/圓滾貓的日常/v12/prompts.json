@@ -6,15 +6,15 @@
   "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, two cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, jacket, shirt, extra limbs, japanese text, kanji, hiragana, katakana, gradient background, textured background, shadow on background, dark background, detailed background, white background, frame border, elongated body, thin body",
   "sam_detect_prompt": "cat",
   "reference_image": "v3.png",
-  "ipadapter_weight": 0.65,
+  "ipadapter_weight": 0.45,
   "stickers": [
-    {"id": 1,  "emotion": "去健身房",  "prompt": "chibi cat sitting upright, (a blue gym bag:1.2) placed on floor to the side NOT touching cat, (one paw raised up holding a water bottle:1.3), excited pumped-up expression, big energetic grin, sparkling eyes, ready-to-go energetic face, cat clearly sitting separately from bag"},
+    {"id": 1,  "emotion": "去健身房",  "prompt": "chibi cat standing upright (both paws raised up triumphantly:1.4), (a blue gym bag:1.2) on floor beside cat, enormous excited grin showing teeth, (sparkling star eyes:1.3), cheeks puffed with excitement, super energetic pumped-up victory pose, (energy aura lines:1.1) radiating outward, NO tired expression, NO drooping eyes, NO sad face"},
     {"id": 2,  "emotion": "舉重",      "prompt": "both paws holding (one dumbbell in each paw:1.4) raised to chest height, red strained face, puffed cheeks, sweat drops, intense effort expression, NO objects on head"},
     {"id": 3,  "emotion": "跑步",      "prompt": "chibi cat mid-run pose, both short legs in stride, paws pumping forward, tongue out panting, (sweat drops:1.3) flying everywhere, exhausted wide bulging eyes, (speed lines:1.1) behind, no treadmill, no stripes, plain grey cat fur, round chubby body"},
     {"id": 4,  "emotion": "呼拉圈",    "prompt": "chibi grey cat spinning a (bright pink hula hoop:1.5) around its round chubby waist, hoop clearly encircling the body, paws out to sides for balance, happy spinning expression, energetic fun pose"},
     {"id": 5,  "emotion": "游泳",      "prompt": "chibi grey cat with (pointy cat ears:1.3) and whiskers clearly shown, (blue swim goggles:1.3) pushed up on forehead, both paws raised up cheerfully, happy big smile, (water droplets splashing:1.2) around, grey cat fur and cat silhouette clearly visible, upright seated pose"},
     {"id": 6,  "emotion": "瑜珈",      "prompt": "seated chibi cat with (both paws pressed together in front of chest in namaste pose:1.4), (eyes closed peacefully:1.3), (gentle closed-lip smile:1.2), slight head bow, (purple yoga mat:1.2), breathing calmly, zen expression, NO steam effects, NO shock marks, NO wide eyes, serene composed face, yoga meditation namaste"},
-    {"id": 7,  "emotion": "爬山",      "prompt": "chibi cat standing bent forward, panting heavily tongue out, holding (a hiking stick:1.2), sweat drops everywhere, (rocky mountain path:1.1) beneath, exhausted barely-making-it expression"},
+    {"id": 7,  "emotion": "爬山",      "prompt": "chibi cat (gripping a tall brown wooden hiking stick:1.5) with both paws, stick clearly visible and prominent, bent forward leaning on stick, tongue hanging out panting, sweat drops everywhere, exhausted barely-making-it climbing expression, stick is the main prop"},
     {"id": 8,  "emotion": "騎車",      "prompt": "seated on (a small green bicycle:1.3), pedaling hard, wind blowing fur dramatically backward, (speed lines:1.1) behind, determined squinting expression"},
     {"id": 9,  "emotion": "打球",      "prompt": "one paw raised high holding (a blue tennis racket:1.5) clearly visible, (a yellow tennis ball:1.4) floating in air in front of cat, other paw braced for swing, focused intense expression, racket and ball both clearly visible in frame"},
     {"id": 10, "emotion": "大流汗",    "prompt": "sitting slumped, completely drenched in sweat, (large sweat drops raining off body:1.4), dripping wet fur, wilted exhausted defeated expression, steam rising"},
@@ -22,7 +22,7 @@
     {"id": 12, "emotion": "喝蛋白質",  "prompt": "holding (a large white protein shaker bottle:1.3) to mouth, chugging it, one eye twitching, grimacing at the awful taste, throat moving as it gulps"},
     {"id": 13, "emotion": "量體重",    "prompt": "standing on (a white bathroom scale:1.3), looking straight down at the number display, (eyes wide in absolute horror:1.3), mouth agape, shocked devastated expression"},
     {"id": 14, "emotion": "今天有練",  "prompt": "sitting upright, one arm raised flexing (a tiny bicep:1.3), extremely smug proud grin, eyes closed in self-satisfaction, chest puffed out, very smug show-off expression"},
-    {"id": 15, "emotion": "拉筋",      "prompt": "chibi cat seated on floor (legs stretched out forward:1.3), (both paws reaching forward toward paws/toes:1.4), (body bent forward in stretch:1.3), mild strain expression, slight grunt face, forward bend stretch pose, NO arms raised up, NO standing, clearly stretching forward"},
+    {"id": 15, "emotion": "拉筋",      "prompt": "chibi cat (sitting on floor with legs spread out to sides in splits position:1.4), upper body upright, (both paws pressing down on floor to sides:1.3), strained wincing face, effort expression, wide split stretch pose clearly visible, grounded seated floor stretch"},
     {"id": 16, "emotion": "翹掉了",    "prompt": "sitting, looking sideways with guilty shifty eyes, (a smartphone showing gym notification:1.2) on floor nearby, pretending not to see it, sneaky avoiding expression, one paw scratching cheek awkwardly"}
   ]
 }
