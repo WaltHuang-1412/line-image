@@ -262,6 +262,38 @@ prompts.json 的 `"type"` 欄位決定用哪個流程（`"sticker"` 或 `"emoji"
    - 沿用舊風格（style_prefix / IP-Adapter 跟之前版本一樣）→ 自動通過
    - 新風格（新角色、新 style_prefix、第一版）→ ★ USER CONFIRMS STYLE
 
+### Shared: Prompt Design (Phase 2.5)
+
+**在寫 prompts.json 之前，Claude Code 必須先設計並讓用戶確認每個 prompt。**
+
+這一步的目的是在生圖之前找出問題，而不是生了爛圖才來修。
+
+**Step 1 — 角色動作審計**
+
+根據 `style_prefix` 的角色定義，先列出這個角色「能做」和「不能做」的動作：
+
+- **能做**：站立舉手、坐姿持道具、前傾彎腰、抱東西、誇張表情
+- **不能做**：需要長四肢的動作（劈腿、高踢腿）、需要柔軟度的複雜 pose（倒立、瑜珈高難度動作）、趴姿（形狀模糊）、靜態坐姿閉眼（容易產生兜帽感）
+
+**Step 2 — 逐一設計 prompt，照以下順序判斷：**
+
+1. **這個動作這個角色 physically 能做嗎？** → 不能做，改用道具替代
+2. **道具能比動作更清楚傳達意思嗎？** → 能，優先用道具
+3. **兩個都不確定？** → 標記 ⚠️ 高風險，需要先測 1-2 張確認
+
+**Step 3 — 高風險標記原則**
+
+以下類型標 ⚠️：
+- 需要複雜姿勢（柔軟度動作、多肢體協調）
+- 道具在這個畫風下不容易清楚（細繩、小字、抽象符號）
+- 動作概念抽象、靠臉部表情無法傳達（冥想、放鬆、等待）
+
+**Step 4 — ★ USER CONFIRMS PROMPT DESIGN**
+
+把所有 emotion 的 prompt 設計呈現給用戶，⚠️ 的特別說明風險。用戶確認後才寫進 prompts.json，才進 Phase 3 生圖。
+
+⚠️ 標記的 emotion 在 Phase 3 先用 `python main.py fix <theme> <version> <id>` 生 2-3 張確認可行，再繼續生其餘的。
+
 ---
 
 ### Sticker Pipeline (type: "sticker")
