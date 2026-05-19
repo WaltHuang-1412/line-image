@@ -353,6 +353,23 @@ ZH_EMOTION_TAGS = {
     "倒垃圾": ["cat", "work", "sad", "lazy"],
     "懶得動": ["cat", "lazy", "sleep", "sad"],
     "冷氣開起來": ["cat", "happy", "excited", "relief"],
+    # v12 workout emotions (圓滾貓的運動日常)
+    "去健身房": ["cat", "happy", "excited", "run", "anticipation"],
+    "舉重":     ["cat", "work", "ok", "excited", "happy"],
+    "跑步":     ["cat", "run", "happy", "excited"],
+    "呼拉圈":   ["cat", "happy", "excited", "laugh"],
+    "游泳":     ["cat", "happy", "excited", "relief"],
+    "瑜珈":     ["cat", "happy", "relief", "lazy"],
+    "爬山":     ["cat", "run", "happy", "excited", "anticipation"],
+    "騎車":     ["cat", "happy", "excited", "run"],
+    "打球":     ["cat", "happy", "excited", "ok"],
+    "大流汗":   ["cat", "work", "sad", "cry", "panic"],
+    "肌肉痠":   ["cat", "sad", "cry", "work", "lazy"],
+    "喝蛋白質": ["cat", "eat", "happy", "ok", "excited"],
+    "量體重":   ["cat", "anxious", "sad", "surprise", "shock"],
+    "今天有練": ["cat", "happy", "excited", "ok", "thank"],
+    "拉筋":     ["cat", "work", "ok", "relief", "happy"],
+    "翹掉了":   ["cat", "lazy", "sad", "shy", "sleep"],
 }
 
 
@@ -495,9 +512,11 @@ def do_upload(theme, version, lang, sticker_id=None):
     ver_dir = config.get_version_dir(theme, version)
     lang_dir = os.path.join(ver_dir, lang)
     listing_path = os.path.join(lang_dir, "listing.md")
+    if not os.path.exists(listing_path):
+        listing_path = os.path.join(ver_dir, "listing.md")
 
     if not os.path.exists(listing_path):
-        print(f"ERROR: listing.md not found: {listing_path}")
+        print(f"ERROR: listing.md not found in {lang_dir}/ or {ver_dir}/")
         sys.exit(1)
     if not os.path.exists(SESSION_FILE):
         print("ERROR: No session found. Run: python upload_line.py --login")
@@ -530,10 +549,11 @@ def do_upload(theme, version, lang, sticker_id=None):
             print(f"Using existing sticker ID: {sticker_id}")
         else:
             print("Step 1: Creating sticker set...")
+            suffix = " (JA)" if lang == "ja" else ""
             metas = [
-                {"language": "en", "title": info["en"]["title"], "description": info["en"]["desc"]},
-                {"language": "ja", "title": info["ja"]["title"], "description": info["ja"]["desc"]},
-                {"language": "zh-Hant", "title": info["zh"]["title"], "description": info["zh"]["desc"]},
+                {"language": "en",      "title": info["en"]["title"] + suffix, "description": info["en"]["desc"]},
+                {"language": "ja",      "title": info["ja"]["title"] + suffix, "description": info["ja"]["desc"]},
+                {"language": "zh-Hant", "title": info["zh"]["title"] + suffix, "description": info["zh"]["desc"]},
             ]
             body = json.dumps({
                 "type": "static",
