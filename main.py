@@ -7,6 +7,7 @@ Usage:
     python main.py all     <theme> [version]           Run full pipeline (generate → format → package)
     python main.py list                                List all themes and versions
     python main.py fix     <theme> <version> <ids...>  Regenerate specific sticker IDs
+    python main.py animate <theme> <version>           Generate animated APNG stickers
 
 Examples:
     python main.py all 圓滾貓的日常
@@ -191,6 +192,14 @@ def cmd_nobg(theme, version):
     sam_remove_bg_all(theme, version)
 
 
+def cmd_animate(theme, version, lang=None):
+    """Generate animated APNG stickers with per-emotion text effects."""
+    label = f"{theme}/{version}" + (f"/{lang}" if lang else "")
+    _section(f"ANIMATE  [{label}]")
+    from format_animated import animate_all
+    animate_all(theme, version, lang=lang)
+
+
 def cmd_fix(theme, version, sticker_ids):
     """Regenerate specific stickers by ID (raw only, no SAM, no format)."""
     id_list = [int(x) for x in sticker_ids]
@@ -270,6 +279,16 @@ def main():
             sys.exit(1)
         theme, version = args[1], args[2]
         cmd_nobg(theme, version)
+
+    elif cmd == "animate":
+        if len(args) < 3:
+            print("Usage: python main.py animate <theme> <version> [--lang zh|ja]")
+            sys.exit(1)
+        theme, version = args[1], args[2]
+        lang = None
+        if "--lang" in args:
+            lang = args[args.index("--lang") + 1]
+        cmd_animate(theme, version, lang=lang)
 
     elif cmd == "fix":
         if len(args) < 4:

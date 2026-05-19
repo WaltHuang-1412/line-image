@@ -30,7 +30,13 @@ TEXT_FONT_REGULAR = "msjh.ttc"
 # Text style — warm dark brown + thick white stroke for hand-drawn feel
 TEXT_FILL = (75, 55, 45, 255)
 TEXT_STROKE = (255, 255, 255, 255)
-TEXT_STROKE_WIDTH = 6
+TEXT_STROKE_WIDTH = 6  # default / max; use _stroke_width(font_size) for dynamic sizing
+
+
+def _stroke_width(font_size):
+    """Thinner stroke for smaller font sizes — prevents thick outlines from
+    filling the interior of complex CJK characters (e.g. 體, 重, 疊)."""
+    return max(3, font_size // 10)
 
 # Small decorative marks per emotion (CJK-safe characters only)
 EMOTION_DECO = {
@@ -98,9 +104,10 @@ def add_text_overlay(canvas, text, position="bottom", sticker_id=1):
         font_size = 38
 
     font = _get_font(font_size)
+    sw = _stroke_width(font_size)
 
     # Measure
-    bbox = draw.textbbox((0, 0), display_text, font=font, stroke_width=TEXT_STROKE_WIDTH)
+    bbox = draw.textbbox((0, 0), display_text, font=font, stroke_width=sw)
     text_w = bbox[2] - bbox[0]
     text_h = bbox[3] - bbox[1]
 
@@ -119,13 +126,13 @@ def add_text_overlay(canvas, text, position="bottom", sticker_id=1):
     shadow_offset = 2
     draw.text((x + shadow_offset, y + shadow_offset), display_text, font=font,
               fill=(0, 0, 0, 40),
-              stroke_width=TEXT_STROKE_WIDTH,
+              stroke_width=sw,
               stroke_fill=(0, 0, 0, 0))
 
     # Main text
     draw.text((x, y), display_text, font=font,
               fill=TEXT_FILL,
-              stroke_width=TEXT_STROKE_WIDTH,
+              stroke_width=sw,
               stroke_fill=TEXT_STROKE)
 
     return result
