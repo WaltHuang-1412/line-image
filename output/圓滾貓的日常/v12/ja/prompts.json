@@ -1,0 +1,20 @@
+{
+  "stickers": [
+    {"id": 1,  "emotion": "ジムへ行くぞ"},
+    {"id": 2,  "emotion": "筋トレ"},
+    {"id": 3,  "emotion": "ランニング"},
+    {"id": 4,  "emotion": "フラフープ"},
+    {"id": 5,  "emotion": "水泳"},
+    {"id": 6,  "emotion": "ヨガ"},
+    {"id": 7,  "emotion": "登山"},
+    {"id": 8,  "emotion": "サイクリング"},
+    {"id": 9,  "emotion": "テニス"},
+    {"id": 10, "emotion": "大汗"},
+    {"id": 11, "emotion": "筋肉痛"},
+    {"id": 12, "emotion": "プロテイン"},
+    {"id": 13, "emotion": "体重測定"},
+    {"id": 14, "emotion": "今日も筋トレ"},
+    {"id": 15, "emotion": "ストレッチ"},
+    {"id": 16, "emotion": "サボった"}
+  ]
+}

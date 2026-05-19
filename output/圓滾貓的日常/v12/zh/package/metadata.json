@@ -1,0 +1,29 @@
+{
+  "theme": "圓滾貓的日常",
+  "version": "v12",
+  "title": "圓滾貓的運動日常",
+  "description": "圓滾滾灰貓陪你動起來! 16 款運動貼圖, 舉重、跑步、游泳、瑜珈、爬山... 每個運動場景都有圓滾貓.",
+  "sticker_count": 16,
+  "files": {
+    "stickers": [
+      "01.png",
+      "02.png",
+      "03.png",
+      "04.png",
+      "05.png",
+      "06.png",
+      "07.png",
+      "08.png",
+      "09.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "14.png",
+      "15.png",
+      "16.png"
+    ],
+    "main": "main.png",
+    "tab": "tab.png"
+  }
+}
