@@ -438,16 +438,23 @@ Raw QA 是**逐張**判定，**不會抓跨張不一致**（單張看很好，16
 
 #### Upload API Details
 - Session: `line_session.json` (Playwright browser context, refresh with `--login` if expired)
-- Tag mapping: `line_tags.json` (444 tags, scraped from LINE Creators Market tag page)
+  - `--login` 需要互動(瀏覽器登入 + 終端機按 Enter），**必須讓用戶自己用 `!` 前綴跑**，不能用背景執行
+- Tag mapping: `line_tags.json`(舊版 444 tags, 數字 ID）+ `line_tags_v2.json`(新版 840 tags, c 開頭 ID）
 - CSRF: `X-XSRF-TOKEN` header from `XSRF-TOKEN` cookie
 - API prefix: `https://creator.line.me/my/{seller_id}`
 - Create: `POST /api/v2/sticker` (JSON: type, metas, copyright, categoryIds, isAiGenerated, etc.)
 - Set count: `POST /api/sticker/{id}/stickers_per_set` (FormData)
 - Upload image: `POST /api/sticker/{id}/upload_image` (FormData: field name is `image`, not `sticker_image`)
-- Tag: `POST /api/sticker/{id}/update_taggings` (JSON: `{"01": ["tag_id_1", ...]}`)
+- Tag（**2026-06 LINE cms-next 改版後**）: `PUT /api/sticker/{id}/auto_suggest_tags`，body 是**裸陣列** `[{"type":"01","tag_ids":["c296",...]}, ...]`（不是包在 "tags" key 裡；包了會 500）。讀取用 GET 同路徑。舊的 `POST update_taggings` 已 404 作廢
+- 舊數字 tag ID → 新 c-ID 靠英文名稱對照（`load_tag_id_migration()`），對不到的 tag 會被丟掉
 - Submit: `POST /sticker/{id}/do_request`
 - Cancel: `POST /sticker/{id}/cancel_request`
 - LINE API responses have `)]}'` XSS prefix — strip before JSON parsing.
+
+#### Tag 鐵則（2026-07-07 血淚教訓，用戶已提醒無數次）
+- **每出新主題，先把所有 emotion（zh + ja）加進 `ZH_EMOTION_TAGS` 再上傳** — 現在腳本遇到缺漏會直接 exit，不會再默默用預設 tags
+- **tag 寫入失敗（非 200）會擋住 submit** — 修好再用 `--tags-only --sticker-id <ID>` 補打，然後 `--submit <ID>`
+- 送審中（審核鎖定）的貼圖仍可 cancel → 補 tag → 重新 submit，不影響排隊之外的東西
 
 ## QA System
 

@@ -70,6 +70,8 @@ async ([url, bodyJson, token]) => {
 }
 """
 
+JS_PUT_JSON = JS_POST_JSON.replace("method: 'POST'", "method: 'PUT'")
+
 JS_POST_FORM = """
 async ([url, fields, token]) => {
     const form = new FormData();
@@ -370,13 +372,48 @@ ZH_EMOTION_TAGS = {
     "今天有練": ["cat", "happy", "excited", "ok", "thank"],
     "拉筋":     ["cat", "work", "ok", "relief", "happy"],
     "翹掉了":   ["cat", "lazy", "sad", "shy", "sleep"],
+    # v13 daily-chat emotions (圓滾貓的日常對話) — zh
+    "讚啦":     ["cat", "ok", "happy", "excited"],
+    "瘋了嗎":   ["cat", "shock", "surprise", "seriously"],
+    "認真嗎":   ["cat", "seriously", "surprise", "no"],
+    "不會吧":   ["cat", "shock", "surprise", "panic"],
+    "拜託啦":   ["cat", "please", "anxious", "sorry"],
+    "好啦好啦": ["cat", "ok", "never_mind", "relief"],
+    "哇塞":     ["cat", "surprise", "excited", "shock"],
+    "厲害":     ["cat", "excited", "happy", "ok"],
+    "廢話":     ["cat", "of_course", "exactly", "lazy"],
+    "算了":     ["cat", "never_mind", "sad", "relief"],
+    "欸欸欸":   ["cat", "hello", "excited", "surprise"],
+    "說真的":   ["cat", "seriously", "exactly", "angry_dissatisfied"],
+    "懂":       ["cat", "ok", "exactly", "of_course"],
+    "超猛":     ["cat", "excited", "happy", "shock"],
+    "不行啦":   ["cat", "laugh", "cry", "no"],
+    "有夠煩":   ["cat", "angry", "angry_dissatisfied", "no"],
+    # v13 daily-chat emotions — ja (ja/prompts.json)
+    "いいね":       ["cat", "ok", "happy", "excited"],
+    "マジかよ":     ["cat", "shock", "surprise", "seriously"],
+    "本気？":       ["cat", "seriously", "surprise", "no"],
+    "うそでしょ":   ["cat", "shock", "surprise", "panic"],
+    "お願い":       ["cat", "please", "anxious", "sorry"],
+    "はいはい":     ["cat", "ok", "never_mind", "relief"],
+    "うわぁ":       ["cat", "surprise", "excited", "shock"],
+    "すごい":       ["cat", "excited", "happy", "ok"],
+    "当たり前":     ["cat", "of_course", "exactly", "lazy"],
+    "もういい":     ["cat", "never_mind", "sad", "relief"],
+    "ねえねえ":     ["cat", "hello", "excited", "surprise"],
+    "マジで":       ["cat", "seriously", "exactly", "angry_dissatisfied"],
+    "わかる":       ["cat", "ok", "exactly", "of_course"],
+    "やばい":       ["cat", "excited", "happy", "shock"],
+    "もうムリ":     ["cat", "laugh", "cry", "no"],
+    "うざい":       ["cat", "angry", "angry_dissatisfied", "no"],
 }
 
 
 def get_tags_for_emotion(emotion):
     """Get tag IDs for a given emotion text. Returns up to 9 tags."""
     if emotion and emotion not in ZH_EMOTION_TAGS:
-        print(f"  WARNING: emotion '{emotion}' not in ZH_EMOTION_TAGS, using default tags")
+        print(f"  ERROR: emotion '{emotion}' not in ZH_EMOTION_TAGS — add a mapping before uploading")
+        sys.exit(1)
     keywords = ZH_EMOTION_TAGS.get(emotion, ["cat", "happy"])
     tag_ids = []
     for kw in keywords:
@@ -388,6 +425,35 @@ def get_tags_for_emotion(emotion):
             seen.add(t)
             result.append(t)
     return result[:9]
+
+
+def load_tag_id_migration():
+    """Old numeric tag IDs -> new c-prefixed IDs (LINE cms-next, 2026-06+), matched by English name."""
+    v2_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "line_tags_v2.json")
+    with open(v2_path, encoding="utf-8") as f:
+        catalog = json.load(f)
+    en_to_new = {}
+    for t in catalog:
+        for nl in t.get("name_by_lang", []):
+            if nl["language"] == "en":
+                en_to_new.setdefault(nl["name"].strip().lower(), t["id"])
+    old_names = load_tags()
+    return {oid: en_to_new[nm.strip().lower()] for oid, nm in old_names.items()
+            if nm.strip().lower() in en_to_new}
+
+
+def build_tag_payload(stickers):
+    """Payload for PUT /api/sticker/{id}/auto_suggest_tags: [{"type":"01","tag_ids":[...]}, ...]"""
+    o2n = load_tag_id_migration()
+    payload = []
+    for s in stickers:
+        old_ids = get_tags_for_emotion(s.get("emotion", ""))
+        new_ids = [o2n[o] for o in old_ids if o in o2n][:9]
+        if not new_ids:
+            print(f"  ERROR: no tags resolved for #{s['id']} [{s.get('emotion', '')}] — fix mapping first")
+            sys.exit(1)
+        payload.append({"type": "%02d" % s["id"], "tag_ids": new_ids})
+    return payload
 
 
 # ---------------------------------------------------------------------------
@@ -488,21 +554,17 @@ def do_tags(theme, version, sticker_id):
 
     with sync_playwright() as p:
         browser, ctx, page, token = _open_page(p)
-        url = f"{API_BASE}/api/sticker/{sticker_id}/update_taggings"
-
-        for sdef in prompts_data["stickers"]:
-            num = f"{sdef['id']:02d}"
-            emotion = sdef.get("emotion", "")
-            tags = get_tags_for_emotion(emotion)
-            names = [tag_name_map.get(t, t) for t in tags]
-
-            body = json.dumps({num: tags})
-            result = page.evaluate(JS_POST_JSON, [url, body, token])
-            status = result["status"]
-            print(f"  #{num} [{emotion}] ({len(tags)}) -> {status} {names}")
-
+        url = f"{API_BASE}/api/sticker/{sticker_id}/auto_suggest_tags"
+        payload = build_tag_payload(prompts_data["stickers"])
+        for sdef, entry in zip(prompts_data["stickers"], payload):
+            print(f"  #{entry['type']} [{sdef.get('emotion', '')}] ({len(entry['tag_ids'])} tags)")
+        result = page.evaluate(JS_PUT_JSON, [url, json.dumps(payload), token])
         ctx.storage_state(path=SESSION_FILE)
         browser.close()
+        if result["status"] != 200:
+            print(f"\nERROR: tag PUT -> {result['status']}: {str(result['body'])[:200]}")
+            sys.exit(1)
+        print(f"\nAll tags updated OK (PUT {result['status']}).")
 
 
 def do_upload(theme, version, lang, sticker_id=None):
@@ -607,18 +669,21 @@ def do_upload(theme, version, lang, sticker_id=None):
             r = page.evaluate(JS_UPLOAD_IMAGE, [upload_url, b64, name, num, token])
             print(f"  {name} -> {r['status']}")
 
-        # Step 4: Tag
+        # Step 4: Tag (new auto_suggest_tags API, LINE cms-next 2026-06+)
         print("Step 4: Tagging...")
-        tag_url = f"{API_BASE}/api/sticker/{sticker_id}/update_taggings"
-        for sf in sticker_files:
-            num = re.search(r'sticker_(\d+)', os.path.basename(sf)).group(1)
-            sid = int(num)
-            emotion = sticker_defs.get(sid, {}).get("emotion", "")
-            tags = get_tags_for_emotion(emotion)
-            names = [tag_name_map.get(t, t) for t in tags]
-            body = json.dumps({num: tags})
-            result = page.evaluate(JS_POST_JSON, [tag_url, body, token])
-            print(f"  #{num} [{emotion}] ({len(tags)}) -> {result['status']} {names}")
+        tag_url = f"{API_BASE}/api/sticker/{sticker_id}/auto_suggest_tags"
+        payload = build_tag_payload(prompts_data["stickers"])
+        for entry in payload:
+            emotion = sticker_defs.get(int(entry["type"]), {}).get("emotion", "")
+            print(f"  #{entry['type']} [{emotion}] ({len(entry['tag_ids'])} tags)")
+        result = page.evaluate(JS_PUT_JSON, [tag_url, json.dumps(payload), token])
+        print(f"  PUT tags -> {result['status']}")
+        if result["status"] != 200:
+            ctx.storage_state(path=SESSION_FILE)
+            browser.close()
+            print(f"\nERROR: tagging failed ({result['status']}) — NOT submitting. body: {str(result['body'])[:200]}")
+            print(f"After fixing, retag with --tags-only --sticker-id {sticker_id}, then --submit {sticker_id}")
+            sys.exit(1)
 
         # Step 5: Submit
         print("Step 5: Submitting...")
