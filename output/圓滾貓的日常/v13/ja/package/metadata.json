@@ -1,0 +1,29 @@
+{
+  "theme": "圓滾貓的日常",
+  "version": "v13",
+  "title": "圓滾貓的日常對話",
+  "description": "圓滾滾灰貓陪你聊天! 16 款萬用回應貼圖，讚啦、瘋了嗎、不會吧... 每個反應都有圓滾貓。",
+  "sticker_count": 16,
+  "files": {
+    "stickers": [
+      "01.png",
+      "02.png",
+      "03.png",
+      "04.png",
+      "05.png",
+      "06.png",
+      "07.png",
+      "08.png",
+      "09.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "14.png",
+      "15.png",
+      "16.png"
+    ],
+    "main": "main.png",
+    "tab": "tab.png"
+  }
+}

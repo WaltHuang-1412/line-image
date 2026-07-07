@@ -507,7 +507,8 @@ ComfyUI and Ollama gemma3:12b cannot run simultaneously on a single GPU (GTX 108
 
 ### Operations Notes
 
-- **Auto-start ComfyUI** — if ComfyUI is not running, start it yourself with `cd ComfyUI && python main.py --listen` (run_in_background). Never ask the user to start it.
+- **GPU 工作絕對不能卡住用戶的電腦（鐵則）** — 所有吃 GPU/CPU 的程序（ComfyUI、Ollama）啟動後**必須立刻**把 process priority 降到 BelowNormal。ComfyUI 啟動**必須**加 `--reserve-vram 2` 保留 2GB VRAM 給 Windows 桌面（1080 Ti 是顯示卡兼算圖卡，VRAM 吃滿桌面就凍結）。生成結束後馬上 `POST http://127.0.0.1:8188/free` 釋放 VRAM；QA 跑完馬上 `ollama stop gemma3:12b`。
+- **Auto-start ComfyUI** — if ComfyUI is not running, start it yourself with `cd ComfyUI && python main.py --listen --reserve-vram 2` (run_in_background)，啟動後把該 python process 降到 BelowNormal。Never ask the user to start it.
 - **GPU memory** — after timeouts or multiple generations, free ComfyUI memory with `POST http://127.0.0.1:8188/free` before retrying.
 - **Japanese format encoding** — use `PYTHONIOENCODING=utf-8` when running format with `--lang ja` to avoid cp950 encoding errors on Windows.
 - **fix 只重生 raw** — 不產 nobg，不做 format。後續步驟（nobg、format）各自獨立跑。

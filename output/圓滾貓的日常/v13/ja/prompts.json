@@ -1,0 +1,92 @@
+{
+  "title": "圓滾貓的日常對話",
+  "description": "圓滾滾灰貓陪你聊天! 16 款萬用回應貼圖，讚啦、瘋了嗎、不會吧... 每個反應都有圓滾貓。",
+  "type": "sticker",
+  "style_prefix": "(best quality:1.4), (masterpiece:1.3), (highly detailed:1.2), 1cat, solo, simple background, (solid bright orange background:1.3), plain background, no gradient, no shadow, no texture, chibi, super deformed, big head small body, no humans, animal focus, feral cat, actual cat, ink painting style, brush strokes, (fine line art:1.2), (detailed fur texture:1.1), soft cel-shading, cute, (round chubby body:1.2), blush stickers, large white face, white cheeks, cat face, whiskers, cat paws, grey cat, big round eyes with black pupils, expressive eyes, centered composition, correct anatomy, no text, very expressive face, exaggerated expression, floating character, no ground plane, no floor",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, two cats, realistic, human, humanoid, catgirl, anime girl, person, clothing, jacket, shirt, extra limbs, japanese text, kanji, hiragana, katakana, gradient background, textured background, shadow on background, dark background, detailed background, white background, frame border, elongated body, thin body, ground shadow, floor shadow, cast shadow, drop shadow, ground plane, floor indicator, white outline, white border around character, heart, heart symbols, hearts on background, collar, necklace, bell, accessories, scarf, white scribble under body, ground scribble, scribble shadow, wink, one eye closed, claws, sharp claws, dark paw pads, raccoon, panda markings, ink drops, floating black shapes, dark puddle",
+  "sam_detect_prompt": "cat",
+  "reference_image": "v3.png",
+  "ipadapter_weight": 0.6,
+  "stickers": [
+    {
+      "id": 1,
+      "emotion": "いいね",
+      "prompt": "(one paw thumbs up:1.4), enormous excited grin, (sparkling star eyes:1.3), cheeks puffed with pride, super enthusiastic approval expression"
+    },
+    {
+      "id": 2,
+      "emotion": "マジかよ",
+      "prompt": "(one paw pointing forward at viewer:1.3), jaw dropped wide open, (eyes bulging in disbelief:1.3), incredulous shocked expression, totally baffled face, floating on background, no ground"
+    },
+    {
+      "id": 3,
+      "emotion": "本気？",
+      "prompt": "(1cat solo single cat only:1.5), (facing viewer directly:1.4), (large clear face fully visible:1.3), (both eyes open flat half-lidded stare:1.5), (small flat closed mouth:1.4), unimpressed doubtful deadpan face, are-you-serious look, single sweat drop, (floating on clean plain background:1.3), clean outline"
+    },
+    {
+      "id": 4,
+      "emotion": "うそでしょ",
+      "prompt": "(both paws on cheeks:1.4), mouth wide open in shock, (eyes popping out wide:1.3), completely stunned disbelief expression, jaw drop face"
+    },
+    {
+      "id": 5,
+      "emotion": "お願い",
+      "prompt": "(both paws pressed together begging:1.4), (watery pleading puppy eyes:1.3), desperate trembling lip, pitiful begging expression, (light grey uniform fur:1.3), plain grey cat, clean solid background only, absolutely NO paw prints, absolutely NO hearts, absolutely NO stamps on background"
+    },
+    {
+      "id": 6,
+      "emotion": "はいはい",
+      "prompt": "(one paw raised waving dismissively:1.4), (other paw on hip:1.2), (eyes rolling to side:1.3), exasperated done-with-it face, reluctant ok fine expression, heavy sigh look, (round chubby body clearly visible:1.2), upper body pose"
+    },
+    {
+      "id": 7,
+      "emotion": "うわぁ",
+      "prompt": "(both paws raised up in amazement:1.3), mouth wide open wow expression, (sparkling glitter eyes:1.4), overwhelmed with amazement face, (plain short grey fur:1.3), (smooth round head:1.2), clean outline, no ink splashes, NO hood, NO clothing, NO fluffy chest fur, NO orange paw pads"
+    },
+    {
+      "id": 8,
+      "emotion": "すごい",
+      "prompt": "(both eyes wide open sparkling in awe:1.4), (happy admiring open smile:1.4), (one paw giving thumbs up:1.3), impressed cheerful admiration face, relaxed eyebrows, (light grey fur:1.3), (small centered character with wide empty margins around:1.4), full character visible within frame, not cropped, floating on plain background, clean outline, no ink splashes, clean solid background only"
+    },
+    {
+      "id": 9,
+      "emotion": "当たり前",
+      "prompt": "(eyes half-closed droopy unimpressed:1.5), flat closed mouth, (one paw out in duh gesture:1.3), deeply bored obviously face, unamused dismissive expression, NO smile, NO open mouth, NO happy expression, NO excited expression"
+    },
+    {
+      "id": 10,
+      "emotion": "もういい",
+      "prompt": "(one paw slowly waving to side:1.3), (eyes droopy half-closed resigned:1.4), (mouth tightly closed:1.3), whatever-forget-it expression, giving-up face, exhale sigh, (light grey fur:1.3), NO crying, NO tears, NO shocked face, NO open mouth"
+    },
+    {
+      "id": 11,
+      "emotion": "ねえねえ",
+      "prompt": "(round chubby upper body only:1.3), (both paws raised up excitedly:1.3), (eyes wide open sparkling:1.4), (mouth open in excited shout:1.3), bouncy energetic hey-hey-hey expression, can't-contain-excitement face, NO closed eyes, NO smug expression, NO legs visible, NO full body, NO paw prints on background, NO floating elements on background"
+    },
+    {
+      "id": 12,
+      "emotion": "マジで",
+      "prompt": "(one paw pointing finger directly at viewer:1.4), (eyebrows furrowed serious:1.4), (eyes wide open intense:1.3), stern earnest I-mean-business expression, NO smile, NO closed eyes, NO happy expression, NO laughing"
+    },
+    {
+      "id": 13,
+      "emotion": "わかる",
+      "prompt": "(one paw raised in aha moment:1.3), (eyes open bright knowing:1.3), (small confident smile:1.2), light bulb moment expression, I-understand-exactly face, alert engaged look, NO dismissive expression, NO heavy-lidded eyes, NO waving goodbye"
+    },
+    {
+      "id": 14,
+      "emotion": "やばい",
+      "prompt": "(one front paw raised in fist pump:1.3), (huge excited open mouth grin:1.3), (big round orange eyes with black pupils:1.4), excited admiring expression, this-is-insanely-awesome face, simple clean chibi pose, (correct cat anatomy:1.2), plain grey fur white belly, bare neck, soft round paws, clean outline"
+    },
+    {
+      "id": 15,
+      "emotion": "もうムリ",
+      "prompt": "(round chubby body:1.3), (tears streaming from eyes:1.3), (wide open laughing mouth:1.4), completely losing it laughter expression, can't stop laughing face, NO elongated body, NO thin body"
+    },
+    {
+      "id": 16,
+      "emotion": "うざい",
+      "prompt": "(eyebrows furrowed in anger:1.5), (scrunched angry face:1.4), (steam from head:1.3), tightly closed scowling mouth, deeply annoyed irritated expression, about-to-snap rage face, (light grey fur:1.3), NO smile, NO open mouth, NO happy expression, NO tongue out"
+    }
+  ]
+}
