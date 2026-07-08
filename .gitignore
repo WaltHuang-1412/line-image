@@ -7,3 +7,7 @@ v3.png
 # sensitive session/credentials
 line_session.json
 api_log.json
+# transient logs & test outputs
+comfyui.log
+format_zh_log*.txt
+output/test_anim/
