@@ -9,7 +9,7 @@
 
 ### English
 - Title: Roly-Poly Cat Taiwanese Talk
-- Description: The chubby grey cat speaks Taiwanese! 32 reaction stickers full of authentic Taiwan flavor - oh my goodness, no way, hold on, I know already... perfect for every chat.
+- Description: The chubby grey cat speaks Taiwanese! 32 reaction stickers full of authentic Taiwan flavor - perfect for every chat.
 - Tags: cat, sticker, taiwanese, taiwan, chat, reply, cute, kawaii, chubby, grey
 
 ### Japanese
