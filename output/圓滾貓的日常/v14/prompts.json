@@ -30,7 +30,7 @@
     {"id": 20, "emotion": "修但幾勒",   "prompt": "(one paw stretched forward in stop gesture:1.4), (body leaning back:1.2), hold-on-wait face, alarmed pause expression"},
     {"id": 21, "emotion": "三八啦",     "prompt": "(one paw pushing forward playfully:1.3), (laughing embarrassed face:1.3), blushing cheeks, bashful giggle, oh-stop-it expression"},
     {"id": 22, "emotion": "阿不就好棒棒", "prompt": "(both paws clapping slowly:1.3), (deadpan half-lidded eyes:1.4), fake flat smile, sarcastic unimpressed applause face"},
-    {"id": 23, "emotion": "免啦",       "prompt": "(one paw raised waving side to side:1.4), (gentle closed-eye smile:1.3), relaxed declining expression, easygoing warm no-thanks face"},
+    {"id": 23, "emotion": "免啦",       "prompt": "(one single paw raised waving:1.4), (other paw resting on belly:1.2), (only two front paws:1.3), (gentle closed-eye smile:1.3), relaxed declining expression, easygoing warm no-thanks face, (correct cat anatomy:1.3)"},
     {"id": 24, "emotion": "緊來去",     "prompt": "(body turned sideways ready to go:1.2), (one paw beckoning forward:1.4), excited eager face, let's-go sparkling eyes, energetic lean"},
     {"id": 25, "emotion": "馬上到",     "prompt": "(running in side profile view:1.4), (body leaning far forward:1.3), (small dust puffs behind feet:1.2), determined focused face, sweat drop flying off head, (full body visible:1.2), clean outline, NO frame, NO border, no sweatband, no clothing"},
     {"id": 26, "emotion": "到厝啊",     "prompt": "(standing upright cheerfully:1.2), (wearing white house slippers:1.3), (both paws raised in happy arrival:1.2), (relieved warm smile:1.3), small breath puff, i-am-home expression, relaxed happy eyes, clean outline"},
@@ -39,6 +39,6 @@
     {"id": 29, "emotion": "嘸要緊",     "prompt": "(1cat solo single cat only:1.5), (eyes closed gentle warm smile:1.3), (one paw patting forward softly:1.3), comforting reassuring expression, soft kind face"},
     {"id": 30, "emotion": "保重蛤",     "prompt": "(one paw raised waving warmly:1.3), (warm gentle smile:1.3), (small sparkles around:1.2), caring farewell expression, soft eyes"},
     {"id": 31, "emotion": "好家在",     "prompt": "(one paw wiping sweat from forehead:1.4), (relieved smile with closed eyes:1.3), large sweat drop flying away, phew what-a-relief expression"},
-    {"id": 32, "emotion": "哩馬幫幫忙", "prompt": "(both paws spread out palms up:1.4), (eyes rolling upward:1.3), exasperated pleading face, give-me-a-break expression"}
+    {"id": 32, "emotion": "哩馬幫幫忙", "prompt": "(both front paws pressed together pleading:1.3), (eyes rolled up in exasperation:1.4), (flat annoyed mouth:1.2), give-me-a-break pleading face, (correct cat anatomy:1.3), plain short grey fur, smooth round head, clean outline"}
   ]
 }

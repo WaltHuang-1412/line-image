@@ -19,9 +19,25 @@ def check_running():
 
 
 def ask(image_path, prompt):
-    """Send an image + prompt to ollama and return the response text."""
-    with open(image_path, "rb") as f:
-        img_b64 = base64.b64encode(f.read()).decode("utf-8")
+    """Send an image + prompt to ollama and return the response text.
+
+    RGBA images are composited onto white first — Ollama vision models
+    handle the alpha channel inconsistently and may "see" the RGB values
+    hiding under transparent pixels (e.g. leftover orange after flood fill).
+    """
+    from PIL import Image
+    import io
+    img = Image.open(image_path)
+    if img.mode in ("RGBA", "LA", "P"):
+        img = img.convert("RGBA")
+        canvas = Image.new("RGBA", img.size, (255, 255, 255, 255))
+        canvas.alpha_composite(img)
+        buf = io.BytesIO()
+        canvas.convert("RGB").save(buf, "PNG")
+        img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+    else:
+        with open(image_path, "rb") as f:
+            img_b64 = base64.b64encode(f.read()).decode("utf-8")
 
     payload = {
         "model": MODEL,
