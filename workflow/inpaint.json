@@ -1,0 +1,87 @@
+{
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "animagine-xl-3.1.safetensors"
+    }
+  },
+  "20": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "source.png"
+    }
+  },
+  "21": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mask.png"
+    }
+  },
+  "22": {
+    "class_type": "ImageToMask",
+    "inputs": {
+      "image": ["21", 0],
+      "channel": "red"
+    }
+  },
+  "23": {
+    "class_type": "GrowMask",
+    "inputs": {
+      "mask": ["22", 0],
+      "expand": 8,
+      "tapered_corners": true
+    }
+  },
+  "24": {
+    "class_type": "VAEEncodeForInpaint",
+    "inputs": {
+      "pixels": ["20", 0],
+      "vae": ["4", 2],
+      "mask": ["23", 0],
+      "grow_mask_by": 6
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["4", 1],
+      "text": "dark brown fur, warm cinnamon and coffee colored fur texture, fluffy cat fur, detailed fur"
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["4", 1],
+      "text": "white fur, white chest, light fur, cream fur, grey fur"
+    }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["4", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["24", 0],
+      "seed": 0,
+      "steps": 20,
+      "cfg": 7.0,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 0.45
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["4", 2]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "inpaint_result",
+      "images": ["8", 0]
+    }
+  }
+}
