@@ -1,0 +1,31 @@
+{
+  "title": "玳玳的溫暖小窩",
+  "description": "玳瑁貓玳玳的療癒日常! 16 款室內陽光窩家貼圖, 曬太陽, 踏踏, 呼嚕, 賴床... 暖到心坎裡.",
+  "type": "sticker",
+  "character_desc": "dark tortoiseshell fluffy cat, dark chocolate brown and black mottled fur, long fluffy fur",
+  "character_parts": "ears, paws, tail, belly, whiskers",
+  "sam_detect_prompt": "cat",
+  "reference_image": "reference_final.png",
+  "ipadapter_weight": 0.45,
+  "_note": "This config produced the best tortoiseshell mixing - do not over-modify",
+  "style_prefix": "1cat, solo, (tortoiseshell cat:1.3), (dark mottled brown and black patchy fur:1.2), burnt orange and chocolate brown patches, fluffy long fur, realistic detailed fur texture, cute illustration style, slightly big round head, large sparkling golden amber eyes, adorable proportions, round face, no humans, animal focus, solid flat single color background, plain background, no gradient, bright saturated purple background, centered composition, no text",
+  "negative_prompt": "lowres, bad anatomy, text, error, worst quality, low quality, jpeg artifacts, signature, watermark, blurry, multiple cats, (white fur:1.4), (white chest:1.4), (white chin:1.4), (white paws:1.3), (white belly:1.3), (cream fur:1.3), (light fur:1.2), calico, grey cat, tabby stripes, striped, gradient background, dark background",
+  "stickers": [
+    {"id": 1,  "emotion": "曬太陽",   "prompt": "tortoiseshell fluffy cat (lying down on side:1.2), eyes half-closed, peaceful"},
+    {"id": 2,  "emotion": "踏踏",     "prompt": "tortoiseshell fluffy cat (front paws pressing down on blanket:1.2), kneading, closed eyes happy"},
+    {"id": 3,  "emotion": "呼嚕",     "prompt": "tortoiseshell fluffy cat sitting, eyes closed smiling, musical notes around head, purring"},
+    {"id": 4,  "emotion": "賴床",     "prompt": "tortoiseshell fluffy cat (under blanket only face peeking out:1.3), sleepy eyes"},
+    {"id": 5,  "emotion": "伸懶腰",   "prompt": "tortoiseshell fluffy cat (back arched high stretching:1.3), tail up, big stretch"},
+    {"id": 6,  "emotion": "翻肚",     "prompt": "tortoiseshell fluffy cat (lying on back belly up:1.3), paws in air, peaceful"},
+    {"id": 7,  "emotion": "蓋被被",   "prompt": "tortoiseshell fluffy cat (wrapped in blanket burrito:1.3), only head sticking out"},
+    {"id": 8,  "emotion": "打哈欠",   "prompt": "tortoiseshell fluffy cat (mouth wide open yawning:1.3), pink tongue, eyes shut"},
+    {"id": 9,  "emotion": "看窗外",   "prompt": "tortoiseshell fluffy cat (back facing viewer:1.3), looking away, tail visible"},
+    {"id": 10, "emotion": "窩著",     "prompt": "tortoiseshell fluffy cat (curled into ball from side:1.3), compact loaf, napping"},
+    {"id": 11, "emotion": "蹭一下",   "prompt": "tortoiseshell fluffy cat (head tilted sideways:1.3), rubbing cheek, eyes closed, nuzzling"},
+    {"id": 12, "emotion": "泡茶中",   "prompt": "tortoiseshell fluffy cat sitting next to (steaming mug:1.2), looking at cup curiously"},
+    {"id": 13, "emotion": "偷看",     "prompt": "tortoiseshell fluffy cat (peeking from behind edge:1.3), both eyes wide, curious sneaky"},
+    {"id": 14, "emotion": "好夢",     "prompt": "tortoiseshell fluffy cat (sleeping curled up:1.2), dream bubble above head, ZZZ, peaceful"},
+    {"id": 15, "emotion": "摸摸",     "prompt": "tortoiseshell fluffy cat (head tilted up:1.3), eyes closed blissful, being petted"},
+    {"id": 16, "emotion": "好舒服",   "prompt": "tortoiseshell fluffy cat (relaxed flat melting pose:1.3), droopy eyes, total bliss"}
+  ]
+}
