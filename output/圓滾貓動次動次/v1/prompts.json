@@ -1,0 +1,272 @@
+{
+  "title": "圓滾貓動次動次",
+  "description": "圓滾滾灰貓動起來! 24 款動態貼圖，嗯嗯、哈哈、好喔... 可以一直回的萬用款全都會動。",
+  "type": "animated_sticker",
+  "main_id": 1,
+  "stickers": [
+    {
+      "id": 1,
+      "emotion": "嗯嗯",
+      "source": {
+        "version": "v14",
+        "sid": 1,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "nod",
+      "particles": "sparkle"
+    },
+    {
+      "id": 2,
+      "emotion": "哈哈",
+      "source": {
+        "version": "v14",
+        "sid": 13,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "bounce",
+      "particles": "stars"
+    },
+    {
+      "id": 3,
+      "emotion": "喔喔",
+      "source": {
+        "version": "v14",
+        "sid": 4,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "nod_slow",
+      "particles": "sparkle"
+    },
+    {
+      "id": 4,
+      "emotion": "好喔",
+      "source": {
+        "version": "v13",
+        "sid": 6,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "sway",
+      "particles": "sparkle"
+    },
+    {
+      "id": 5,
+      "emotion": "沒問題",
+      "source": {
+        "version": "v13",
+        "sid": 1,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "bounce",
+      "particles": "stars"
+    },
+    {
+      "id": 6,
+      "emotion": "知道了",
+      "source": {
+        "version": "v13",
+        "sid": 13,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "nod",
+      "particles": "exclaim"
+    },
+    {
+      "id": 7,
+      "emotion": "對啊",
+      "source": {
+        "version": "v14",
+        "sid": 2,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "nod",
+      "particles": "sparkle"
+    },
+    {
+      "id": 8,
+      "emotion": "蛤?",
+      "source": {
+        "version": "v14",
+        "sid": 6,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "pop",
+      "particles": "question"
+    },
+    {
+      "id": 9,
+      "emotion": "好啦",
+      "source": {
+        "version": "v14",
+        "sid": 3,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "sway",
+      "particles": "sweat"
+    },
+    {
+      "id": 10,
+      "emotion": "真的喔",
+      "source": {
+        "version": "v13",
+        "sid": 3,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "sway_slow",
+      "particles": "question"
+    },
+    {
+      "id": 11,
+      "emotion": "晚點說",
+      "source": {
+        "version": "v14",
+        "sid": 8,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "tremble",
+      "particles": "sweat"
+    },
+    {
+      "id": 12,
+      "emotion": "先這樣",
+      "source": {
+        "version": "v14",
+        "sid": 23,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "sway",
+      "particles": "sparkle"
+    },
+    {
+      "id": 13,
+      "emotion": "天公伯啊",
+      "source": {
+        "version": "v14",
+        "sid": 10,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "rock",
+      "particles": "sweat"
+    },
+    {
+      "id": 14,
+      "emotion": "母湯",
+      "source": {
+        "version": "v14",
+        "sid": 18,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "headshake",
+      "particles": "anger_small"
+    },
+    {
+      "id": 15,
+      "emotion": "哭啊",
+      "source": {
+        "version": "v14",
+        "sid": 15,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "rock",
+      "particles": "tears"
+    },
+    {
+      "id": 16,
+      "emotion": "有夠煩",
+      "source": {
+        "version": "v13",
+        "sid": 16,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "shake",
+      "particles": "anger"
+    },
+    {
+      "id": 17,
+      "emotion": "超猛",
+      "source": {
+        "version": "v13",
+        "sid": 14,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "bounce",
+      "particles": "stars"
+    },
+    {
+      "id": 18,
+      "emotion": "不會吧",
+      "source": {
+        "version": "v13",
+        "sid": 4,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "tremble",
+      "particles": "sweat"
+    },
+    {
+      "id": 19,
+      "emotion": "GG",
+      "source": {
+        "version": "v14",
+        "sid": 16,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "sink",
+      "particles": "gloom"
+    },
+    {
+      "id": 20,
+      "emotion": "先來睏",
+      "source": {
+        "version": "v14",
+        "sid": 27,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "sway_slow",
+      "particles": "zzz"
+    },
+    {
+      "id": 21,
+      "emotion": "到厝啊",
+      "source": {
+        "version": "v14",
+        "sid": 26,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "bounce_soft",
+      "particles": "sparkle"
+    },
+    {
+      "id": 22,
+      "emotion": "歹勢啦",
+      "source": {
+        "version": "v14",
+        "sid": 28,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "bow",
+      "particles": "sweat"
+    },
+    {
+      "id": 23,
+      "emotion": "緊來去",
+      "source": {
+        "version": "v14",
+        "sid": 24,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "lean",
+      "particles": "dust"
+    },
+    {
+      "id": 24,
+      "emotion": "修但幾勒",
+      "source": {
+        "version": "v14",
+        "sid": 20,
+        "theme": "圓滾貓的日常"
+      },
+      "motion": "leanback",
+      "particles": "exclaim"
+    }
+  ]
+}

@@ -250,6 +250,10 @@ Triggered by: user explicitly requests a full pipeline step (generate, format, Q
 prompts.json 的 `"type"` 欄位決定用哪個流程（`"sticker"` 或 `"emoji"`）。
 
 ### Shared: Planning (Phase 1)
+0. **系列分流(鐵則,2026-07 起)** — 「圓滾貓的日常」= 國語主系列;「圓滾貓的台味日常」= 台語系列。**一包只能一種語感,不能混**(v15 混了國台語是反例)。動態/表情貼等新類型也各自分國語版、台味版。選詞規劃時填充型(嗯嗯/哈哈類可以一直回的)必須佔 50% 以上。
+0b. **圖源重用上限(鐵則)** — 同一張圖最多出現在「原靜態包 + 一個衍生包(動態或表情貼)」,**不能三包同圖**。衍生包規劃時先列出已被其他衍生包用過的圖源並排除。
+0d. **產品線資料夾分離(鐵則,2026-07 起)** — 一個產品線一個 theme 資料夾、各自從 v1 編號:`圓滾貓的日常/`(靜態國語)、`圓滾貓動次動次/`(動態)、`圓滾貓表情貼/`(emoji)。衍生包的 prompts.json 圖源用 `"source": {"theme": ..., "version": ..., "sid": ...}` 跨主題引用,不再把不同產品類型塞進同一個 theme 的版號序列(舊 v15 = 動次動次 v1)。
+0c. **衍生包選圖看視覺不看語意** — 表情貼/縮圖尺寸下,語意分類無效(瘋了嗎/不會吧/驚訝縮小後是同一張臉)。每個「視覺原型」只選一張,道具/姿勢張(愛心手、舉重、咖啡杯)反而加分。
 1. **Market research** — Search LINE sticker/emoji trends, identify gaps.
 2. **Theme discussion** — Propose concepts, get user approval.
 3. **Emotion planning** — Plan emotions. Collect all v3+ emotions and ensure zero duplicates. Present for user approval.

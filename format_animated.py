@@ -329,7 +329,7 @@ def render_frames(body_img, text, text_pos, motion, particles, canvas=(W, H)):
 
 def animate_sticker(entry, theme, out_path, canvas=(W, H), body_h=None):
     src = entry["source"]
-    src_dir = config.get_paths(theme, src["version"])["raw"]
+    src_dir = config.get_paths(src.get("theme", theme), src["version"])["raw"]
     src_png = os.path.join(src_dir, f"sticker_{src['sid']:02d}_nobg.png")
     bh = body_h or (canvas[1] - 80)
     body = _load_body(src_png, bh)
