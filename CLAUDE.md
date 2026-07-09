@@ -456,7 +456,8 @@ Raw QA 是**逐張**判定，**不會抓跨張不一致**（單張看很好，16
 - LINE API responses have `)]}'` XSS prefix — strip before JSON parsing.
 
 #### Tag 鐵則（2026-07-07 血淚教訓，用戶已提醒無數次）
-- **每出新主題，先把所有 emotion（zh + ja）加進 `ZH_EMOTION_TAGS` 再上傳** — 現在腳本遇到缺漏會直接 exit，不會再默默用預設 tags
+- **新包（2026-07-09 起）的 tags 直接寫在 prompts.json 每張貼圖上**：`"tags": ["cat", "ok", "happy"]`（關鍵字用 `EMOTION_TAG_MAP` 的 key）。**不要再往 `ZH_EMOTION_TAGS` 加新包** — 那是 v7-v15 的 legacy fallback
+- 腳本遇到「無 tags 欄位且 legacy 也查不到」或「未知關鍵字」會直接 exit，不會再默默用預設 tags
 - **tag 寫入失敗（非 200）會擋住 submit** — 修好再用 `--tags-only --sticker-id <ID>` 補打，然後 `--submit <ID>`
 - 送審中（審核鎖定）的貼圖仍可 cancel → 補 tag → 重新 submit，不影響排隊之外的東西
 

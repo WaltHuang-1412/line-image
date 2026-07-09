@@ -455,14 +455,33 @@ ZH_EMOTION_TAGS = {
 }
 
 
-def get_tags_for_emotion(emotion):
-    """Get tag IDs for a given emotion text. Returns up to 9 tags."""
-    if emotion and emotion not in ZH_EMOTION_TAGS:
-        print(f"  ERROR: emotion '{emotion}' not in ZH_EMOTION_TAGS — add a mapping before uploading")
+def get_tag_keywords(sticker_def):
+    """Resolve the tag keyword list for one sticker.
+
+    Preferred source: the sticker's own "tags" list in prompts.json
+    (new packs, 2026-07+). Fallback: the legacy ZH_EMOTION_TAGS dict
+    (v7-v15 packs, kept for compatibility — do not add new packs there).
+    """
+    keywords = sticker_def.get("tags")
+    if not keywords:
+        emotion = sticker_def.get("emotion", "")
+        if emotion and emotion not in ZH_EMOTION_TAGS:
+            print(f"  ERROR: #{sticker_def.get('id')} [{emotion}] has no \"tags\" in prompts.json "
+                  f"and no legacy ZH_EMOTION_TAGS entry — add \"tags\" to prompts.json")
+            sys.exit(1)
+        keywords = ZH_EMOTION_TAGS.get(emotion, ["cat", "happy"])
+    unknown = [k for k in keywords if k not in EMOTION_TAG_MAP]
+    if unknown:
+        print(f"  ERROR: #{sticker_def.get('id')} unknown tag keyword(s) {unknown} — "
+              f"valid keywords are EMOTION_TAG_MAP keys")
         sys.exit(1)
-    keywords = ZH_EMOTION_TAGS.get(emotion, ["cat", "happy"])
+    return keywords
+
+
+def get_tags_for_emotion(sticker_def):
+    """Keyword list -> legacy numeric tag IDs, deduped, max 9."""
     tag_ids = []
-    for kw in keywords:
+    for kw in get_tag_keywords(sticker_def):
         tag_ids.extend(EMOTION_TAG_MAP.get(kw, []))
     seen = set()
     result = []
@@ -493,7 +512,7 @@ def build_tag_payload(stickers):
     o2n = load_tag_id_migration()
     payload = []
     for s in stickers:
-        old_ids = get_tags_for_emotion(s.get("emotion", ""))
+        old_ids = get_tags_for_emotion(s)
         new_ids = [o2n[o] for o in old_ids if o in o2n][:9]
         if not new_ids:
             print(f"  ERROR: no tags resolved for #{s['id']} [{s.get('emotion', '')}] — fix mapping first")
