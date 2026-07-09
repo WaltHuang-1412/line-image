@@ -1,0 +1,248 @@
+{
+  "title": "圓滾貓動次動次",
+  "description": "圓滾滾灰貓動起來! 24 款動態貼圖，嗯嗯、哈哈、好喔... 可以一直回的萬用款全都會動。",
+  "type": "animated_sticker",
+  "main_id": 1,
+  "stickers": [
+    {
+      "id": 1,
+      "emotion": "うんうん",
+      "source": {
+        "version": "v14",
+        "sid": 1
+      },
+      "motion": "nod",
+      "particles": "sparkle"
+    },
+    {
+      "id": 2,
+      "emotion": "わはは",
+      "source": {
+        "version": "v14",
+        "sid": 13
+      },
+      "motion": "bounce",
+      "particles": "stars"
+    },
+    {
+      "id": 3,
+      "emotion": "なるほど",
+      "source": {
+        "version": "v14",
+        "sid": 4
+      },
+      "motion": "nod_slow",
+      "particles": "sparkle"
+    },
+    {
+      "id": 4,
+      "emotion": "いいよ",
+      "source": {
+        "version": "v13",
+        "sid": 6
+      },
+      "motion": "sway",
+      "particles": "sparkle"
+    },
+    {
+      "id": 5,
+      "emotion": "まかせて",
+      "source": {
+        "version": "v13",
+        "sid": 1
+      },
+      "motion": "bounce",
+      "particles": "stars"
+    },
+    {
+      "id": 6,
+      "emotion": "りょうかい",
+      "source": {
+        "version": "v13",
+        "sid": 13
+      },
+      "motion": "nod",
+      "particles": "exclaim"
+    },
+    {
+      "id": 7,
+      "emotion": "だよね",
+      "source": {
+        "version": "v14",
+        "sid": 2
+      },
+      "motion": "nod",
+      "particles": "sparkle"
+    },
+    {
+      "id": 8,
+      "emotion": "え!?",
+      "source": {
+        "version": "v14",
+        "sid": 6
+      },
+      "motion": "pop",
+      "particles": "question"
+    },
+    {
+      "id": 9,
+      "emotion": "はーい",
+      "source": {
+        "version": "v14",
+        "sid": 3
+      },
+      "motion": "sway",
+      "particles": "sweat"
+    },
+    {
+      "id": 10,
+      "emotion": "ほんとに?",
+      "source": {
+        "version": "v13",
+        "sid": 3
+      },
+      "motion": "sway_slow",
+      "particles": "question"
+    },
+    {
+      "id": 11,
+      "emotion": "あとでね",
+      "source": {
+        "version": "v14",
+        "sid": 8
+      },
+      "motion": "tremble",
+      "particles": "sweat"
+    },
+    {
+      "id": 12,
+      "emotion": "そんじゃ",
+      "source": {
+        "version": "v14",
+        "sid": 23
+      },
+      "motion": "sway",
+      "particles": "sparkle"
+    },
+    {
+      "id": 13,
+      "emotion": "神さま~",
+      "source": {
+        "version": "v14",
+        "sid": 10
+      },
+      "motion": "rock",
+      "particles": "sweat"
+    },
+    {
+      "id": 14,
+      "emotion": "ダメだって",
+      "source": {
+        "version": "v14",
+        "sid": 18
+      },
+      "motion": "headshake",
+      "particles": "anger_small"
+    },
+    {
+      "id": 15,
+      "emotion": "泣けるわ",
+      "source": {
+        "version": "v14",
+        "sid": 15
+      },
+      "motion": "rock",
+      "particles": "tears"
+    },
+    {
+      "id": 16,
+      "emotion": "イライラ",
+      "source": {
+        "version": "v13",
+        "sid": 16
+      },
+      "motion": "shake",
+      "particles": "anger"
+    },
+    {
+      "id": 17,
+      "emotion": "最強かよ",
+      "source": {
+        "version": "v13",
+        "sid": 14
+      },
+      "motion": "bounce",
+      "particles": "stars"
+    },
+    {
+      "id": 18,
+      "emotion": "まさか",
+      "source": {
+        "version": "v13",
+        "sid": 4
+      },
+      "motion": "tremble",
+      "particles": "sweat"
+    },
+    {
+      "id": 19,
+      "emotion": "GG",
+      "source": {
+        "version": "v14",
+        "sid": 16
+      },
+      "motion": "sink",
+      "particles": "gloom"
+    },
+    {
+      "id": 20,
+      "emotion": "おやすみ~",
+      "source": {
+        "version": "v14",
+        "sid": 27
+      },
+      "motion": "sway_slow",
+      "particles": "zzz"
+    },
+    {
+      "id": 21,
+      "emotion": "帰ったよ~",
+      "source": {
+        "version": "v14",
+        "sid": 26
+      },
+      "motion": "bounce_soft",
+      "particles": "sparkle"
+    },
+    {
+      "id": 22,
+      "emotion": "ごめんて",
+      "source": {
+        "version": "v14",
+        "sid": 28
+      },
+      "motion": "bow",
+      "particles": "sweat"
+    },
+    {
+      "id": 23,
+      "emotion": "いくよ~!",
+      "source": {
+        "version": "v14",
+        "sid": 24
+      },
+      "motion": "lean",
+      "particles": "dust"
+    },
+    {
+      "id": 24,
+      "emotion": "まって!",
+      "source": {
+        "version": "v14",
+        "sid": 20
+      },
+      "motion": "leanback",
+      "particles": "exclaim"
+    }
+  ]
+}

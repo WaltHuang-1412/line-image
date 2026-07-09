@@ -272,13 +272,22 @@ def _quantize_frame(f, pal, t_index):
     return q
 
 
-def save_apng(frames, delays, path, colors=PALETTE_COLORS):
+def _normalize_delays(delays, loop_ms=1000):
+    """Scale delays so one loop is exactly loop_ms (LINE: total playback must be
+    exactly 1/2/3/4 s and loops 1-4 — we use 1000ms x 3 loops = 3s)."""
+    total = sum(delays)
+    scaled = [max(30, int(round(d * loop_ms / total))) for d in delays]
+    scaled[-1] += loop_ms - sum(scaled)  # absorb rounding drift in the last frame
+    return scaled
+
+
+def save_apng(frames, delays, path, colors=PALETTE_COLORS, num_plays=3):
     """Write APNG with one shared palette + reserved transparent index. Returns KB."""
     from apng import APNG, PNG
     pal = _shared_palette(frames, colors)
     trns = b"\xff" * colors + b"\x00"
-    ap = APNG()
-    for f, ms in zip(frames, delays):
+    ap = APNG(num_plays=num_plays)
+    for f, ms in zip(frames, _normalize_delays(delays)):
         q = _quantize_frame(f, pal, colors)
         q.info["transparency"] = trns
         buf = BytesIO()

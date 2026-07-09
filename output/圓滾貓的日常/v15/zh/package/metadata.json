@@ -1,0 +1,37 @@
+{
+  "theme": "圓滾貓的日常",
+  "version": "v15",
+  "title": "圓滾貓動次動次",
+  "description": "圓滾滾灰貓動起來! 24 款動態貼圖，嗯嗯、哈哈、好喔... 可以一直回的萬用款全都會動。",
+  "sticker_count": 24,
+  "files": {
+    "stickers": [
+      "01.png",
+      "02.png",
+      "03.png",
+      "04.png",
+      "05.png",
+      "06.png",
+      "07.png",
+      "08.png",
+      "09.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "14.png",
+      "15.png",
+      "16.png",
+      "17.png",
+      "18.png",
+      "19.png",
+      "20.png",
+      "21.png",
+      "22.png",
+      "23.png",
+      "24.png"
+    ],
+    "main": "main.png",
+    "tab": "tab.png"
+  }
+}

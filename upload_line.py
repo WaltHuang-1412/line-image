@@ -422,6 +422,19 @@ ZH_EMOTION_TAGS = {
     "保重蛤":     ["cat", "bye", "love", "thank"],
     "好家在":     ["cat", "relief", "happy", "surprise"],
     "哩馬幫幫忙": ["cat", "please", "angry_dissatisfied", "no"],
+    # v15 animated pack fillers (圓滾貓動次動次) — zh
+    "嗯嗯":     ["cat", "ok", "exactly", "of_course"],
+    "哈哈":     ["cat", "laugh", "happy", "excited"],
+    "喔喔":     ["cat", "surprise", "ok", "still"],
+    "好喔":     ["cat", "ok", "relief", "never_mind"],
+    "沒問題":   ["cat", "ok", "of_course", "thank", "happy"],
+    "知道了":   ["cat", "ok", "exactly", "of_course"],
+    "對啊":     ["cat", "exactly", "of_course", "happy"],
+    "蛤?":      ["cat", "surprise", "shock", "seriously"],
+    "好啦":     ["cat", "ok", "never_mind", "relief"],
+    "真的喔":   ["cat", "seriously", "surprise", "still"],
+    "晚點說":   ["cat", "wait", "work", "anxious"],
+    "先這樣":   ["cat", "bye", "ok", "never_mind"],
     # v13 daily-chat emotions — ja (ja/prompts.json)
     "いいね":       ["cat", "ok", "happy", "excited"],
     "マジかよ":     ["cat", "shock", "surprise", "seriously"],
@@ -650,8 +663,9 @@ def do_upload(theme, version, lang, sticker_id=None):
                 {"language": "ja",      "title": info["ja"]["title"] + suffix, "description": info["ja"]["desc"]},
                 {"language": "zh-Hant", "title": info["zh"]["title"] + suffix, "description": info["zh"]["desc"]},
             ]
+            sticker_type = "animation" if prompts_data.get("type") == "animated_sticker" else "static"
             body = json.dumps({
-                "type": "static",
+                "type": sticker_type,
                 "metas": metas,
                 "copyright": info["copyright"],
                 "categoryIds": ["6", "10"],
@@ -688,19 +702,34 @@ def do_upload(theme, version, lang, sticker_id=None):
         # Step 3: Upload images
         print(f"Step 3: Uploading {count + 2} images...")
         upload_url = f"{API_BASE}/api/sticker/{sticker_id}/upload_image"
+        upload_failures = []
+
+        def _upload_ok(r, label):
+            """HTTP 200 does NOT mean accepted — the body carries success/errors."""
+            ok = isinstance(r["body"], dict) and r["body"].get("success", True)
+            errs = r["body"].get("errors") if isinstance(r["body"], dict) else None
+            print(f"  {label} -> {r['status']}" + ("" if ok else f"  REJECTED: {errs}"))
+            if not ok:
+                upload_failures.append(label)
 
         for img_path, img_type in [(main_file, "main"), (tab_file, "tab")]:
             if os.path.exists(img_path):
                 b64 = base64.b64encode(open(img_path, "rb").read()).decode()
                 r = page.evaluate(JS_UPLOAD_IMAGE, [upload_url, b64, os.path.basename(img_path), img_type, token])
-                print(f"  {img_type}.png -> {r['status']}")
+                _upload_ok(r, f"{img_type}.png")
 
         for sf in sticker_files:
             name = os.path.basename(sf)
             num = re.search(r'sticker_(\d+)', name).group(1)
             b64 = base64.b64encode(open(sf, "rb").read()).decode()
             r = page.evaluate(JS_UPLOAD_IMAGE, [upload_url, b64, name, num, token])
-            print(f"  {name} -> {r['status']}")
+            _upload_ok(r, name)
+
+        if upload_failures:
+            ctx.storage_state(path=SESSION_FILE)
+            browser.close()
+            print(f"\nERROR: {len(upload_failures)} image(s) rejected — NOT submitting: {upload_failures}")
+            sys.exit(1)
 
         # Step 4: Tag (new auto_suggest_tags API, LINE cms-next 2026-06+)
         print("Step 4: Tagging...")
